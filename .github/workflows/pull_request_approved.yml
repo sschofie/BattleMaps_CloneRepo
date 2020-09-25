@@ -1,4 +1,4 @@
-name: relabel approved pull requests
+name: Pull Request Approved
 on: pull_request_review
 
 jobs:
