@@ -3,5 +3,5 @@
 
 ## Deployment
 - Pre-requisite: `npm install --global surge` 
-- `surge`
+- `surge landing-pages`
     - You'll need to be authenticated for this to work
