@@ -1,0 +1,14 @@
+name: Master Updated
+on:
+  push:
+    branches: 
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+      - run: npm install --global surge
+      - run: surge landing-pages --token ${{ secrets.SURGE_TOKEN }}
