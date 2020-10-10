@@ -24,3 +24,16 @@ jobs:
               repo: context.repo.repo,
               labels: ['awaiting review']
             })
+           
+  discord_notify_pullRequest_Review:
+        name: Pull Request Needs Review
+        runs-on: ubuntu-latest
+        steps:
+            - name: Pull Request
+              if: ${{ contains(github.event.pull_request.labels.*.name, 'awaiting review') }}
+              uses: rjstone/discord-webhook-notify@v1
+              with:
+                severity: warn
+                username: KoWT
+                details: A Pull Request is Awaiting Review.
+                webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}         

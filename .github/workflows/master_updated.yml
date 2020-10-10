@@ -12,3 +12,15 @@ jobs:
       - uses: actions/setup-node@v1
       - run: npm install --global surge
       - run: surge landing-pages --token ${{ secrets.SURGE_TOKEN }}
+        
+  discord_notify_deployed:
+        runs-on: ubuntu-latest
+        name: PreLaunch Page Deployed
+        steps:
+            - name: Deployment
+              uses: rjstone/discord-webhook-notify@v1.0.4
+              with:
+                severity: info
+                username: KoWT
+                details: 'The PreLaunch Page has been deployed. URL: kingsofwar.carlsonmckinnon.com.'
+                webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
