@@ -7,6 +7,5 @@
 > *Dynamically generate "good" [Kings of War](https://www.manticgames.com/games/kings-of-war/) battlefields.*
 
 ## Deployment
-- Pre-requisite: `npm install --global surge` 
-- `surge landing-pages`
-    - You'll need to be authenticated for this to work
+
+Deployment will happen automatically once changes are merged into `master` via a GitHub Action.
