@@ -22,5 +22,5 @@ jobs:
               with:
                 severity: info
                 username: KoWT
-                details: 'The PreLaunch Page has been deployed. URL: kingsofwar.carlsonmckinnon.com.'
+                details: 'The PreLaunch Page has been deployed. URL: http://kingsofwar.carlsonmckinnon.com'
                 webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
