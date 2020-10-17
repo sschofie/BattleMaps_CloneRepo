@@ -5,6 +5,21 @@ on:
       - master
 
 jobs:
+  bump_version_number:
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.bump.outputs.new_tag }}
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - name: Bump version and push tag
+        id: bump
+        uses: mathieudutour/github-tag-action@v4.6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: false
+
   deploy:
     runs-on: ubuntu-latest
     steps:
@@ -14,13 +29,15 @@ jobs:
       - run: surge landing-pages --token ${{ secrets.SURGE_TOKEN }}
         
   discord_notify_deployed:
-        runs-on: ubuntu-latest
-        name: PreLaunch Page Deployed
-        steps:
-            - name: Deployment
-              uses: rjstone/discord-webhook-notify@v1.0.4
-              with:
-                severity: info
-                username: KoWT
-                details: 'The PreLaunch Page has been deployed. URL: http://kingsofwar.carlsonmckinnon.com'
-                webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+    needs: bump_version_number
+    runs-on: ubuntu-latest
+    name: PreLaunch Page Deployed
+    steps:
+      - uses: actions/checkout@v1
+      - name: Deployment
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        with:
+          severity: info
+          username: KoWT
+          details: "**${{ needs.bump_version_number.outputs.new_version }}**\nThe PreLaunch Page has been deployed.\nURL: http://kingsofwar.carlsonmckinnon.com."
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
