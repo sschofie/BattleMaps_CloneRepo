@@ -20,8 +20,8 @@ h6 {
 
 header.masthead {
   position: relative;
-  background-color: #343a40;
-  background: url("../img/bg-masthead.jpg") no-repeat center center;
+  background-color: #4b443c;
+  background: url("../img/bg-fademast.jpg") no-repeat center center;
   background-size: cover;
   padding-top: 8rem;
   padding-bottom: 8rem;
@@ -34,7 +34,7 @@ header.masthead .overlay {
   width: 100%;
   top: 0;
   left: 0;
-  opacity: 0.3;
+  opacity: 0.1;
 }
 
 header.masthead h1 {
@@ -49,6 +49,43 @@ header.masthead h1 {
   header.masthead h1 {
     font-size: 3rem;
   }
+}
+
+.fadein img {
+  position:absolute;
+  -webkit-animation-name: fade;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-duration: 6s;
+  animation-name: fade;
+  animation-iteration-count: infinite;
+  animation-duration: 6s;
+}
+
+@-webkit-keyframes fade {
+  0% {opacity: 0;}
+  20% {opacity: 1;}
+  33% {opacity: 1;}
+  53% {opacity: 0;}
+  100% {opacity: 0;}
+}
+@keyframes fade {
+  0% {opacity: 0;}
+  20% {opacity: 1;}
+  33% {opacity: 1;}
+  53% {opacity: 0;}
+  100% {opacity: 0;}
+}
+
+#f1 {
+}
+#f2 {
+  -webkit-animation-delay: -4s;
+}
+#f3 {
+  -webkit-animation-delay: -2s;
+}
+#title {
+  margin-top:200px;
 }
 
 .showcase .showcase-text {
@@ -83,10 +120,6 @@ header.masthead h1 {
   font-size: 4.5rem;
 }
 
-.features-icons .features-icons-item:hover .features-icons-icon i {
-  font-size: 5rem;
-}
-
 .testimonials {
   padding-top: 7rem;
   padding-bottom: 7rem;
@@ -103,7 +136,7 @@ header.masthead h1 {
 
 .call-to-action {
   position: relative;
-  background-color: #343a40;
+  background-color: #cab9a5;
   background: url("../img/bg-masthead.jpg") no-repeat center center;
   background-size: cover;
   padding-top: 7rem;
