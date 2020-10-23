@@ -51,6 +51,16 @@ header.masthead h1 {
   }
 }
 
+div.fadein {
+  width: 500px;
+  height: 500px;
+  position: absolute;
+  margin-right: 50%;
+  margin-left: 50%;
+  right: 0px;
+  top: 25px;
+}
+
 .fadein img {
   position:absolute;
   -webkit-animation-name: fade;
