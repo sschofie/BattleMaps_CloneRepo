@@ -8,6 +8,7 @@ jobs:
   bump_version_number:
     runs-on: ubuntu-latest
     outputs:
+      old_version: ${{ steps.bump.outputs.previous_tag }}
       new_version: ${{ steps.bump.outputs.new_tag }}
     steps:
       - uses: actions/checkout@v1
@@ -20,7 +21,33 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false
 
+  update_site_version:
+    needs: bump_version_number
+    runs-on: ubuntu-latest
+    env:
+      index: landing-pages/index.html
+    steps:
+      - uses: actions/checkout@v2
+        if: ${{ needs.bump_version_number.outputs.new_version }}
+      - name: Find and Replace
+        if: ${{ needs.bump_version_number.outputs.new_version }}
+        run: |
+          if [ -z "${{ needs.bump_version_number.outputs.old_version }}" ]; then
+            sed -i "s/v0.0.0/${{ needs.bump_version_number.outputs.new_version }}/" ${{ env.index }}
+          else
+            sed -i "s/${{ needs.bump_version_number.outputs.old_version }}/${{ needs.bump_version_number.outputs.new_version }}/" ${{ env.index }}
+          fi
+      - name: Commit and Push
+        if: ${{ needs.bump_version_number.outputs.new_version }}
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "GitHub Actions"
+          git status
+          git commit -a -m "doc: update version to ${{ needs.bump_version_number.outputs.new_version }} in ${{ env.index }}"
+          git push
+
   deploy:
+    needs: update_site_version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
