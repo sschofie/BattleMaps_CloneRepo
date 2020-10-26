@@ -1,0 +1,22 @@
+name: Lighthouse check
+on: 
+  push:
+    branches:
+      - master
+
+jobs:
+  lighthouse-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: mkdir /tmp/artifacts
+    - name: Run Lighthouse
+      uses: foo-software/lighthouse-check-action@v2
+      with:
+        outputDirectory: /tmp/artifacts
+        urls: 'http://kingsofwar.carlsonmckinnon.com/'
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: Lighthouse reports
+        path: /tmp/artifacts
