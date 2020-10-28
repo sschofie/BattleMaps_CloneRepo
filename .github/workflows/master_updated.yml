@@ -66,5 +66,5 @@ jobs:
         with:
           severity: info
           username: KoWT
-          details: "**${{ needs.bump_version_number.outputs.new_version }}**\nThe PreLaunch Page has been deployed.\nURL: http://kingsofwar.carlsonmckinnon.com."
+          details: "**${{ needs.bump_version_number.outputs.new_version }}**\nThe PreLaunch Page has been deployed.\nURL: http://battle-maps.carlsonmckinnon.com."
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
