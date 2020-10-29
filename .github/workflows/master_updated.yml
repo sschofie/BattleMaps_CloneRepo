@@ -51,6 +51,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+        with:
+          ref: master
       - uses: actions/setup-node@v1
       - run: npm install --global surge
       - run: surge landing-pages --token ${{ secrets.SURGE_TOKEN }}
