@@ -32,7 +32,7 @@ jobs:
       - name: Pull Request
         uses: rjstone/discord-webhook-notify@v1.0.4
         with:
-          severity: warn
+          severity: info
           username: KoWT
-          details: A Pull Request is Awaiting Review.
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}     
+          description: "A Pull Request is awaiting review...\n\n- **Name:** ${{ github.event.pull_request.title }}\n- **Author:** ${{ github.event.pull_request.user.login }}\n- **URL:** ${{ github.event.pull_request.html_url }}"
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
