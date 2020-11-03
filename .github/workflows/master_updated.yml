@@ -58,7 +58,8 @@ jobs:
       - run: surge landing-pages --token ${{ secrets.SURGE_TOKEN }}
         
   discord_notify_deployed:
-    needs: bump_version_number
+    needs: 
+      [ bump_version_number, deploy ]
     runs-on: ubuntu-latest
     name: PreLaunch Page Deployed
     steps:
