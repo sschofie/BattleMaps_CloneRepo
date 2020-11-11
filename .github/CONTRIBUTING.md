@@ -1,5 +1,11 @@
 # Contributing
 
+## Developer Setup
+
+- Install `git`
+- `git clone https://github.com/carmck/battle-maps.git`
+- Install [nodejs](https://nodejs.org/en/)
+
 ## Submitting Changes
 
 - Issues that are ready to be worked are added and prioritized on [project Kanban board](https://github.com/orgs/carmck/projects/5)
