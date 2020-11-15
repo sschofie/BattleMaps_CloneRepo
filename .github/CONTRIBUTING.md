@@ -13,6 +13,8 @@
     - ```<issue-number>-<brief-description>```
     - e.g., `12-contributing-doc`
 - Commit code changes (See commit [commit message guidelines](#Commit-Message))
+    - `git add`
+    - `npm run commit` (instead of `git commit`)
     - Squash unneeded commits
 - Open pull request against the `develop` branch
 - Gain approvals via code review (the "approved" label will be automatically added once you've gained enough approvals)
@@ -20,10 +22,12 @@
 
 ## Commit Message
 
-Commit messages should follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). The body should include issue number closed as a `trailer`.
+Commit messages should follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) and include the closed issue number as a `trailer`. This will be formatted for you by running `npm run commit` instead of `git commit`.
 
 Example:
-```
+
+```text
+
 docs: app deployment
 
 - README updated
