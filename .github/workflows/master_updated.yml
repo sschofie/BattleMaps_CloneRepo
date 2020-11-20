@@ -5,49 +5,70 @@ on:
       - master
 
 jobs:
-  bump_version_number:
+  calculate_next_version:
     runs-on: ubuntu-latest
     outputs:
-      old_version: ${{ steps.bump.outputs.previous_tag }}
-      new_version: ${{ steps.bump.outputs.new_tag }}
+      prev_tag: ${{ steps.calc_version.outputs.previous_tag }}
+      next_tag: ${{ steps.calc_version.outputs.new_tag }}
+      next_version: ${{ steps.calc_version.outputs.new_version }}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Bump version and push tag
-        id: bump
-        uses: mathieudutour/github-tag-action@v4.6
+      - name: Calculate new version
+        id: calc_version
+        uses: mathieudutour/github-tag-action@v5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false
+          dry_run: true
+  
+  update_version:
+    needs: calculate_next_version
+    runs-on: ubuntu-latest
+    if: ${{ needs.calculate_next_version.outputs.next_version }}
+    steps:
+      - name: checkout_master
+        uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: Bump npm version, commit and push
+        id: bump_npm
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git status
+          npm version ${{ needs.calculate_next_version.outputs.next_version }} -m "doc: update version to %s"
+          git push --follow-tags
 
   update_site_version:
-    needs: bump_version_number
+    needs: calculate_next_version
     runs-on: ubuntu-latest
     env:
       index: landing-pages/index.html
     steps:
       - uses: actions/checkout@v2
-        if: ${{ needs.bump_version_number.outputs.new_version }}
+        if: ${{ needs.calculate_next_version.outputs.next_tag }}
       - name: Find and Replace
-        if: ${{ needs.bump_version_number.outputs.new_version }}
+        if: ${{ needs.calculate_next_version.outputs.next_tag }}
         run: |
-          if [ -z "${{ needs.bump_version_number.outputs.old_version }}" ]; then
-            sed -i "s/v0.0.0/${{ needs.bump_version_number.outputs.new_version }}/" ${{ env.index }}
+          if [ -z "${{ needs.calculate_next_version.outputs.prev_tag }}" ]; then
+            sed -i "s/v0.0.0/${{ needs.calculate_next_version.outputs.next_tag }}/" ${{ env.index }}
           else
-            sed -i "s/${{ needs.bump_version_number.outputs.old_version }}/${{ needs.bump_version_number.outputs.new_version }}/" ${{ env.index }}
+            sed -i "s/${{ needs.calculate_next_version.outputs.prev_tag }}/${{ needs.calculate_next_version.outputs.next_tag }}/" ${{ env.index }}
           fi
       - name: Commit and Push
-        if: ${{ needs.bump_version_number.outputs.new_version }}
+        if: ${{ needs.calculate_next_version.outputs.next_tag }}
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "GitHub Actions"
           git status
-          git commit -a -m "doc: update version to ${{ needs.bump_version_number.outputs.new_version }} in ${{ env.index }}"
+          git commit -a -m "doc: update version to ${{ needs.calculate_next_version.outputs.next_tag }} in ${{ env.index }}"
           git push
 
   deploy:
-    needs: update_site_version
+    needs: 
+      [ update_version, update_site_version ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -59,7 +80,7 @@ jobs:
         
   discord_notify_deployed:
     needs: 
-      [ bump_version_number, deploy ]
+      [ calculate_next_version, deploy ]
     runs-on: ubuntu-latest
     name: PreLaunch Page Deployed
     steps:
@@ -69,5 +90,5 @@ jobs:
         with:
           severity: info
           username: KoWT
-          details: "**${{ needs.bump_version_number.outputs.new_version }}**\nThe PreLaunch Page has been deployed.\nURL: http://battle-maps.carlsonmckinnon.com."
+          details: "**${{ needs.calculate_next_version.outputs.next_tag }}**\nThe PreLaunch Page has been deployed.\nURL: http://battle-maps.carlsonmckinnon.com."
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
