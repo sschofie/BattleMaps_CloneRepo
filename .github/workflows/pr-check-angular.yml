@@ -1,0 +1,37 @@
+name: PR Angular Build/Test/Lint
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  angular-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: install packages
+        run: sudo npm install
+      - name: Check angular version (npx)
+        run: npx ng v
+      - name: Build angular app
+        id: build
+        run: |
+          echo "\n*** Building Angular App ***\n"
+          npm run build
+      - name: Run angular tests
+        id: test
+        run: |
+          echo "\n*** Running Tests ***\n"
+          npm run test:ci
+      - name: Run end-to-end tests
+        id: e2e
+        run: |
+          echo "\n *** Running E2E Tests ***\n"
+          npx webdriver-manager update --versions.chrome 86.0.4240.22
+          npm run e2e:ci
+      - name: Lint angular app
+        id: lint
+        run: |
+          echo "\n*** Linting Project ***\n"
+          npm run lint
+
