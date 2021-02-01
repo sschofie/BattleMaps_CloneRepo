@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { ShowMapComponent } from './show-map/show-map.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { MapGeneratorComponent } from './map-generator/map-generator.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 const routes: Routes = [
   { path: '', redirectTo: '/landing-page', pathMatch: 'full' },
@@ -22,7 +23,8 @@ const routes: Routes = [
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

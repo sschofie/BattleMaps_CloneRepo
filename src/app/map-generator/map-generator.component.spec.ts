@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ShowMapComponent } from '../show-map/show-map.component';
 
 import { MapGeneratorComponent } from './map-generator.component';
@@ -7,7 +7,7 @@ describe('MapGeneratorComponent', () => {
   let component: MapGeneratorComponent;
   let fixture: ComponentFixture<MapGeneratorComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         MapGeneratorComponent,
