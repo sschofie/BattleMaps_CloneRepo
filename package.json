@@ -9,7 +9,6 @@
     "test:ci": "ng test --watch=false --browsers=ChromeHeadless",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "e2e:ci": "ng e2e --webdriverUpdate=false",
     "commit": "cz"
   },
   "private": true,

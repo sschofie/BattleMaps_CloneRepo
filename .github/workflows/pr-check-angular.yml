@@ -27,8 +27,7 @@ jobs:
         id: e2e
         run: |
           echo "\n *** Running E2E Tests ***\n"
-          npx webdriver-manager update --versions.chrome 86.0.4240.22
-          npm run e2e:ci
+          npm run e2e
       - name: Lint angular app
         id: lint
         run: |
