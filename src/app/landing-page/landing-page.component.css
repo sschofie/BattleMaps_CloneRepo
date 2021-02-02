@@ -4,20 +4,6 @@
  * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-landing-page/blob/master/LICENSE)
  */
 
- body {
-    font-family: 'IM Fell DW Pica';
-  }
-  
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: Cinzel, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 700;
-  }
-  
   header.masthead {
     position: relative;
     background-color: #4b443c;
@@ -26,7 +12,7 @@
     padding-top: 8rem;
     padding-bottom: 8rem;
   }
-  
+
   header.masthead .overlay {
     position: absolute;
     background-color: #212529;
@@ -36,11 +22,11 @@
     left: 0;
     opacity: 0.1;
   }
-  
+
   header.masthead h1 {
     font-size: 2rem;
   }
-  
+
   @media (min-width: 768px) {
     header.masthead {
       padding-top: 12rem;
@@ -50,7 +36,7 @@
       font-size: 3rem;
     }
   }
-  
+
   div.fadein {
     width: 500px;
     height: 500px;
@@ -60,7 +46,7 @@
     right: 0px;
     top: 25px;
   }
-  
+
   .fadein img {
     position:absolute;
     -webkit-animation-name: fade;
@@ -70,7 +56,7 @@
     animation-iteration-count: infinite;
     animation-duration: 6s;
   }
-  
+
   @-webkit-keyframes fade {
     0% {opacity: 0;}
     20% {opacity: 1;}
@@ -85,7 +71,7 @@
     53% {opacity: 0;}
     100% {opacity: 0;}
   }
-  
+
   #f1 {
   }
   #f2 {
@@ -97,53 +83,40 @@
   #title {
     margin-top:200px;
   }
-  
+
   .showcase .showcase-text {
     padding: 3rem;
   }
-  
+
   .showcase .showcase-img {
     min-height: 30rem;
     background-size: cover;
   }
-  
+
   @media (min-width: 768px) {
     .showcase .showcase-text {
       padding: 7rem;
     }
   }
-  
+
   .features-icons {
     padding-top: 7rem;
     padding-bottom: 7rem;
   }
-  
+
   .features-icons .features-icons-item {
     max-width: 20rem;
   }
-  
+
   .features-icons .features-icons-item .features-icons-icon {
     height: 7rem;
   }
-  
+
   .features-icons .features-icons-item .features-icons-icon i {
     font-size: 4.5rem;
   }
-  
-  .testimonials {
-    padding-top: 7rem;
-    padding-bottom: 7rem;
-  }
-  
-  .testimonials .testimonial-item {
-    max-width: 18rem;
-  }
-  
-  .testimonials .testimonial-item img {
-    max-width: 12rem;
-    box-shadow: 0px 5px 5px 0px #adb5bd;
-  }
-  
+
+
   .call-to-action {
     position: relative;
     background-color: #cab9a5;
@@ -152,7 +125,7 @@
     padding-top: 7rem;
     padding-bottom: 7rem;
   }
-  
+
   .call-to-action .overlay {
     position: absolute;
     background-color: #212529;
@@ -162,9 +135,3 @@
     left: 0;
     opacity: 0.3;
   }
-  
-  footer.footer {
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-  }
-  
