@@ -9,14 +9,14 @@
 ## Submitting Changes
 
 - Issues that are ready to be worked are added and prioritized on [project Kanban board](https://github.com/orgs/carmck/projects/5)
-- Create branch off `develop` branch with the related issue number in the name
+- Create branch off `master` branch with the related issue number in the name
     - ```<issue-number>-<brief-description>```
     - e.g., `12-contributing-doc`
 - Commit code changes (See commit [commit message guidelines](#Commit-Message))
     - `git add`
     - `npm run commit` (instead of `git commit`)
     - Squash unneeded commits
-- Open pull request against the `develop` branch
+- Open pull request against the `master` branch
 - Gain approvals via code review (the "approved" label will be automatically added once you've gained enough approvals)
 - Merge and close pull request
 
