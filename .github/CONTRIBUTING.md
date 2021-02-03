@@ -39,7 +39,8 @@ Closes: #1
 
 *updated 1/31/2021*
 
-**Battle Maps Color Scheme**
+### Battle Maps Color Scheme
+
 - Light Tan `#cab9a5`
 - Dark Green `#052415`
 - Dark Brown `#4b443c`
@@ -47,9 +48,10 @@ Closes: #1
 - Logo Brown `#714441`
 - Logo Green `#a2c44f`
 
-**Bootstrap Colors**
+#### Bootstrap Colors
 
 *Use custom CSS for colors only when necessary, most design should be possible with Bootstrap elements and these colors.*
+
 - Primary `#0275d8`
 - Secondary `#714441` (Logo Brown)
 - Success `#a2C44f` (Logo Green)
@@ -62,7 +64,8 @@ Closes: #1
 - Dark `#282420`
     - Secondary button type for case-by-case use, esp. on medium backgrounds 
 
-**Fonts**
+#### Fonts
+
 - [Cinzel](https://fonts.google.com/specimen/Cinzel)
     - Always appears uppercase
     - Titles and headings
