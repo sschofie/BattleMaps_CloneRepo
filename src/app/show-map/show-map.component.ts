@@ -8,6 +8,20 @@ import { Component, OnInit } from '@angular/core';
 
 export class ShowMapComponent implements OnInit {
   mapDisplay = '';
+  selectedScenario: string;
+  private scenarios = [
+    `Control`,
+    `Dominate`,
+    `Fool's Gold`,
+    `Invade`,
+    `Kill`,
+    `Loot`,
+    `Pillage`,
+    `Plunder`,
+    `Push`,
+    `Salt the Earth`,
+    `Smoke & Mirrors`
+  ];
 
   constructor() { }
 
@@ -16,9 +30,10 @@ export class ShowMapComponent implements OnInit {
   }
 
   switchMap() {
+    this.selectedScenario = this.scenarios[Math.floor(Math.random() * this.scenarios.length)];
     const mapNum = 20;
-    const chooseIndex =  Math.round(Math.random() * (mapNum-1))+1;
-    this.mapDisplay = 'assets/img/maps/ed' +chooseIndex+'.svg';
+    const chooseIndex = Math.round(Math.random() * (mapNum - 1)) + 1;
+    this.mapDisplay = 'assets/img/maps/ed' + chooseIndex + '.svg';
   }
 
 }
