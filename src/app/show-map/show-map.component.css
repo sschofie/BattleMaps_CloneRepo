@@ -1,8 +1,13 @@
 .content {
   display: flex;
-  margin: 32px auto;
-  padding: 0 16px;
-  width: 50%;
+  margin: 32px auto ;
+  padding: auto;
+  width: 85%;
   flex-direction: column;
   align-items: center;
+}
+@media (orientation: landscape) {
+  .content {
+    width: 50%;
+  }
 }
