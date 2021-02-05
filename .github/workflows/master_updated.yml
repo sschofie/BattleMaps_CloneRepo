@@ -90,6 +90,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v2
         with:
+          name: battle-maps
           path: dist/battle-maps
 
   deploy_build:
