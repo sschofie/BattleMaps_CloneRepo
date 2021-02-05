@@ -85,7 +85,7 @@ jobs:
           sudo npm install
           npx ng v
       - name: Build production app
-        run: ng build --prod
+        run: npm run build:prod
       - name: Upload build
         if: success()
         uses: actions/upload-artifact@v2
