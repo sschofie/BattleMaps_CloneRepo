@@ -109,7 +109,7 @@ jobs:
           path: dist/battle-maps
       - name: Deploy build
         run: |
-          npm install --global surge
+          sudo npm install --global surge
           surge dist/battle-maps battle-maps.carlsonmckinnon.com --token ${{ secrets.SURGE_TOKEN }}
 
   discord_notify_deployed:
