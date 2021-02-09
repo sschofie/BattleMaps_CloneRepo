@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 
 export class ShowMapComponent implements OnInit {
   mapDisplay = '';
+  dwarfText = '';
   selectedScenario: string;
   private scenarios = [
     `Control`,
@@ -32,8 +33,9 @@ export class ShowMapComponent implements OnInit {
   switchMap() {
     this.selectedScenario = this.scenarios[Math.floor(Math.random() * this.scenarios.length)];
     const mapNum = 20;
-    const chooseIndex = Math.round(Math.random() * (mapNum - 1)) + 1;
-    this.mapDisplay = 'assets/img/maps/ed' + chooseIndex + '.svg';
+    const chooseIndex =  Math.round(Math.random() * (mapNum-1))+1;
+    this.mapDisplay = 'assets/img/maps/ed' +chooseIndex+'.svg';
+    this.dwarfText = 'Lars\' Epic Dwarf map #'+chooseIndex;
   }
 
 }
