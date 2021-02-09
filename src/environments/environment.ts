@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   appVersion: require('../../package.json').version + '-dev',
-  appName: require('../../package.json').name
+  appName: require('../../package.json').name,
+  copyrightYear: new Date().getFullYear()
 };
 
 /*

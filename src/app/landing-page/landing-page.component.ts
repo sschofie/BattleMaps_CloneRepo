@@ -12,6 +12,7 @@ import { environment } from 'src/environments/environment';
 
 export class LandingPageComponent implements OnInit {
   version = environment.appVersion;
+  copyrightYear = environment.copyrightYear;
 
   constructor() { }
 

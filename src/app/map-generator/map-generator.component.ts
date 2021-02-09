@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 })
 export class MapGeneratorComponent implements OnInit {
   version = environment.appVersion;
+  copyrightYear = environment.copyrightYear;
 
   constructor() { }
 
