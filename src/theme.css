@@ -3585,6 +3585,7 @@ a.badge-dark.focus {
     margin-bottom: 0rem;
     border: 1px solid transparent;
     border-radius: 0.25rem;
+    text-align: center;
 }
 .alert-heading {
     color: inherit;
