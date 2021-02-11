@@ -4,7 +4,7 @@ on:
     types: [opened, edited, reopened, synchronize]
 
 jobs:
-  angular-ci:
+  angular_ci:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
