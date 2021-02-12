@@ -9,7 +9,11 @@ import { Component, OnInit } from '@angular/core';
 export class ShowMapComponent implements OnInit {
   mapDisplay = '';
   dwarfText = '';
-  selectedScenario: string;
+  selectedScenario = '';
+  isLongLoading = false;
+  private isLoading: boolean;
+  private tmpDwarfText: string;
+  private tmpSelectedScenario: string;
   private scenarios = [
     `Control`,
     `Dominate`,
@@ -30,12 +34,28 @@ export class ShowMapComponent implements OnInit {
     this.switchMap();
   }
 
+  async startSpinner() {
+    this.isLoading = true;
+    await sleep(150);
+    this.isLongLoading = this.isLoading;
+  }
+
+  onLoad() {
+    this.isLoading = false;
+    this.isLongLoading = this.isLoading;
+    this.selectedScenario = this.tmpSelectedScenario;
+    this.dwarfText = this.tmpDwarfText;
+  }
+
   switchMap() {
-    this.selectedScenario = this.scenarios[Math.floor(Math.random() * this.scenarios.length)];
+    this.startSpinner();
+    this.tmpSelectedScenario = this.scenarios[Math.floor(Math.random() * this.scenarios.length)];
     const mapNum = 20;
     const chooseIndex =  Math.round(Math.random() * (mapNum-1))+1;
     this.mapDisplay = 'assets/img/maps/ed' +chooseIndex+'.svg';
-    this.dwarfText = 'Lars\' Epic Dwarf map #'+chooseIndex;
+    this.tmpDwarfText = 'Lars\' Epic Dwarf map #'+chooseIndex;
   }
 
 }
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
