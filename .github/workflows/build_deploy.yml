@@ -1,0 +1,67 @@
+name: Build and Deploy
+on:
+  workflow_run:
+    workflows: ["Verify and Update Version"]
+    branches: [master]
+    types:
+      - completed
+
+jobs:
+  build_angular_prod:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    name: Build Angular app (prod)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo npm install
+          npx ng v
+      - name: Build production app
+        run: npm run build:prod
+      - name: Upload build
+        if: success()
+        uses: actions/upload-artifact@v2
+        with:
+          name: battle-maps
+          path: dist/battle-maps
+
+  deploy_build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: build_angular_prod
+    runs-on: ubuntu-latest
+    name: Deploy app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: Download build
+        uses: actions/download-artifact@v2
+        with:
+          name: battle-maps
+          path: dist/battle-maps
+      - name: Deploy build
+        run: |
+          sudo npm install --global surge
+          surge dist/battle-maps battle-maps.carlsonmckinnon.com --token ${{ secrets.SURGE_TOKEN }}
+
+  discord_notify_deployed:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: [ build_angular_prod, deploy_build ]
+    runs-on: ubuntu-latest
+    name: Discord deployment notification
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get current package version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.1.0
+      - name: Notify
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        with:
+          severity: info
+          username: KoWT
+          details: "**$${{ steps.package-version.outputs.current-version}}**\nThe site has been deployed.\nURL: http://battle-maps.carlsonmckinnon.com."
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}

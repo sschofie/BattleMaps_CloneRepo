@@ -1,4 +1,4 @@
-name: Master Updated
+name: Verify and Update Version
 on:
   push:
     branches: 
@@ -7,6 +7,7 @@ on:
 jobs:
   angular_ci:
     runs-on: ubuntu-latest
+    name: Test & lint app
     steps:
       - name: checkout
         uses: actions/checkout@v2
@@ -44,6 +45,7 @@ jobs:
       prev_tag: ${{ steps.calc_version.outputs.previous_tag }}
       next_tag: ${{ steps.calc_version.outputs.new_tag }}
       next_version: ${{ steps.calc_version.outputs.new_version }}
+    name: Calculate next version
     steps:
       - uses: actions/checkout@v2
         with:
@@ -60,6 +62,7 @@ jobs:
     needs: [ angular_ci, calculate_next_version ]
     runs-on: ubuntu-latest
     if: ${{ needs.calculate_next_version.outputs.next_version }}
+    name: Update npm version
     steps:
       - name: checkout_master
         uses: actions/checkout@v2
@@ -73,56 +76,3 @@ jobs:
           git status
           npm version ${{ needs.calculate_next_version.outputs.next_version }} -m "doc: update version to %s"
           git push --follow-tags
-
-  build_angular_prod:
-    needs: [ angular_ci, calculate_next_version, update_version ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install dependencies
-        run: |
-          sudo npm install
-          npx ng v
-      - name: Build production app
-        run: npm run build:prod
-      - name: Upload build
-        if: success()
-        uses: actions/upload-artifact@v2
-        with:
-          name: battle-maps
-          path: dist/battle-maps
-
-  deploy_build:
-    needs:
-      [ angular_ci, calculate_next_version, update_version, build_angular_prod ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: master
-      - name: Download build
-        uses: actions/download-artifact@v2
-        with:
-          name: battle-maps
-          path: dist/battle-maps
-      - name: Deploy build
-        run: |
-          sudo npm install --global surge
-          surge dist/battle-maps battle-maps.carlsonmckinnon.com --token ${{ secrets.SURGE_TOKEN }}
-
-  discord_notify_deployed:
-    needs: 
-      [ calculate_next_version, deploy_build ]
-    runs-on: ubuntu-latest
-    name: Site Deployed
-    steps:
-      - uses: actions/checkout@v1
-      - name: Deployment
-        uses: rjstone/discord-webhook-notify@v1.0.4
-        with:
-          severity: info
-          username: KoWT
-          details: "**${{ needs.calculate_next_version.outputs.next_tag }}**\nThe site has been deployed.\nURL: http://battle-maps.carlsonmckinnon.com."
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
