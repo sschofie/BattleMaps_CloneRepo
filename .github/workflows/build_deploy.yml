@@ -63,5 +63,5 @@ jobs:
         with:
           severity: info
           username: KoWT
-          details: "**$${{ steps.package-version.outputs.current-version}}**\nThe site has been deployed.\nURL: http://battle-maps.carlsonmckinnon.com."
+          details: "**v${{ steps.package-version.outputs.current-version}}**\nThe site has been deployed.\n**URL:** http://battle-maps.carlsonmckinnon.com"
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
