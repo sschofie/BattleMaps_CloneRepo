@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
-    "build:prod": "ng build --prod",
+    "build": "ng build && cp dist/battle-maps/index.html dist/battle-maps/200.html",
+    "build:prod": "ng build --prod && cp dist/battle-maps/index.html dist/battle-maps/200.html",
     "test": "ng test",
     "test:ci": "ng test --watch=false --browsers=ChromeHeadless",
     "lint": "ng lint",
