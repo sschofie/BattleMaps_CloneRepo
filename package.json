@@ -10,7 +10,8 @@
     "test:ci": "ng test --watch=false --browsers=ChromeHeadless",
     "lint": "ng lint",
     "e2e": "ng e2e --webdriverUpdate=false",
-    "commit": "cz"
+    "commit": "cz",
+    "checks": "npm run test:ci && npm run e2e && npm run lint"
   },
   "private": true,
   "dependencies": {

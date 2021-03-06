@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-show-map',
@@ -28,10 +29,21 @@ export class ShowMapComponent implements OnInit {
     `Smoke & Mirrors`
   ];
 
-  constructor() { }
+  constructor(private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
-    this.switchMap();
+    // update the displayed information whenever the queries are updated
+    this.route.queryParams.subscribe(() => {
+      this.startSpinner();
+      // if setting the scenario fails, pick a new scenario
+      if (!this.setScenarioFromQuery()) {
+        this.switchScenario(true);
+      }
+      // if setting the map fails, pick a new map
+      if (!this.setMapFromQuery()) {
+        this.switchMap(true);
+      }
+    });
   }
 
   async startSpinner() {
@@ -47,13 +59,89 @@ export class ShowMapComponent implements OnInit {
     this.dwarfText = this.tmpDwarfText;
   }
 
-  switchMap() {
-    this.startSpinner();
-    this.tmpSelectedScenario = this.scenarios[Math.floor(Math.random() * this.scenarios.length)];
-    const mapNum = 20;
-    const chooseIndex =  Math.round(Math.random() * (mapNum-1))+1;
-    this.mapDisplay = 'assets/img/maps/ed' +chooseIndex+'.svg';
-    this.tmpDwarfText = 'Lars\' Epic Dwarf map #'+chooseIndex;
+  /**
+   * Pick a random scenario and map and update the URL accordingly.
+   */
+  switchMapAndScenario() {
+    this.router.navigate(['/app'], {
+      queryParams: {
+        s: this.switchScenario(false),
+        map: this.switchMap(false)
+      }
+    });
+  }
+
+  /**
+   * Pick a new random scenario ID.
+   *
+   * @param navigate Whether to update URL query parameters.
+   *
+   * @returns New scenario ID.
+   */
+  switchScenario(navigate: boolean): number {
+    const scenarioID = Math.floor(Math.random() * this.scenarios.length);
+    if (navigate) {
+      // update the URL with the chosen information
+      this.router.navigate(['/app'], { queryParams: { s: scenarioID }, queryParamsHandling: 'merge' });
+    }
+    return scenarioID;
+  }
+
+  /**
+   * Pick a new random map ID.
+   *
+   * @param navigate Whether to update URL query parameters.
+   *
+   * @returns New map ID.
+   */
+  switchMap(navigate: boolean): string {
+    const mapCount = 20;
+    const mapID = 'ed' + (Math.round(Math.random() * (mapCount - 1)) + 1);
+    if (navigate) {
+      // update the URL with the chosen information
+      this.router.navigate(['/app'], { queryParams: { map: mapID }, queryParamsHandling: 'merge' });
+    }
+    return mapID;
+  }
+
+  /**
+   * Set the scenario based on the current url query parameters.
+   *
+   * @returns False if scenario ID is invalid or does not exist.
+   */
+  setScenarioFromQuery(): boolean {
+    // load the scenario ID
+    const scenarioID = this.route.snapshot.queryParamMap.get('s');
+    // check that the 'scenario' parameter exists
+    if (!scenarioID) { return false; }
+    this.tmpSelectedScenario = this.scenarios[scenarioID];
+    // check that we have a valid scenario
+    if (!this.tmpSelectedScenario) { return false; }
+    return true;
+  }
+
+  /**
+   * Set the map based on the current url query parameters.
+   *
+   * @returns False if map ID is invalid or does not exist.
+   */
+  setMapFromQuery(): boolean {
+    // load the map ID
+    const mapID = this.route.snapshot.queryParamMap.get('map');
+    // check that the 'map' parameter exists
+    if (!mapID) { return false; }
+    if (mapID.startsWith('ed', 0)) {
+      const mapNum = Number(mapID.replace('ed', ''));
+      // check that we have a valid map number
+      if (isNaN(mapNum) || mapNum < 1 || mapNum > 20) { return false; }
+      this.mapDisplay = 'assets/img/maps/' + mapID + '.svg';
+      this.tmpDwarfText = 'Lars\' Epic Dwarf map #' + mapNum;
+    }
+    else {
+      // for now, any map ID that doesn't start with 'ed' (e.g. any map that isn't epic dwarf) is invalid
+      return false;
+    }
+    return true;
   }
 
 }
