@@ -31,6 +31,7 @@ jobs:
         id: e2e
         run: |
           echo "\n *** Pre-Deployment Tests: Running E2E Tests ***\n"
+          npx webdriver-manager update --versions.chrome 88.0.4324.182
           npm run e2e
       - name: Lint angular app
         id: lint
