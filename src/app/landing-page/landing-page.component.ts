@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './landing-page.component.html',
   styleUrls: [
     './landing-page.component.css',
-    './vendor/simple-line-icons/css/simple-line-icons.css'
+    '../../assets/simple-line-icons/css/simple-line-icons.css'
   ]
 })
 

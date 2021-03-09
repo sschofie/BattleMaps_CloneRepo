@@ -1,10 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-show-map',
   templateUrl: './show-map.component.html',
-  styleUrls: ['./show-map.component.css']
+  styleUrls: [
+    './show-map.component.css',
+    '../../assets/simple-line-icons/css/simple-line-icons.css'
+  ]
 })
 
 export class ShowMapComponent implements OnInit {
@@ -12,6 +17,8 @@ export class ShowMapComponent implements OnInit {
   dwarfText = '';
   selectedScenario = '';
   isLongLoading = false;
+  qrCodeString = '';
+  private baseURL = environment.appURL;
   private isLoading: boolean;
   private tmpDwarfText: string;
   private tmpSelectedScenario: string;
@@ -29,7 +36,7 @@ export class ShowMapComponent implements OnInit {
     `Smoke & Mirrors`
   ];
 
-  constructor(private route: ActivatedRoute, private router: Router) { }
+  constructor(private route: ActivatedRoute, private router: Router, private modalService: NgbModal) { }
 
   ngOnInit() {
     // update the displayed information whenever the queries are updated
@@ -144,6 +151,15 @@ export class ShowMapComponent implements OnInit {
     return true;
   }
 
+  /**
+   * Sets the QR code string based on the current map, then opens a modal using the given template.
+   *
+   * @param modal - The modal HTML template.
+   */
+  openShareModal(modal: TemplateRef<NgbModal>) {
+    this.qrCodeString = this.baseURL + this.router.url;
+    this.modalService.open(modal, { ariaLabelledBy: 'shareModalTitle' });
+  }
 }
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

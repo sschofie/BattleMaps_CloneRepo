@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   appVersion: require('../../package.json').version + '-dev',
   appName: require('../../package.json').name,
+  appURL: 'http://localhost:4200',
   copyrightYear: new Date().getFullYear()
 };
 
