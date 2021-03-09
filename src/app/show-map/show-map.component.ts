@@ -2,6 +2,8 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from 'src/environments/environment';
+import { FeatureFlagsService } from '../feature-flags.service';
+
 
 @Component({
   selector: 'app-show-map',
@@ -36,7 +38,12 @@ export class ShowMapComponent implements OnInit {
     `Smoke & Mirrors`
   ];
 
-  constructor(private route: ActivatedRoute, private router: Router, private modalService: NgbModal) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private modalService: NgbModal,
+    private _featureFlags: FeatureFlagsService
+  ) { }
 
   ngOnInit() {
     // update the displayed information whenever the queries are updated

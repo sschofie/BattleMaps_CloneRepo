@@ -7,7 +7,10 @@ export const environment = {
   appVersion: require('../../package.json').version + '-dev',
   appName: require('../../package.json').name,
   appURL: 'http://localhost:4200',
-  copyrightYear: new Date().getFullYear()
+  copyrightYear: new Date().getFullYear(),
+  featureFlags: {
+    sharing: true
+  }
 };
 
 /*
