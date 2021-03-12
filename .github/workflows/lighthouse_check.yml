@@ -1,8 +1,10 @@
 name: Lighthouse check
-on: 
-  push:
-    branches:
-      - master
+on:
+  workflow_run:
+    workflows: ["Build and Deploy"]
+    branches: [master]
+    types:
+      - completed
 
 jobs:
   lighthouse-check:
