@@ -1,6 +1,6 @@
 .content {
   display: flex;
-  margin: 32px auto ;
+  margin: 32px auto;
   padding: auto;
   width: 85%;
   flex-direction: column;
@@ -16,8 +16,6 @@
 
 #map-holder {
   position: relative;
-  margin: 0%;
-  padding: 0%;
   width: 100%;
 }
 

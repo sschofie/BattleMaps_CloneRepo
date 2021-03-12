@@ -10,16 +10,16 @@
   </script>
 
 <!-- Toolbar -->
-<div class="toolbar bg-secondary d-flex" role="banner">
-  <img
-    class="logo"
-    height="115"
-    src="assets/img/LogoTile.svg" alt="Battle Maps Tile"/>
-
-  <img
-    class="logo"
-    height="95"
-    src="assets/img/JustTitle.svg" alt="Battle Maps Title"/>
+<div class="toolbar container-fluid bg-secondary px-0 py-1" role="banner">
+    <img
+      class="logo"
+      height="115"
+      src="assets/img/LogoTile.svg" alt="Battle Maps Tile"/>
+  
+    <img
+      class="logo"
+      height="95"
+      src="assets/img/JustTitle.svg" alt="Battle Maps Title"/>
 </div>
 
 <div class="alert alert-success" role="alert">
@@ -35,7 +35,9 @@
   </div>
 </div>
 
-<app-show-map></app-show-map>
+<div class="container-fluid p-0 m-0">
+  <app-show-map></app-show-map>
+</div>
 
 <!-- Footer -->
 <footer class="footer bg-secondary">
