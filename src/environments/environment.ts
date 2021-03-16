@@ -9,7 +9,8 @@ export const environment = {
   appURL: 'http://localhost:4200',
   copyrightYear: new Date().getFullYear(),
   featureFlags: {
-    sharing: true
+    sharing: true,
+    mapCanvas: true
   }
 };
 

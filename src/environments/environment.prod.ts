@@ -5,6 +5,7 @@ export const environment = {
   appURL: 'http://battle-maps.carlsonmckinnon.com',
   copyrightYear: new Date().getFullYear(),
   featureFlags: {
-    sharing: false
+    sharing: false,
+    mapCanvas: false
   }
 };

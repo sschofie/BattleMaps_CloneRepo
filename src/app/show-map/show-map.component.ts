@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from 'src/environments/environment';
 import { FeatureFlagsService } from '../feature-flags.service';
-
+import { randomBytes } from 'crypto';
 
 @Component({
   selector: 'app-show-map',
@@ -24,6 +24,10 @@ export class ShowMapComponent implements OnInit {
   private isLoading: boolean;
   private tmpDwarfText: string;
   private tmpSelectedScenario: string;
+  private seed; // generates a random 32 bit unsigned int
+  private maxRuns = 50; //universal limit to number of runs each generation is allowed.
+  private seedrandom = require('seedrandom');
+  private rand;
   private scenarios = [
     `Control`,
     `Dominate`,
@@ -36,6 +40,17 @@ export class ShowMapComponent implements OnInit {
     `Push`,
     `Salt the Earth`,
     `Smoke & Mirrors`
+  ];
+  private terrainPieces = [ //reference array for pre-defined items. Others culd be read in from Json file.
+    new TerrainPiece(0, 40, 1, 'stone_wall'),
+    new TerrainPiece(1, 40, 1, 'pond'),
+    new TerrainPiece(2, 40, 1, 'house'),
+    new TerrainPiece(3, 40, 1, 'tree'),
+    new TerrainPiece(4, 40, 1, 'boulder'),
+    new TerrainPiece(5, 40, 1, 'boulder2'),
+    new TerrainPiece(6, 40, 1, 'boulder3'),
+    new TerrainPiece(7, 40, 1, 'foliage'),
+    new TerrainPiece(8, 40, 1, 'crop_field')
   ];
 
   constructor(
@@ -83,6 +98,9 @@ export class ShowMapComponent implements OnInit {
         map: this.switchMap(false)
       }
     });
+    if (environment.featureFlags.mapCanvas) {
+      this.genMap();
+    }
   }
 
   /**
@@ -167,6 +185,201 @@ export class ShowMapComponent implements OnInit {
     this.qrCodeString = this.baseURL + this.router.url;
     this.modalService.open(modal, { ariaLabelledBy: 'shareModalTitle' });
   }
+
+  /**
+   * generates and prints a map with simpleGenerate, then prints the seed for debug pruposes.
+   */
+  genMap() {
+    this.printMap(this.simpleGenerate(400, 600, 50, null, false, false), 400, 600, true);
+    this.dwarfText = 'Map Seed: ' + this.seed;
+  }
+
+  //Generaton code starts here.
+
+  /**
+   * generate map encoding (Node[])
+   *
+   * @param mapHeight - height of the map (usually 400)
+   * @param mapWidth - width of the map (usually 600)
+   * @param edgeBoundary - distance from the map edge in which objects cannot spawn
+   * @param resources - an array of numbers representing the available resources where index equals id
+   * @param weighted - toggle weighted generation
+   * @param seeded - toggle whether the function generates a new seed
+   */
+  simpleGenerate(mapHeight: number, mapWidth: number, edgeBoundary: number,
+    resources: number[], weighted: boolean, seeded: boolean): Node[] {
+    if (!seeded) {
+      this.seed = Math.floor(Math.random() * 4294967296);
+    }
+    this.rand = this.seedrandom(this.seed);
+    const numOfItems = this.terrainPieces.length;
+    const boundScaling = 0.85; //this scales the bounding circle allowing object to overlap slightly.
+    const nodes: Node[] = [];
+    const runs = 0;
+    let numOfNodes = Math.floor(this.rand() * 4) + 8; //designates number of terrain pieces with a max of 12 and min of 8.
+    let numPiecesAvailable = 0;
+    if (resources != null) {
+      for (const n of resources) {
+        numPiecesAvailable += n;
+      }
+      if (numOfNodes > numPiecesAvailable) {
+        numOfNodes = numPiecesAvailable;
+      }
+    }
+    while (nodes.length < numOfNodes && runs < this.maxRuns) {
+      const item: TerrainPiece = this.selectTP(numOfItems, weighted, resources);
+      const tempX = Math.floor(this.rand() * (mapWidth - edgeBoundary)) + edgeBoundary;
+      const tempY = Math.floor(this.rand() * (mapHeight - edgeBoundary)) + edgeBoundary;
+      if (!this.checkForOverlap(nodes, item, tempX, tempY)) {
+        nodes.push(new Node(tempX, tempY, Math.floor(this.rand() * 2 * Math.PI), (item.radius * boundScaling), item));
+        if (resources != null) {
+          resources[item.id]--;
+        }
+      }
+    }
+    return nodes;
+  }
+
+  /**
+   * Selects a random terrain piece
+   *
+   * @param numOfItems - the number of items in TerrainPieces
+   * @param weighted - toggle whether the generation is weighted
+   * @param resources - an array of numbers representing the available resources where index equals id
+   * @returns a random TerrainPiece
+   */
+  selectTP(numOfItems: number, weighted: boolean, resources: number[]): TerrainPiece {
+    let item: TerrainPiece = null;
+    while (item == null) {
+      item = this.terrainPieces[Math.floor(this.rand() * (numOfItems - 1))];
+      if ((resources != null) && (resources[item.id] < 1)) {
+        item = null;
+      }
+      if (weighted && item.weight < this.rand()) {
+        item = null;
+      }
+    }
+    return item;
+  }
+
+  /**
+   *
+   * @param nodes - an array of nodes to compare against
+   * @param item - potential terrain piece to check for overlap
+   * @param x - the x coordinate of the potential location
+   * @param y - the y coordinate of the potential location
+   * @returns - boolean to indicate whether there is any overlap
+   */
+  checkForOverlap(nodes: Node[], item: TerrainPiece, x: number, y: number): boolean {
+    let overlap = false;
+    for (let i = 0; i < nodes.length; i++) { //checks the temp bounding circle against existing node bounding circles.
+      const circle = nodes[i];
+      if (dist(circle.x, circle.y, x, y) < circle.radius + item.radius) {
+        overlap = true;
+        i = nodes.length;
+      }
+    }
+    return overlap;
+  }
+
+  /**
+   * this function takes a valid encoding and prints it to the canvas.
+   *
+   * @param encoding - this array of nodes represents the map
+   * @param h - indicates the height of the map to be printed
+   * @param w - indicated the width of the map to be printed
+   * @param debug - indicates whether or not to print debug info (bounding circles and spawn pts)
+   */
+  printMap(encoding: Node[], h: number, w: number, debug: boolean) {
+    const gridSpacing = 100; //could be a param later
+    const canvas = document.getElementById('mapViewer') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.canvas.width = w;
+    ctx.canvas.height = h;
+    ctx.fillStyle = 'rgb(112,179,68)';
+    ctx.strokeStyle = 'black';
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    //code to draw grid
+    for (let i = gridSpacing; i < w; i += gridSpacing) {
+      ctx.beginPath();
+      ctx.moveTo(i, 0);
+      ctx.lineTo(i, h);
+      ctx.stroke();
+    }
+    for (let i = gridSpacing; i < h; i += gridSpacing) {
+      ctx.beginPath();
+      ctx.moveTo(0, i);
+      ctx.lineTo(w, i);
+      ctx.stroke();
+    }
+    //code to draw items
+    ctx.fillStyle = 'red';
+    for (const p of encoding) {
+      const img = new Image(0, 0);
+      img.src = 'assets/img/svg_map_pieces/' + p.item.svg + '.svg';
+      //TODO: add code to rotate images
+      const scaleFactor = p.item.radius * 2;
+      img.onload = () => { ctx.drawImage(img, p.x - p.item.radius, p.y - p.item.radius, scaleFactor, scaleFactor); };
+      if (debug) {
+        ctx.fillRect(p.x - 3, p.y - 3, 6, 6);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI);
+        ctx.stroke();
+      }
+    }
+  }
 }
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+const dist = (x1: number, y1: number, x2: number, y2: number): number => {
+  const a = x1 - x2;
+  const b = y1 - y2;
+  return Math.sqrt(a * a + b * b);
+};
+
+//represents a terrain piece and its circle boundary
+class Node {
+  public x: number;
+  public y: number;
+  public angle: number; // angle of rotation
+  public radius: number; //might be able to remove this later as item.radius is a scaled version of this.
+  public item: TerrainPiece;
+
+  public constructor(x, y, angle, radius, item) {
+    this.x = x;
+    this.y = y;
+    this.angle = angle;
+    this.radius = radius;
+    this.item = item;
+  }
+}
+
+//represents a single pre-defined piece of terrain.
+class TerrainPiece {
+  public id: number; //index in the terrainPieces array
+  public radius: number; //radius of the bounding circle
+  public weight: number; // beween 0 and 1
+  public svg: string; //name of the svg image.
+
+  public constructor(id: number, r: number, w: number, img: string) {
+    this.id = id;
+    this.radius = r;
+    this.weight = w;
+    this.svg = img;
+  }
+}
+
+// may be used for groups of terrain pieces dow the line.
+class Group {
+  public weight: number;
+  public radius: number;
+  public items: number[]; //array of terrain piece ids.
+
+  public constructor(w: number, r: number, i: any[]) {
+    this.weight = w;
+    this.radius = r;
+    this.items = i;
+  }
+}
