@@ -21,6 +21,8 @@ export class ShowMapComponent implements OnInit {
   isLongLoading = false;
   qrCodeString = '';
   private baseURL = environment.appURL;
+  private changedMapID = false;
+  private changeScenarioOnly = false;
   private isLoading: boolean;
   private tmpDwarfText: string;
   private tmpSelectedScenario: string;
@@ -63,7 +65,9 @@ export class ShowMapComponent implements OnInit {
   ngOnInit() {
     // update the displayed information whenever the queries are updated
     this.route.queryParams.subscribe(() => {
-      this.startSpinner();
+      if(this.changedMapID) {
+        this.startSpinner();
+      }
       // if setting the scenario fails, pick a new scenario
       if (!this.setScenarioFromQuery()) {
         this.switchScenario(true);
@@ -111,9 +115,16 @@ export class ShowMapComponent implements OnInit {
    * @returns New scenario ID.
    */
   switchScenario(navigate: boolean): number {
-    const scenarioID = Math.floor(Math.random() * this.scenarios.length);
+    this.changeScenarioOnly = false;
+    const oldScenarioID = parseInt(this.route.snapshot.queryParamMap.get('s'),10);
+    let scenarioID = Math.floor(Math.random() * this.scenarios.length);
+    while(scenarioID === oldScenarioID) {
+      scenarioID = Math.floor(Math.random() * this.scenarios.length);
+    }
     if (navigate) {
       // update the URL with the chosen information
+      this.changeScenarioOnly = true;
+      this.changedMapID = false;
       this.router.navigate(['/app'], { queryParams: { s: scenarioID }, queryParamsHandling: 'merge' });
     }
     return scenarioID;
@@ -128,7 +139,13 @@ export class ShowMapComponent implements OnInit {
    */
   switchMap(navigate: boolean): string {
     const mapCount = 20;
-    const mapID = 'ed' + (Math.round(Math.random() * (mapCount - 1)) + 1);
+    this.changeScenarioOnly = false;
+    this.changedMapID = true;
+    const oldMapID = this.route.snapshot.queryParamMap.get('map');
+    let mapID = 'ed' + (Math.round(Math.random() * (mapCount - 1)) + 1);
+    if(mapID === oldMapID) {
+      mapID = 'ed' + (Math.round(Math.random() * (mapCount - 1)) + 1);
+    }
     if (navigate) {
       // update the URL with the chosen information
       this.router.navigate(['/app'], { queryParams: { map: mapID }, queryParamsHandling: 'merge' });
@@ -149,6 +166,7 @@ export class ShowMapComponent implements OnInit {
     this.tmpSelectedScenario = this.scenarios[scenarioID];
     // check that we have a valid scenario
     if (!this.tmpSelectedScenario) { return false; }
+    if(this.changeScenarioOnly) { this.onLoad(); }
     return true;
   }
 

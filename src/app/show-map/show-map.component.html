@@ -3,7 +3,23 @@
 </head>
 
 <div class="content">
-  <h1>{{selectedScenario}}</h1>
+  <div class="container">
+    <div class="row justify-content-center align-items-center">
+      <div class="col-md-auto">
+        <h3>Scenario:</h3>
+        <h1>{{selectedScenario}}</h1>
+      </div>
+      <div class="col-md-push-auto pb-3">
+        <button id="scenarioButton" type="button" class="btn btn-success"
+          (click)="switchScenario(true)"
+          ngbTooltip="New Scenario" [openDelay]="500">
+          <div class="d-flex align-items-center">
+            <i class="icon-shuffle my-1 text-body"></i>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
   <div class="content m-0 p-0" id="map-holder">
     <img (load)="onLoad()" src={{mapDisplay}}>
     <canvas *appFeatureFlag="'mapCanvas'" id="mapViewer" width="600" height="400" style="border: 1px solid black;"></canvas>
