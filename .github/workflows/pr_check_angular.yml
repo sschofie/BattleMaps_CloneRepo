@@ -11,6 +11,12 @@ jobs:
         uses: actions/checkout@v2
       - name: install packages
         run: sudo npm install
+      - name: get installed Chrome version
+        run: |
+          echo "CHROME_VERSION=$(google-chrome --product-version)" >> $GITHUB_ENV
+      - name: install matching Chromedriver
+        run: |
+          npx webdriver-manager update --versions.chrome $CHROME_VERSION
       - name: Check angular version (npx)
         run: npx ng v
       - name: Build angular app
@@ -23,15 +29,13 @@ jobs:
         run: |
           echo "\n*** Running Tests ***\n"
           npm run test:ci
-      - name: Run end-to-end tests
-        id: e2e
-        run: |
-          echo "\n *** Running E2E Tests ***\n"
-          npx webdriver-manager update --versions.chrome 88.0.4324.182
-          npm run e2e
       - name: Lint angular app
         id: lint
         run: |
           echo "\n*** Linting Project ***\n"
           npm run lint
-
+      - name: Run end-to-end tests
+        id: e2e
+        run: |
+          echo "\n *** Running E2E Tests ***\n"
+          npm run e2e
