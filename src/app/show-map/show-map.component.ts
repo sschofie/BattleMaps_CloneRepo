@@ -2,8 +2,6 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from 'src/environments/environment';
-import { FeatureFlagsService } from '../feature-flags.service';
-import { randomBytes } from 'crypto';
 
 @Component({
   selector: 'app-show-map',
@@ -15,18 +13,17 @@ import { randomBytes } from 'crypto';
 })
 
 export class ShowMapComponent implements OnInit {
+  static readonly maxInt32Unsigned = 4294967296;
   mapDisplay = '';
   dwarfText = '';
   selectedScenario = '';
   isLongLoading = false;
   qrCodeString = '';
   private baseURL = environment.appURL;
-  private changedMapID = false;
   private changeScenarioOnly = false;
   private isLoading: boolean;
   private tmpDwarfText: string;
   private tmpSelectedScenario: string;
-  private seed; // generates a random 32 bit unsigned int
   private maxRuns = 50; //universal limit to number of runs each generation is allowed.
   private seedrandom = require('seedrandom');
   private rand;
@@ -60,25 +57,23 @@ export class ShowMapComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private modalService: NgbModal,
-    private _featureFlags: FeatureFlagsService
+    private modalService: NgbModal
   ) { }
 
   ngOnInit() {
     this.startSpinner();
     // update the displayed information whenever the queries are updated
     this.route.queryParams.subscribe(() => {
-      if(this.changedMapID) {
-        this.startSpinner();
-      }
       // if setting the scenario fails, pick a new scenario
       if (!this.setScenarioFromQuery()) {
         this.switchScenario(true);
       }
+      // check whether we're only changing the scenario, then:
       // if setting the map fails, pick a new map
-      if (!this.setMapFromQuery()) {
+      if (!this.changeScenarioOnly && !this.setMapFromQuery()) {
         this.switchMap(true);
       }
+      this.changeScenarioOnly = false;
     });
   }
 
@@ -96,6 +91,14 @@ export class ShowMapComponent implements OnInit {
   }
 
   /**
+   * Called when "Switch Scenario" button is clicked. Ensures that only the scenario is changed.
+   */
+  onSwitchScenarioButtonClick() {
+    this.changeScenarioOnly = true;
+    this.switchScenario(true);
+  }
+
+  /**
    * Pick a random scenario and map and update the URL accordingly.
    */
   switchMapAndScenario() {
@@ -105,9 +108,6 @@ export class ShowMapComponent implements OnInit {
         map: this.switchMap(false)
       }
     });
-    if (environment.featureFlags.mapCanvas) {
-      this.genMap();
-    }
   }
 
   /**
@@ -118,16 +118,13 @@ export class ShowMapComponent implements OnInit {
    * @returns New scenario ID.
    */
   switchScenario(navigate: boolean): number {
-    this.changeScenarioOnly = false;
-    const oldScenarioID = parseInt(this.route.snapshot.queryParamMap.get('s'),10);
-    let scenarioID = Math.floor(Math.random() * this.scenarios.length);
-    while(scenarioID === oldScenarioID) {
+    const oldScenarioID = parseInt(this.route.snapshot.queryParamMap.get('s'), 10);
+    let scenarioID = oldScenarioID;
+    while (scenarioID === oldScenarioID || isNaN(scenarioID)) { // make sure we're actually picking a new scenario
       scenarioID = Math.floor(Math.random() * this.scenarios.length);
     }
     if (navigate) {
       // update the URL with the chosen information
-      this.changeScenarioOnly = true;
-      this.changedMapID = false;
       this.router.navigate(['/app'], { queryParams: { s: scenarioID }, queryParamsHandling: 'merge' });
     }
     return scenarioID;
@@ -141,13 +138,21 @@ export class ShowMapComponent implements OnInit {
    * @returns New map ID.
    */
   switchMap(navigate: boolean): string {
-    const mapCount = 20;
-    this.changeScenarioOnly = false;
-    this.changedMapID = true;
+    if (this.changeScenarioOnly) { console.warn('WARN: How did we get here?'); return null; } // just in case
+    this.startSpinner();
+    let mapID: string;
     const oldMapID = this.route.snapshot.queryParamMap.get('map');
-    let mapID = 'ed' + (Math.round(Math.random() * (mapCount - 1)) + 1);
-    if(mapID === oldMapID) {
-      mapID = 'ed' + (Math.round(Math.random() * (mapCount - 1)) + 1);
+    mapID = oldMapID;
+    while (mapID === oldMapID) { // make sure we're actually picking a new map
+      if (environment.featureFlags.mapCanvas) {
+        // generate a random seed
+        mapID = Math.floor(Math.random() * ShowMapComponent.maxInt32Unsigned).toString();
+      }
+      else {
+        // pick a random Epic Dwarf map
+        const mapCount = 20;
+        mapID = 'ed' + (Math.round(Math.random() * (mapCount - 1)) + 1);
+      }
     }
     if (navigate) {
       // update the URL with the chosen information
@@ -169,7 +174,7 @@ export class ShowMapComponent implements OnInit {
     this.tmpSelectedScenario = this.scenarios[scenarioID];
     // check that we have a valid scenario
     if (!this.tmpSelectedScenario) { return false; }
-    if(this.changeScenarioOnly) { this.onLoad(); }
+    if (this.changeScenarioOnly) { this.onLoad(); }
     return true;
   }
 
@@ -191,8 +196,16 @@ export class ShowMapComponent implements OnInit {
       this.tmpDwarfText = 'Lars\' Epic Dwarf map #' + mapNum;
     }
     else {
-      // for now, any map ID that doesn't start with 'ed' (e.g. any map that isn't epic dwarf) is invalid
-      return false;
+      if (!environment.featureFlags.mapCanvas) { return false; }
+      const mapSeed = Number(mapID);
+      // check that we have a valid seed
+      if (isNaN(mapSeed) || mapSeed < 0 || mapSeed > ShowMapComponent.maxInt32Unsigned) {
+        console.warn('WARN: Map seed is invalid.');
+        return false;
+      }
+      this.mapDisplay = ''; // clearing this makes the svg display "go away"
+      this.printMap(this.simpleGenerate(400, 600, 50, null, false, mapSeed), 400, 600, false);
+      this.tmpDwarfText = 'Dynamically generated map';
     }
     return true;
   }
@@ -207,15 +220,7 @@ export class ShowMapComponent implements OnInit {
     this.modalService.open(modal, { ariaLabelledBy: 'shareModalTitle' });
   }
 
-  /**
-   * generates and prints a map with simpleGenerate, then prints the seed for debug pruposes.
-   */
-  genMap() {
-    this.printMap(this.simpleGenerate(400, 600, 50, null, false, false), 400, 600, true);
-    this.dwarfText = 'Map Seed: ' + this.seed;
-  }
-
-  //Generaton code starts here.
+  // Generaton code starts here. =======================================================================================
 
   /**
    * generate map encoding (Node[])
@@ -225,14 +230,11 @@ export class ShowMapComponent implements OnInit {
    * @param edgeBoundary - distance from the map edge in which objects cannot spawn
    * @param resources - an array of numbers representing the available resources where index equals id
    * @param weighted - toggle weighted generation
-   * @param seeded - toggle whether the function generates a new seed
+   * @param seed - a 32 bit unsigned int to generate a specific map
    */
   simpleGenerate(mapHeight: number, mapWidth: number, edgeBoundary: number,
-    resources: number[], weighted: boolean, seeded: boolean): Node[] {
-    if (!seeded) {
-      this.seed = Math.floor(Math.random() * 4294967296);
-    }
-    this.rand = this.seedrandom(this.seed);
+    resources: number[], weighted: boolean, seed: number): Node[] {
+    this.rand = this.seedrandom(seed);
     const numOfItems = this.terrainPieces.length;
     const boundScaling = 0.85; //this scales the bounding circle allowing object to overlap slightly.
     const nodes: Node[] = [];
@@ -311,9 +313,16 @@ export class ShowMapComponent implements OnInit {
    * @param w - indicated the width of the map to be printed
    * @param debug - indicates whether or not to print debug info (bounding circles and spawn pts)
    */
-  printMap(encoding: Node[], h: number, w: number, debug: boolean) {
+  async printMap(encoding: Node[], h: number, w: number, debug: boolean) {
     const gridSpacing = 100; //could be a param later
-    const canvas = document.getElementById('mapViewer') as HTMLCanvasElement;
+    let canvas = document.getElementById('mapViewer') as HTMLCanvasElement;;
+    while (!canvas) {
+      // sometimes the canvas takes a bit to load in
+      console.debug('[printMap] Looking for canvas...');
+      canvas = document.getElementById('mapViewer') as HTMLCanvasElement;
+      await sleep(150);
+    }
+    console.debug('[printMap] Found canvas!');
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.canvas.width = w;

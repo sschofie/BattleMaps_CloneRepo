@@ -104,4 +104,15 @@ describe('ShowMapComponent', () => {
       expect(component.qrCodeString).toEqual('http://localhost:4200/app?s=0&map=ed1');
     });
   }));
+
+  it('should switch only scenario when "New Scenario" button is clicked', waitForAsync(() => {
+    const switchScenario = spyOn(component, 'switchScenario');
+    const switchMap = spyOn(component, 'switchMap');
+    const button = fixture.debugElement.nativeElement.querySelector('#scenarioButton');
+    button.click();
+    fixture.whenStable().then(() => {
+      expect(switchScenario).toHaveBeenCalledWith(true);
+      expect(switchMap).not.toHaveBeenCalled();
+    });
+  }));
 });
