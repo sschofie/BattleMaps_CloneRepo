@@ -30,6 +30,8 @@ export class ShowMapComponent implements OnInit {
   private maxRuns = 50; //universal limit to number of runs each generation is allowed.
   private seedrandom = require('seedrandom');
   private rand;
+  private itemsToLoad: number;
+  private itemsLoaded: number;
   private scenarios = [
     `Control`,
     `Dominate`,
@@ -63,6 +65,7 @@ export class ShowMapComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.startSpinner();
     // update the displayed information whenever the queries are updated
     this.route.queryParams.subscribe(() => {
       if(this.changedMapID) {
@@ -332,13 +335,22 @@ export class ShowMapComponent implements OnInit {
       ctx.stroke();
     }
     //code to draw items
+    this.itemsToLoad = encoding.length; //these are used to make sure onLoad is called when all items have been rendered
+    this.itemsLoaded = 0;
     ctx.fillStyle = 'red';
     for (const p of encoding) {
       const img = new Image(0, 0);
       img.src = 'assets/img/svg_map_pieces/' + p.item.svg + '.svg';
       //TODO: add code to rotate images
       const scaleFactor = p.item.radius * 2;
-      img.onload = () => { ctx.drawImage(img, p.x - p.item.radius, p.y - p.item.radius, scaleFactor, scaleFactor); };
+      img.onload = () => {
+        ctx.drawImage(img, p.x - p.item.radius, p.y - p.item.radius, scaleFactor, scaleFactor);
+        this.itemsLoaded++;
+        //if we've loaded all the items, then call onLoad
+        if (this.itemsLoaded >= this.itemsToLoad) {
+          this.onLoad();
+        }
+      };
       if (debug) {
         ctx.fillRect(p.x - 3, p.y - 3, 6, 6);
         ctx.beginPath();
