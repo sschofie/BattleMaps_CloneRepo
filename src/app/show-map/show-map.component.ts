@@ -2,6 +2,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from 'src/environments/environment';
+import { ClipboardService } from 'ngx-clipboard';
 
 @Component({
   selector: 'app-show-map',
@@ -57,7 +58,8 @@ export class ShowMapComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private clipboardService: ClipboardService
   ) { }
 
   ngOnInit() {
@@ -218,6 +220,22 @@ export class ShowMapComponent implements OnInit {
   openShareModal(modal: TemplateRef<NgbModal>) {
     this.qrCodeString = this.baseURL + this.router.url;
     this.modalService.open(modal, { ariaLabelledBy: 'shareModalTitle' });
+  }
+
+
+
+  /**
+   * Shares link to current map via mobile OS share menu if available, otherwise copies URL to clipboard.
+   */
+  shareURL() {
+    const linkURL = this.baseURL + this.router.url;
+    if (navigator.share) {
+      navigator.share({
+        url: linkURL
+      });
+    } else {
+      this.clipboardService.copy(linkURL);
+    }
   }
 
   // Generaton code starts here. =======================================================================================

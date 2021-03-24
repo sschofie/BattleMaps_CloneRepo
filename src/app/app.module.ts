@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { QRCodeModule } from 'angularx-qrcode';
+import { ClipboardModule } from 'ngx-clipboard';
 
 import { AppComponent } from './app.component';
 import { ShowMapComponent } from './show-map/show-map.component';
@@ -29,7 +30,8 @@ const routes: Routes = [
     BrowserModule,
     RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
     NgbModule,
-    QRCodeModule
+    QRCodeModule,
+    ClipboardModule
   ],
   providers: [FeatureFlagsService],
   bootstrap: [AppComponent]

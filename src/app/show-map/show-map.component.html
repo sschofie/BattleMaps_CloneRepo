@@ -64,7 +64,7 @@
     <div class="content" id="share-modal-content">
       <qrcode [qrdata]="qrCodeString" [width]="256" [errorCorrectionLevel]="'M'" [elementType]="'svg'"></qrcode>
       <p>Have your opponent scan this QR code or send them the link below.</p>
-      <a href="{{qrCodeString}}">Link to This Map</a>
+      <button type="button" class="btn btn-success" (click)="shareURL()">Share Link</button>
     </div>
   </div>
 </ng-template>

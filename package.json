@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:lan": "ng serve --host 0.0.0.0 --port 4200",
     "build": "ng build && cp dist/battle-maps/index.html dist/battle-maps/200.html",
     "build:prod": "ng build --prod && cp dist/battle-maps/index.html dist/battle-maps/200.html",
     "test": "ng test",
@@ -29,6 +30,7 @@
     "angularx-qrcode": "^11.0.0",
     "bootstrap": "^4.6.0",
     "jquery": "^3.6.0",
+    "ngx-clipboard": "^14.0.1",
     "popper.js": "^1.16.1",
     "rxjs": "^6.6.6",
     "seedrandom": "^3.0.5",
