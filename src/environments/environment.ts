@@ -10,7 +10,8 @@ export const environment = {
   copyrightYear: new Date().getFullYear(),
   featureFlags: {
     sharing: true,
-    mapCanvas: true
+    mapCanvas: true,
+    mapImage: false
   }
 };
 

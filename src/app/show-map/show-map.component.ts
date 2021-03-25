@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, ElementRef, OnInit, TemplateRef, ViewChild, ɵNOT_FOUND_CHECK_ONLY_ELEMENT_INJECTOR } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from 'src/environments/environment';
@@ -15,6 +15,7 @@ import { ClipboardService } from 'ngx-clipboard';
 
 export class ShowMapComponent implements OnInit {
   static readonly maxInt32Unsigned = 4294967296;
+  @ViewChild('showWidth') showWidth: ElementRef;
   mapDisplay = '';
   dwarfText = '';
   selectedScenario = '';
@@ -52,7 +53,11 @@ export class ShowMapComponent implements OnInit {
     new TerrainPiece(5, 40, 1, 'boulder2'),
     new TerrainPiece(6, 40, 1, 'boulder3'),
     new TerrainPiece(7, 40, 1, 'foliage'),
-    new TerrainPiece(8, 40, 1, 'crop_field')
+    new TerrainPiece(8, 40, 1, 'crop_field'),
+    new TerrainPiece(9, 40, 1, 'hedge_wall'),
+    new TerrainPiece(10, 40, 1, 'hedge_wall2'),
+    new TerrainPiece(11, 40, 1, 'wood_building'),
+    new TerrainPiece(12, 40, 1, 'wood_wall_1')
   ];
 
   constructor(
@@ -272,7 +277,7 @@ export class ShowMapComponent implements OnInit {
       const tempX = Math.floor(this.rand() * (mapWidth - edgeBoundary)) + edgeBoundary;
       const tempY = Math.floor(this.rand() * (mapHeight - edgeBoundary)) + edgeBoundary;
       if (!this.checkForOverlap(nodes, item, tempX, tempY)) {
-        nodes.push(new Node(tempX, tempY, Math.floor(this.rand() * 2 * Math.PI), (item.radius * boundScaling), item));
+        nodes.push(new Node(tempX, tempY, Math.floor(this.rand() * 2 * Math.PI), (item.radius * boundScaling), item, -1));
         if (resources != null) {
           resources[item.id]--;
         }
@@ -343,11 +348,13 @@ export class ShowMapComponent implements OnInit {
     console.debug('[printMap] Found canvas!');
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.canvas.width = w;
-    ctx.canvas.height = h;
+    const width = this.showWidth.nativeElement.offsetWidth;
+    ctx.canvas.width = width;
+    ctx.canvas.height = width*.66;
+    ctx.scale(width/w,width*.66/h);
     ctx.fillStyle = 'rgb(112,179,68)';
     ctx.strokeStyle = 'black';
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.fillRect(0, 0, ctx.canvas.width*w, ctx.canvas.height*h);
     //code to draw grid
     for (let i = gridSpacing; i < w; i += gridSpacing) {
       ctx.beginPath();
@@ -371,7 +378,11 @@ export class ShowMapComponent implements OnInit {
       //TODO: add code to rotate images
       const scaleFactor = p.item.radius * 2;
       img.onload = () => {
-        ctx.drawImage(img, p.x - p.item.radius, p.y - p.item.radius, scaleFactor, scaleFactor);
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+        ctx.drawImage(img, -p.item.radius, -p.item.radius, scaleFactor, scaleFactor);
+        ctx.restore();
         this.itemsLoaded++;
         //if we've loaded all the items, then call onLoad
         if (this.itemsLoaded >= this.itemsToLoad) {
@@ -402,14 +413,34 @@ class Node {
   public y: number;
   public angle: number; // angle of rotation
   public radius: number; //might be able to remove this later as item.radius is a scaled version of this.
+  public height: number; // height of terrain piece
   public item: TerrainPiece;
 
-  public constructor(x, y, angle, radius, item) {
+  public constructor(x, y, angle, radius, item, height) {
     this.x = x;
     this.y = y;
     this.angle = angle;
     this.radius = radius;
     this.item = item;
+    this.height = this.setHeight(height);
+  }
+  setHeight(height: number) {
+    if(height !== -1) {
+      return height;
+    } else {
+      let num = 0;
+      if(this.item.svg === 'pond') {
+        num = 0;
+      } else if (this.item.svg === 'stone_wall' || this.item.svg === 'hedge_wall' ||
+      this.item.svg === 'hedge_wall2' || this.item.svg === 'crop_field' || this.item.svg === 'wood_wall') {
+        num = 1;
+      } else if(this.item.svg ==='foliage') {
+        num = 2;
+      } else {
+        num = Math.floor(Math.random()*3)+2;
+      }
+      return num;
+    }
   }
 }
 
@@ -419,6 +450,7 @@ class TerrainPiece {
   public radius: number; //radius of the bounding circle
   public weight: number; // beween 0 and 1
   public svg: string; //name of the svg image.
+  public height: number;
 
   public constructor(id: number, r: number, w: number, img: string) {
     this.id = id;
