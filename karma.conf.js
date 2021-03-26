@@ -11,23 +11,27 @@ module.exports = function (config) {
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
-      require('karma-coverage-istanbul-reporter'),
+      require('karma-coverage'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     client: {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
-    coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, './coverage/battle-maps'),
-      reports: ['html', 'lcovonly', 'text-summary'],
-      fixWebpackSourcePaths: true
+    coverageReporter: {
+      type: 'html',
+      dir: require('path').join(__dirname, './coverage/battle-maps')
     },
     reporters: ['progress', 'kjhtml'],
+    jasmineHtmlReporter: {
+      suppressAll: true, // Suppress all terminal messages
+      suppressFailed: true // Suppress fail terminal messages
+    },
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['ChromeHeadless'],
+    browserConsoleLogOptions: { level: 'warn' }, // Suppress all console 'log' and 'debug' messages
     singleRun: false,
     restartOnFileChange: true
   });

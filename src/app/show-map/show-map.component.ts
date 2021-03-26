@@ -15,6 +15,19 @@ import { ClipboardService } from 'ngx-clipboard';
 
 export class ShowMapComponent implements OnInit {
   static readonly maxInt32Unsigned = 4294967296;
+  static readonly scenarios = [
+    `Control`,
+    `Dominate`,
+    `Fool's Gold`,
+    `Invade`,
+    `Kill`,
+    `Loot`,
+    `Pillage`,
+    `Plunder`,
+    `Push`,
+    `Salt the Earth`,
+    `Smoke & Mirrors`
+  ];
   @ViewChild('showWidth') showWidth: ElementRef;
   mapDisplay = '';
   dwarfText = '';
@@ -31,19 +44,6 @@ export class ShowMapComponent implements OnInit {
   private rand;
   private itemsToLoad: number;
   private itemsLoaded: number;
-  private scenarios = [
-    `Control`,
-    `Dominate`,
-    `Fool's Gold`,
-    `Invade`,
-    `Kill`,
-    `Loot`,
-    `Pillage`,
-    `Plunder`,
-    `Push`,
-    `Salt the Earth`,
-    `Smoke & Mirrors`
-  ];
   private terrainPieces = [ //reference array for pre-defined items. Others culd be read in from Json file.
     new TerrainPiece(0, 40, 1, 'stone_wall'),
     new TerrainPiece(1, 40, 1, 'pond'),
@@ -128,7 +128,7 @@ export class ShowMapComponent implements OnInit {
     const oldScenarioID = parseInt(this.route.snapshot.queryParamMap.get('s'), 10);
     let scenarioID = oldScenarioID;
     while (scenarioID === oldScenarioID || isNaN(scenarioID)) { // make sure we're actually picking a new scenario
-      scenarioID = Math.floor(Math.random() * this.scenarios.length);
+      scenarioID = Math.floor(Math.random() * ShowMapComponent.scenarios.length);
     }
     if (navigate) {
       // update the URL with the chosen information
@@ -178,7 +178,7 @@ export class ShowMapComponent implements OnInit {
     const scenarioID = this.route.snapshot.queryParamMap.get('s');
     // check that the 'scenario' parameter exists
     if (!scenarioID) { return false; }
-    this.tmpSelectedScenario = this.scenarios[scenarioID];
+    this.tmpSelectedScenario = ShowMapComponent.scenarios[scenarioID];
     // check that we have a valid scenario
     if (!this.tmpSelectedScenario) { return false; }
     if (this.changeScenarioOnly) { this.onLoad(); }
