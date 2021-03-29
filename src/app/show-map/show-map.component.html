@@ -21,8 +21,7 @@
     </div>
   </div>
   <div class="content m-0 p-0" id="map-holder" #showWidth>
-    <img *appFeatureFlag="'mapImage'" (load)="onLoad()" src={{mapDisplay}}>
-    <canvas *appFeatureFlag="'mapCanvas'" id="mapViewer" width="500" style="border: 1px solid black;"></canvas>
+    <canvas id="mapViewer" width="500" style="border: 1px solid rgb(95, 115, 46);"></canvas>
     <div *ngIf="isLongLoading" id="overlay" class="d-flex justify-content-center align-items-center">
       <div class="spinner-border text-success" role="status">
         <span class="sr-only">Loading...</span>

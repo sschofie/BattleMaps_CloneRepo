@@ -1,0 +1,1242 @@
+{
+  "ed1": [
+    {
+      "item": "crop_field",
+      "x": 380,
+      "y": 140,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 100,
+      "y": 300,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 80,
+      "y": 170,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 530,
+      "y": 230,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 240,
+      "y": 260,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 450,
+      "y": 140,
+      "angle": 35
+    },
+    {
+      "item": "pond",
+      "x": 430,
+      "y": 310,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 125,
+      "y": 100,
+      "angle": -40
+    },
+    {
+      "item": "stone_wall",
+      "x": 310,
+      "y": 260,
+      "angle": 0
+    },
+    {
+      "item": "tree",
+      "x": 240,
+      "y": 130,
+      "angle": 0
+    }
+  ],
+  "ed2": [
+    {
+      "item": "crop_field",
+      "x": 60,
+      "y": 280,
+      "angle": 30
+    },
+    {
+      "item": "boulder",
+      "x": 425,
+      "y": 325,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 250,
+      "y": 200,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 350,
+      "y": 200,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 175,
+      "y": 165,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 430,
+      "y": 85,
+      "angle": 30
+    },
+    {
+      "item": "pond",
+      "x": 500,
+      "y": 200,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 75,
+      "y": 115,
+      "angle": -40
+    },
+    {
+      "item": "stone_wall",
+      "x": 480,
+      "y": 114,
+      "angle": 30
+    },
+    {
+      "item": "tree",
+      "x": 175,
+      "y": 235,
+      "angle": 0
+    }
+  ],
+  "ed3": [
+    {
+      "item": "crop_field",
+      "x": 235,
+      "y": 335,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 400,
+      "y": 200,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 545,
+      "y": 130,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 100,
+      "y": 260,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 205,
+      "y": 180,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 225,
+      "y": 75,
+      "angle": 0
+    },
+    {
+      "item": "pond",
+      "x": 370,
+      "y": 90,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 100,
+      "y": 100,
+      "angle": -40
+    },
+    {
+      "item": "stone_wall",
+      "x": 350,
+      "y": 250,
+      "angle": -40
+    },
+    {
+      "item": "tree",
+      "x": 500,
+      "y": 260,
+      "angle": 0
+    }
+  ],
+  "ed4": [
+    {
+      "item": "crop_field",
+      "x": 140,
+      "y": 290,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 495,
+      "y": 230,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 530,
+      "y": 130,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 290,
+      "y": 245,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 440,
+      "y": 285,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 65,
+      "y": 125,
+      "angle": 0
+    },
+    {
+      "item": "pond",
+      "x": 395,
+      "y": 130,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 140,
+      "y": 105,
+      "angle": 45
+    },
+    {
+      "item": "stone_wall",
+      "x": 140,
+      "y": 165,
+      "angle": -45
+    },
+    {
+      "item": "tree",
+      "x": 275,
+      "y": 85,
+      "angle": 0
+    }
+  ],
+  "ed5": [
+    {
+      "item": "crop_field",
+      "x": 140,
+      "y": 290,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 475,
+      "y": 290,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 530,
+      "y": 150,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 275,
+      "y": 230,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 340,
+      "y": 105,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 465,
+      "y": 235,
+      "angle": 0
+    },
+    {
+      "item": "pond",
+      "x": 460,
+      "y": 75,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 170,
+      "y": 95,
+      "angle": -40
+    },
+    {
+      "item": "stone_wall",
+      "x": 70,
+      "y": 285,
+      "angle": 0
+    },
+    {
+      "item": "tree",
+      "x": 110,
+      "y": 140,
+      "angle": 0
+    }
+  ],
+  "ed6": [
+    {
+      "item": "crop_field",
+      "x": 260,
+      "y": 320,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 555,
+      "y": 145,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 400,
+      "y": 130,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 100,
+      "y": 250,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 235,
+      "y": 200,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 485,
+      "y": 280,
+      "angle": 45
+    },
+    {
+      "item": "pond",
+      "x": 455,
+      "y": 70,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 400,
+      "y": 235,
+      "angle": -45
+    },
+    {
+      "item": "stone_wall",
+      "x": 450,
+      "y": 235,
+      "angle": 45
+    },
+    {
+      "item": "tree",
+      "x": 140,
+      "y": 100,
+      "angle": 0
+    }
+  ],
+  "ed7": [
+    {
+      "item": "crop_field",
+      "x": 40,
+      "y": 300,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 565,
+      "y": 145,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 190,
+      "y": 265,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 300,
+      "y": 200,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 410,
+      "y": 290,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 75,
+      "y": 180,
+      "angle": 50
+    },
+    {
+      "item": "pond",
+      "x": 420,
+      "y": 95,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 120,
+      "y": 135,
+      "angle": -40
+    },
+    {
+      "item": "stone_wall",
+      "x": 450,
+      "y": 190,
+      "angle": 50
+    },
+    {
+      "item": "tree",
+      "x": 180,
+      "y": 90,
+      "angle": 0
+    }
+  ],
+  "ed8": [
+    {
+      "item": "crop_field",
+      "x": 295,
+      "y": 95,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 440,
+      "y": 90,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 195,
+      "y": 250,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 530,
+      "y": 200,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 465,
+      "y": 290,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 45,
+      "y": 200,
+      "angle": 20
+    },
+    {
+      "item": "pond",
+      "x": 300,
+      "y": 200,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 305,
+      "y": 295,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 455,
+      "y": 150,
+      "angle": 90
+    },
+    {
+      "item": "tree",
+      "x": 140,
+      "y": 105,
+      "angle": 0
+    }
+  ],
+  "ed9": [
+    {
+      "item": "crop_field",
+      "x": 295,
+      "y": 95,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 460,
+      "y": 300,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 145,
+      "y": 145,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 230,
+      "y": 260,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 400,
+      "y": 180,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 45,
+      "y": 100,
+      "angle": 15
+    },
+    {
+      "item": "pond",
+      "x": 525,
+      "y": 195,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 510,
+      "y": 90,
+      "angle": 35
+    },
+    {
+      "item": "stone_wall",
+      "x": 530,
+      "y": 300,
+      "angle": 0
+    },
+    {
+      "item": "tree",
+      "x": 95,
+      "y": 290,
+      "angle": 0
+    }
+  ],
+  "ed10": [
+    {
+      "item": "crop_field",
+      "x": 380,
+      "y": 95,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 200,
+      "y": 70,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 110,
+      "y": 145,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 460,
+      "y": 140,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 440,
+      "y": 260,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 275,
+      "y": 185,
+      "angle": 15
+    },
+    {
+      "item": "pond",
+      "x": 45,
+      "y": 290,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 150,
+      "y": 225,
+      "angle": 30
+    },
+    {
+      "item": "stone_wall",
+      "x": 525,
+      "y": 305,
+      "angle": 0
+    },
+    {
+      "item": "tree",
+      "x": 205,
+      "y": 260,
+      "angle": 0
+    }
+  ],
+  "ed11": [
+    {
+      "item": "crop_field",
+      "x": 465,
+      "y": 290,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 560,
+      "y": 100,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 305,
+      "y": 265,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 300,
+      "y": 130,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 500,
+      "y": 200,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 55,
+      "y": 130,
+      "angle": 15
+    },
+    {
+      "item": "pond",
+      "x": 45,
+      "y": 300,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 130,
+      "y": 95,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 450,
+      "y": 170,
+      "angle": 35
+    },
+    {
+      "item": "tree",
+      "x": 160,
+      "y": 200,
+      "angle": 0
+    }
+  ],
+  "ed12": [
+    {
+      "item": "crop_field",
+      "x": 530,
+      "y": 300,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 95,
+      "y": 285,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 360,
+      "y": 260,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 55,
+      "y": 180,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 395,
+      "y": 160,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 150,
+      "y": 105,
+      "angle": 10
+    },
+    {
+      "item": "pond",
+      "x": 500,
+      "y": 100,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 210,
+      "y": 115,
+      "angle": 5
+    },
+    {
+      "item": "stone_wall",
+      "x": 340,
+      "y": 130,
+      "angle": 35
+    },
+    {
+      "item": "tree",
+      "x": 210,
+      "y": 200,
+      "angle": 0
+    }
+  ],
+  "ed13": [
+    {
+      "item": "crop_field",
+      "x": 280,
+      "y": 150,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 95,
+      "y": 285,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 385,
+      "y": 250,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 70,
+      "y": 130,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 445,
+      "y": 130,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 170,
+      "y": 220,
+      "angle": 45
+    },
+    {
+      "item": "pond",
+      "x": 520,
+      "y": 300,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 185,
+      "y": 95,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 520,
+      "y": 240,
+      "angle": 90
+    },
+    {
+      "item": "tree",
+      "x": 210,
+      "y": 260,
+      "angle": 0
+    }
+  ],
+  "ed14": [
+    {
+      "item": "crop_field",
+      "x": 60,
+      "y": 225,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 345,
+      "y": 295,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 125,
+      "y": 135,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 205,
+      "y": 245,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 300,
+      "y": 160,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 440,
+      "y": 120,
+      "angle": 20
+    },
+    {
+      "item": "pond",
+      "x": 500,
+      "y": 115,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 420,
+      "y": 160,
+      "angle": -70
+    },
+    {
+      "item": "stone_wall",
+      "x": 415,
+      "y": 290,
+      "angle": 0
+    },
+    {
+      "item": "tree",
+      "x": 500,
+      "y": 260,
+      "angle": 0
+    }
+  ],
+  "ed15": [
+    {
+      "item": "crop_field",
+      "x": 60,
+      "y": 225,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 475,
+      "y": 220,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 505,
+      "y": 130,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 200,
+      "y": 260,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 320,
+      "y": 160,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 160,
+      "y": 175,
+      "angle": 20
+    },
+    {
+      "item": "pond",
+      "x": 85,
+      "y": 100,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 240,
+      "y": 100,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 60,
+      "y": 260,
+      "angle": 0
+    },
+    {
+      "item": "tree",
+      "x": 430,
+      "y": 280,
+      "angle": 0
+    }
+  ],
+  "ed16": [
+    {
+      "item": "crop_field",
+      "x": 335,
+      "y": 175,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 70,
+      "y": 235,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 220,
+      "y": 260,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 200,
+      "y": 130,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 515,
+      "y": 200,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 430,
+      "y": 120,
+      "angle": 30
+    },
+    {
+      "item": "pond",
+      "x": 80,
+      "y": 100,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 335,
+      "y": 130,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 290,
+      "y": 175,
+      "angle": 90
+    },
+    {
+      "item": "tree",
+      "x": 375,
+      "y": 280,
+      "angle": 0
+    }
+  ],
+  "ed17": [
+    {
+      "item": "crop_field",
+      "x": 205,
+      "y": 145,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 85,
+      "y": 95,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 115,
+      "y": 255,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 360,
+      "y": 165,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 490,
+      "y": 115,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 380,
+      "y": 265,
+      "angle": 30
+    },
+    {
+      "item": "pond",
+      "x": 435,
+      "y": 280,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 75,
+      "y": 160,
+      "angle": 90
+    },
+    {
+      "item": "stone_wall",
+      "x": 490,
+      "y": 160,
+      "angle": 0
+    },
+    {
+      "item": "tree",
+      "x": 200,
+      "y": 275,
+      "angle": 0
+    }
+  ],
+  "ed18": [
+    {
+      "item": "crop_field",
+      "x": 260,
+      "y": 175,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 85,
+      "y": 95,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 140,
+      "y": 255,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 520,
+      "y": 155,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 230,
+      "y": 260,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 380,
+      "y": 235,
+      "angle": 30
+    },
+    {
+      "item": "pond",
+      "x": 485,
+      "y": 265,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 75,
+      "y": 155,
+      "angle": 90
+    },
+    {
+      "item": "stone_wall",
+      "x": 115,
+      "y": 180,
+      "angle": 0
+    },
+    {
+      "item": "tree",
+      "x": 435,
+      "y": 140,
+      "angle": 0
+    }
+  ],
+  "ed19": [
+    {
+      "item": "crop_field",
+      "x": 90,
+      "y": 135,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 45,
+      "y": 270,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 500,
+      "y": 200,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 325,
+      "y": 200,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 235,
+      "y": 260,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 220,
+      "y": 140,
+      "angle": 30
+    },
+    {
+      "item": "pond",
+      "x": 410,
+      "y": 285,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 115,
+      "y": 275,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 140,
+      "y": 245,
+      "angle": 90
+    },
+    {
+      "item": "tree",
+      "x": 435,
+      "y": 130,
+      "angle": 0
+    }
+  ],
+  "ed20": [
+    {
+      "item": "crop_field",
+      "x": 390,
+      "y": 105,
+      "angle": 0
+    },
+    {
+      "item": "boulder",
+      "x": 45,
+      "y": 270,
+      "angle": 0
+    },
+    {
+      "item": "boulder2",
+      "x": 300,
+      "y": 200,
+      "angle": 0
+    },
+    {
+      "item": "boulder3",
+      "x": 100,
+      "y": 150,
+      "angle": 0
+    },
+    {
+      "item": "foliage",
+      "x": 160,
+      "y": 260,
+      "angle": 0
+    },
+    {
+      "item": "house",
+      "x": 220,
+      "y": 140,
+      "angle": 30
+    },
+    {
+      "item": "pond",
+      "x": 390,
+      "y": 290,
+      "angle": 0
+    },
+    {
+      "item": "stone_wall",
+      "x": 385,
+      "y": 230,
+      "angle": 90
+    },
+    {
+      "item": "stone_wall",
+      "x": 455,
+      "y": 275,
+      "angle": 0
+    },
+    {
+      "item": "tree",
+      "x": 500,
+      "y": 200,
+      "angle": 0
+    }
+  ]
+}

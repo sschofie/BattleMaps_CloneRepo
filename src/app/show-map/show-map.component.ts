@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from 'src/environments/environment';
 import { ClipboardService } from 'ngx-clipboard';
+import * as epicDwarfMaps from '../../assets/epic-dwarf-maps.json';
 
 @Component({
   selector: 'app-show-map',
@@ -29,7 +30,6 @@ export class ShowMapComponent implements OnInit {
     `Smoke & Mirrors`
   ];
   @ViewChild('showWidth') showWidth: ElementRef;
-  mapDisplay = '';
   dwarfText = '';
   selectedScenario = '';
   isLongLoading = false;
@@ -44,20 +44,20 @@ export class ShowMapComponent implements OnInit {
   private rand;
   private itemsToLoad: number;
   private itemsLoaded: number;
-  private terrainPieces = [ //reference array for pre-defined items. Others culd be read in from Json file.
-    new TerrainPiece(0, 40, 1, 'stone_wall'),
-    new TerrainPiece(1, 40, 1, 'pond'),
-    new TerrainPiece(2, 40, 1, 'house'),
-    new TerrainPiece(3, 40, 1, 'tree'),
-    new TerrainPiece(4, 40, 1, 'boulder'),
-    new TerrainPiece(5, 40, 1, 'boulder2'),
-    new TerrainPiece(6, 40, 1, 'boulder3'),
-    new TerrainPiece(7, 40, 1, 'foliage'),
-    new TerrainPiece(8, 40, 1, 'crop_field'),
-    new TerrainPiece(9, 40, 1, 'hedge_wall'),
-    new TerrainPiece(10, 40, 1, 'hedge_wall2'),
-    new TerrainPiece(11, 40, 1, 'wood_building'),
-    new TerrainPiece(12, 40, 1, 'wood_wall_1')
+  private terrainPieces: [string, TerrainPiece][] = [ //reference array for pre-defined items. Others culd be read in from Json file.
+    ['stone_wall', new TerrainPiece(0, 35, 1, 'stone_wall')],
+    ['pond', new TerrainPiece(1, 45, 1, 'pond')],
+    ['house', new TerrainPiece(2, 25, 1, 'house')],
+    ['tree', new TerrainPiece(3, 40, 1, 'tree')],
+    ['boulder', new TerrainPiece(4, 38, 1, 'boulder')],  // mountain
+    ['boulder2', new TerrainPiece(5, 40, 1, 'boulder2')], // rock hill
+    ['boulder3', new TerrainPiece(6, 40, 1, 'boulder3')], // grass hill
+    ['foliage', new TerrainPiece(7, 40, 1, 'foliage')],
+    ['crop_field', new TerrainPiece(8, 35, 1, 'crop_field')],
+    ['stone_wall', new TerrainPiece(9, 35, 1, 'hedge_wall')],
+    ['stone_wall', new TerrainPiece(10, 35, 1, 'hedge_wall2')],
+    ['wood_building', new TerrainPiece(11, 25, 1, 'wood_building')],
+    ['wood_wall_1', new TerrainPiece(12, 40, 1, 'wood_wall_1')],
   ];
 
   constructor(
@@ -73,11 +73,13 @@ export class ShowMapComponent implements OnInit {
     this.route.queryParams.subscribe(() => {
       // if setting the scenario fails, pick a new scenario
       if (!this.setScenarioFromQuery()) {
+        console.debug('Generating new scenario...');
         this.switchScenario(true);
       }
       // check whether we're only changing the scenario, then:
       // if setting the map fails, pick a new map
       if (!this.changeScenarioOnly && !this.setMapFromQuery()) {
+        console.debug('Generating new map...');
         this.switchMap(true);
       }
       this.changeScenarioOnly = false;
@@ -151,7 +153,7 @@ export class ShowMapComponent implements OnInit {
     const oldMapID = this.route.snapshot.queryParamMap.get('map');
     mapID = oldMapID;
     while (mapID === oldMapID) { // make sure we're actually picking a new map
-      if (environment.featureFlags.mapCanvas) {
+      if (environment.featureFlags.dynamicMaps) {
         // generate a random seed
         mapID = Math.floor(Math.random() * ShowMapComponent.maxInt32Unsigned).toString();
       }
@@ -177,10 +179,10 @@ export class ShowMapComponent implements OnInit {
     // load the scenario ID
     const scenarioID = this.route.snapshot.queryParamMap.get('s');
     // check that the 'scenario' parameter exists
-    if (!scenarioID) { return false; }
+    if (!scenarioID) { console.debug('Scenario ID not provided.'); return false; }
     this.tmpSelectedScenario = ShowMapComponent.scenarios[scenarioID];
     // check that we have a valid scenario
-    if (!this.tmpSelectedScenario) { return false; }
+    if (!this.tmpSelectedScenario) { console.warn('WARN: Invalid scenario ID.'); return false; }
     if (this.changeScenarioOnly) { this.onLoad(); }
     return true;
   }
@@ -194,23 +196,30 @@ export class ShowMapComponent implements OnInit {
     // load the map ID
     const mapID = this.route.snapshot.queryParamMap.get('map');
     // check that the 'map' parameter exists
-    if (!mapID) { return false; }
+    if (!mapID) { console.debug('Map ID not provided.'); return false; }
     if (mapID.startsWith('ed', 0)) {
       const mapNum = Number(mapID.replace('ed', ''));
       // check that we have a valid map number
-      if (isNaN(mapNum) || mapNum < 1 || mapNum > 20) { return false; }
-      this.mapDisplay = 'assets/img/maps/' + mapID + '.svg';
+      if (isNaN(mapNum) || mapNum < 1 || mapNum > 20) {
+        console.warn('WARN: Invalid Epic Dwarf map ID.');
+        return false;
+      }
+      this.printMap(this.getEpicDwarfMapEncoding(mapNum), 400, 600, false);
       this.tmpDwarfText = 'Lars\' Epic Dwarf map #' + mapNum;
     }
     else {
-      if (!environment.featureFlags.mapCanvas) { return false; }
+      if (!environment.featureFlags.dynamicMaps) {
+        // for now we don't want to use maps other than ed
+        console.warn('WARN: Invalid map ID (not an Epic Dwarf ID).');
+        return false;
+      }
+
       const mapSeed = Number(mapID);
       // check that we have a valid seed
       if (isNaN(mapSeed) || mapSeed < 0 || mapSeed > ShowMapComponent.maxInt32Unsigned) {
         console.warn('WARN: Map seed is invalid.');
         return false;
       }
-      this.mapDisplay = ''; // clearing this makes the svg display "go away"
       this.printMap(this.simpleGenerate(400, 600, 50, null, false, mapSeed), 400, 600, false);
       this.tmpDwarfText = 'Dynamically generated map';
     }
@@ -297,7 +306,7 @@ export class ShowMapComponent implements OnInit {
   selectTP(numOfItems: number, weighted: boolean, resources: number[]): TerrainPiece {
     let item: TerrainPiece = null;
     while (item == null) {
-      item = this.terrainPieces[Math.floor(this.rand() * (numOfItems - 1))];
+      item = this.terrainPieces[Math.floor(this.rand() * (numOfItems - 1))][1];
       if ((resources != null) && (resources[item.id] < 1)) {
         item = null;
       }
@@ -329,6 +338,56 @@ export class ShowMapComponent implements OnInit {
   }
 
   /**
+   * Convert a given map json object into a valid map encoding.
+   *
+   * @param mapNum - The Epic Dwarf map number.
+   * @returns An encoding of the input map which can be used in printMap.
+   */
+  getEpicDwarfMapEncoding(mapNum: number): Node[] {
+    // get the appropriate map object from epic-dwarf-maps.json
+    let mapObject: { item: string; x: number; y: number; angle: number }[];
+    switch (mapNum) {
+      case 1: mapObject = epicDwarfMaps.ed1; break;
+      case 2: mapObject = epicDwarfMaps.ed2; break;
+      case 3: mapObject = epicDwarfMaps.ed3; break;
+      case 4: mapObject = epicDwarfMaps.ed4; break;
+      case 5: mapObject = epicDwarfMaps.ed5; break;
+      case 6: mapObject = epicDwarfMaps.ed6; break;
+      case 7: mapObject = epicDwarfMaps.ed7; break;
+      case 8: mapObject = epicDwarfMaps.ed8; break;
+      case 9: mapObject = epicDwarfMaps.ed9; break;
+      case 10: mapObject = epicDwarfMaps.ed10; break;
+      case 11: mapObject = epicDwarfMaps.ed11; break;
+      case 12: mapObject = epicDwarfMaps.ed12; break;
+      case 13: mapObject = epicDwarfMaps.ed13; break;
+      case 14: mapObject = epicDwarfMaps.ed14; break;
+      case 15: mapObject = epicDwarfMaps.ed15; break;
+      case 16: mapObject = epicDwarfMaps.ed16; break;
+      case 17: mapObject = epicDwarfMaps.ed17; break;
+      case 18: mapObject = epicDwarfMaps.ed18; break;
+      case 19: mapObject = epicDwarfMaps.ed19; break;
+      case 20: mapObject = epicDwarfMaps.ed20; break;
+      default: mapObject = epicDwarfMaps.ed1; break;
+    }
+
+    // build a list of nodes using the information in the mapObject
+    const nodes: Node[] = new Array(mapObject.length);
+    for (let i = 0; i < mapObject.length; i++) {
+      // get the terrainPiece that corresponds with this mapObject
+      const piece: TerrainPiece = this.terrainPieces.find(elem => elem[0] === mapObject[i].item)[1];
+      nodes[i] = new Node(
+        mapObject[i].x,
+        mapObject[i].y,
+        mapObject[i].angle * Math.PI / 180,
+        piece.radius * .85,
+        piece,
+        -1
+      );
+    }
+    return nodes;
+  }
+
+  /**
    * this function takes a valid encoding and prints it to the canvas.
    *
    * @param encoding - this array of nodes represents the map
@@ -338,23 +397,33 @@ export class ShowMapComponent implements OnInit {
    */
   async printMap(encoding: Node[], h: number, w: number, debug: boolean) {
     const gridSpacing = 100; //could be a param later
-    let canvas = document.getElementById('mapViewer') as HTMLCanvasElement;;
-    while (!canvas) {
-      // sometimes the canvas takes a bit to load in
-      console.debug('[printMap] Looking for canvas...');
-      canvas = document.getElementById('mapViewer') as HTMLCanvasElement;
-      await sleep(150);
+    let canvas = document.getElementById('mapViewer') as HTMLCanvasElement;
+    if (!canvas) {
+      while (!canvas) {
+        // sometimes the canvas takes a bit to load in
+        console.debug('[printMap] Looking for canvas...');
+        canvas = document.getElementById('mapViewer') as HTMLCanvasElement;
+        await sleep(150);
+      }
+      console.debug('[printMap] Found canvas!');
     }
-    console.debug('[printMap] Found canvas!');
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    if (!this.showWidth) {
+      while (!this.showWidth) {
+        // showWidth takes a moment to load when page refreshes
+        console.debug('[printMap] Looking for showWidth...');
+        await sleep(150);
+      }
+      console.debug('[printMap] Found showWidth!');
+    }
     const width = this.showWidth.nativeElement.offsetWidth;
     ctx.canvas.width = width;
-    ctx.canvas.height = width*.66;
-    ctx.scale(width/w,width*.66/h);
+    ctx.canvas.height = width * .66;
+    ctx.scale(width / w, width * .66 / h);
     ctx.fillStyle = 'rgb(112,179,68)';
-    ctx.strokeStyle = 'black';
-    ctx.fillRect(0, 0, ctx.canvas.width*w, ctx.canvas.height*h);
+    ctx.strokeStyle = 'rgb(95, 115, 46)';
+    ctx.fillRect(0, 0, ctx.canvas.width * w, ctx.canvas.height * h);
     //code to draw grid
     for (let i = gridSpacing; i < w; i += gridSpacing) {
       ctx.beginPath();
@@ -375,7 +444,6 @@ export class ShowMapComponent implements OnInit {
     for (const p of encoding) {
       const img = new Image(0, 0);
       img.src = 'assets/img/svg_map_pieces/' + p.item.svg + '.svg';
-      //TODO: add code to rotate images
       const scaleFactor = p.item.radius * 2;
       img.onload = () => {
         ctx.save();
@@ -411,7 +479,7 @@ const dist = (x1: number, y1: number, x2: number, y2: number): number => {
 class Node {
   public x: number;
   public y: number;
-  public angle: number; // angle of rotation
+  public angle: number; // angle of rotation in radians
   public radius: number; //might be able to remove this later as item.radius is a scaled version of this.
   public height: number; // height of terrain piece
   public item: TerrainPiece;
@@ -425,19 +493,19 @@ class Node {
     this.height = this.setHeight(height);
   }
   setHeight(height: number) {
-    if(height !== -1) {
+    if (height !== -1) {
       return height;
     } else {
       let num = 0;
-      if(this.item.svg === 'pond') {
+      if (this.item.svg === 'pond') {
         num = 0;
       } else if (this.item.svg === 'stone_wall' || this.item.svg === 'hedge_wall' ||
-      this.item.svg === 'hedge_wall2' || this.item.svg === 'crop_field' || this.item.svg === 'wood_wall') {
+        this.item.svg === 'hedge_wall2' || this.item.svg === 'crop_field' || this.item.svg === 'wood_wall') {
         num = 1;
-      } else if(this.item.svg ==='foliage') {
+      } else if (this.item.svg === 'foliage') {
         num = 2;
       } else {
-        num = Math.floor(Math.random()*3)+2;
+        num = Math.floor(Math.random() * 3) + 2;
       }
       return num;
     }

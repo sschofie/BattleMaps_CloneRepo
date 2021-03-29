@@ -124,7 +124,7 @@ describe('ShowMapComponent', () => {
 
   describe('switchMap', () => {
     it('should return valid Epic Dwarf map ID', () => {
-      environment.featureFlags.mapCanvas = false;
+      environment.featureFlags.dynamicMaps = false;
       for (let i = 0; i < 100; i++) {
         const mapID = component.switchMap(false);
         expect(mapID).toContain('ed');
@@ -137,7 +137,7 @@ describe('ShowMapComponent', () => {
     });
 
     it('should return valid dynamic map ID', () => {
-      environment.featureFlags.mapCanvas = true;
+      environment.featureFlags.dynamicMaps = true;
       for (let i = 0; i < 100; i++) {
         const mapID = component.switchMap(false);
         expect(mapID).not.toContain('ed');
@@ -231,7 +231,7 @@ describe('ShowMapComponent', () => {
     });
 
     beforeEach(() => {
-      environment.featureFlags.mapCanvas = true;
+      environment.featureFlags.dynamicMaps = true;
     });
 
     it('should return true when given valid dynamic mapID', () => {
