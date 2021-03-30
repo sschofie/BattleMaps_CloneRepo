@@ -1,23 +1,27 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { DynamicMap } from '../dynamic-map/dynamic-map';
 import { ShowMapComponent } from '../show-map/show-map.component';
 
-import { MapGeneratorComponent } from './map-generator.component';
+import { MapGeneratorPageComponent } from './map-generator-page.component';
 
 describe('MapGeneratorComponent', () => {
-  let component: MapGeneratorComponent;
-  let fixture: ComponentFixture<MapGeneratorComponent>;
+  let component: MapGeneratorPageComponent;
+  let fixture: ComponentFixture<MapGeneratorPageComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
-        MapGeneratorComponent,
+        MapGeneratorPageComponent,
         ShowMapComponent
+      ],
+      providers: [
+        DynamicMap
       ],
       imports: [
         RouterTestingModule.withRoutes(
-          [{path: 'app', component: MapGeneratorComponent}]
+          [{path: 'app', component: MapGeneratorPageComponent}]
         ),
         NgbTooltipModule
       ]
@@ -26,7 +30,7 @@ describe('MapGeneratorComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MapGeneratorComponent);
+    fixture = TestBed.createComponent(MapGeneratorPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

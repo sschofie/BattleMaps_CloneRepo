@@ -9,13 +9,14 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { AppComponent } from './app.component';
 import { ShowMapComponent } from './show-map/show-map.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
-import { MapGeneratorComponent } from './map-generator/map-generator.component';
+import { MapGeneratorPageComponent } from './map-generator-page/map-generator-page.component';
 import { FeatureFlagDirective } from './feature-flag.directive';
+import { DynamicMap } from './dynamic-map/dynamic-map';
 
 const routes: Routes = [
   { path: '', redirectTo: '/landing-page', pathMatch: 'full' },
   { path: 'landing-page', component: LandingPageComponent },
-  { path: 'app', component: MapGeneratorComponent }
+  { path: 'app', component: MapGeneratorPageComponent }
 ];
 
 @NgModule({
@@ -23,7 +24,7 @@ const routes: Routes = [
     AppComponent,
     ShowMapComponent,
     LandingPageComponent,
-    MapGeneratorComponent,
+    MapGeneratorPageComponent,
     FeatureFlagDirective
   ],
   imports: [
@@ -33,7 +34,10 @@ const routes: Routes = [
     QRCodeModule,
     ClipboardModule
   ],
-  providers: [FeatureFlagsService],
+  providers: [
+    DynamicMap,
+    FeatureFlagsService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -5,7 +5,8 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { QRCodeModule } from 'angularx-qrcode';
 import { of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { MapGeneratorComponent } from '../map-generator/map-generator.component';
+import { DynamicMap } from '../dynamic-map/dynamic-map';
+import { MapGeneratorPageComponent } from '../map-generator-page/map-generator-page.component';
 
 import { ShowMapComponent } from './show-map.component';
 
@@ -14,12 +15,13 @@ describe('ShowMapComponent', () => {
     declarations: [ShowMapComponent],
     imports: [
       RouterTestingModule.withRoutes(
-        [{ path: 'app', component: MapGeneratorComponent }]
+        [{ path: 'app', component: MapGeneratorPageComponent }]
       ),
       NgbTooltipModule,
       QRCodeModule
     ],
     providers: [
+      DynamicMap,
       {
         provide: ActivatedRoute,
         useValue: {

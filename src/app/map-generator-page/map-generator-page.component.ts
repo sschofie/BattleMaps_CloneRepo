@@ -3,10 +3,10 @@ import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-map-generator',
-  templateUrl: './map-generator.component.html',
-  styleUrls: ['./map-generator.component.css']
+  templateUrl: './map-generator-page.component.html',
+  styleUrls: ['./map-generator-page.component.css']
 })
-export class MapGeneratorComponent implements OnInit {
+export class MapGeneratorPageComponent implements OnInit {
   version = environment.appVersion;
   copyrightYear = environment.copyrightYear;
 
