@@ -3,6 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { DynamicMap } from '../dynamic-map/dynamic-map';
 import { ShowMapComponent } from '../show-map/show-map.component';
+import { ToastComponent } from '../toast/toast.component';
 
 import { MapGeneratorPageComponent } from './map-generator-page.component';
 
@@ -14,7 +15,8 @@ describe('MapGeneratorComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         MapGeneratorPageComponent,
-        ShowMapComponent
+        ShowMapComponent,
+        ToastComponent
       ],
       providers: [
         DynamicMap

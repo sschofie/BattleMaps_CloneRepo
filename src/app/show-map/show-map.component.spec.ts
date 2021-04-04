@@ -7,12 +7,16 @@ import { of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { DynamicMap } from '../dynamic-map/dynamic-map';
 import { MapGeneratorPageComponent } from '../map-generator-page/map-generator-page.component';
+import { ToastComponent } from '../toast/toast.component';
 
 import { ShowMapComponent } from './show-map.component';
 
 describe('ShowMapComponent', () => {
   const baseTestBed = {
-    declarations: [ShowMapComponent],
+    declarations: [
+      ShowMapComponent,
+      ToastComponent
+    ],
     imports: [
       RouterTestingModule.withRoutes(
         [{ path: 'app', component: MapGeneratorPageComponent }]
@@ -395,11 +399,11 @@ describe('ShowMapComponent', () => {
       fixture = TestBed.createComponent(ShowMapComponent);
       component = fixture.componentInstance;
 
-      expect(component.qrCodeString).toEqual('');
+      expect(component.currentURL).toEqual('');
       const button = fixture.debugElement.nativeElement.querySelector('#shareButton');
       button.click();
       fixture.whenStable().then(() => {
-        expect(component.qrCodeString).toEqual('http://localhost:4200' + path);
+        expect(component.currentURL).toEqual('http://localhost:4200' + path);
       });
     }));
   });

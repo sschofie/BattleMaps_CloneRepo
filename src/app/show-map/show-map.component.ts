@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from 'src/environments/environment';
 import { ClipboardService } from 'ngx-clipboard';
 import { DynamicMap } from '../dynamic-map/dynamic-map';
+import { ToastService } from '../toast/toast.service';
 
 @Component({
   selector: 'app-show-map',
@@ -33,7 +34,7 @@ export class ShowMapComponent implements OnInit {
   dwarfText = '';
   selectedScenario = '';
   isLongLoading = false;
-  qrCodeString = '';
+  currentURL = '';
   private baseURL = environment.appURL;
   private changeScenarioOnly = false;
   private isLoading: boolean;
@@ -45,7 +46,8 @@ export class ShowMapComponent implements OnInit {
     private router: Router,
     private modalService: NgbModal,
     private clipboardService: ClipboardService,
-    private dynamicMap: DynamicMap
+    private dynamicMap: DynamicMap,
+    public toastService: ToastService
   ) { }
 
   ngOnInit() {
@@ -212,7 +214,7 @@ export class ShowMapComponent implements OnInit {
    * @param modal - The modal HTML template.
    */
   openShareModal(modal: TemplateRef<NgbModal>) {
-    this.qrCodeString = this.baseURL + this.router.url;
+    this.currentURL = this.baseURL + this.router.url;
     this.modalService.open(modal, { ariaLabelledBy: 'shareModalTitle' });
   }
 
@@ -220,13 +222,13 @@ export class ShowMapComponent implements OnInit {
    * Shares link to current map via mobile OS share menu if available, otherwise copies URL to clipboard.
    */
   shareURL() {
-    const linkURL = this.baseURL + this.router.url;
     if (navigator.share) {
       navigator.share({
-        url: linkURL
+        url: this.currentURL
       });
     } else {
-      this.clipboardService.copy(linkURL);
+      this.clipboardService.copy(this.currentURL);
+      this.toastService.show('Link copied to clipboard');
     }
   }
 }

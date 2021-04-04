@@ -51,6 +51,8 @@
   </div>
 </div>
 
+<app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+
 <!-- Share Modal -->
 <ng-template #shareModal let-modal>
   <div class="modal-header">
@@ -61,7 +63,7 @@
   </div>
   <div class="modal-body">
     <div class="content" id="share-modal-content">
-      <qrcode [qrdata]="qrCodeString" [width]="256" [errorCorrectionLevel]="'M'" [elementType]="'svg'"></qrcode>
+      <qrcode [qrdata]="currentURL" [width]="256" [errorCorrectionLevel]="'M'" [elementType]="'svg'"></qrcode>
       <p>Have your opponent scan this QR code or send them the link below.</p>
       <button type="button" class="btn btn-success" (click)="shareURL()">Share Link</button>
     </div>
