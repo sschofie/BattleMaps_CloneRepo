@@ -50,7 +50,7 @@ export class ShowMapComponent implements OnInit {
   showToolTips: boolean = false;
   tooltipButton = "Show ToolTips";
   tipViewer;
-  //tipViewer = document.getElementById("tooltipViewer") as HTMLCanvasElement;
+
 
 
   constructor(
@@ -83,6 +83,9 @@ export class ShowMapComponent implements OnInit {
       }
       this.changeScenarioOnly = false;
     });
+
+    this.tipViewer = document.getElementById("tooltipViewer") as HTMLCanvasElement;
+    this.tipViewer.style.display="none";
   }
 
   async startSpinner() {

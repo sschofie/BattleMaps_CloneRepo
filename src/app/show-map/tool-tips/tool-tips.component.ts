@@ -42,11 +42,35 @@ export class ToolTipsComponent implements OnInit {
         this.mapNodes[n].y,
         this.mapNodes[n].item.svg,
         this.mapNodes[n].height,
-        this.mapNodes[n].radius
+        this.mapNodes[n].radius,
+        this.assignTerrainType(this.mapNodes[n].item.svg, this.mapNodes[n].height)
       ));
     }
     console.log(tooltipNodes);
     return tooltipNodes;
+  }
+
+  assignTerrainType(type: string, height: number){
+    console.log(type);
+    //var terrain_type;
+    if(type === 'boulder' || type === 'boulder2' || type === 'boulder3' || type === 'foliage' || type === 'house' || type === 'wood_building'){
+      //return terrain_type = 'Blocking Terrain';
+      return 'Blocking Terrain'
+    }else if (type === 'crop_field' || type === 'tree' || type === 'pond'){
+      //return terrain_type = 'Difficult Terrain';
+      return 'Difficult Terrain'
+    }else if (type === 'hedge_wall' || type === 'hedge_wall2' || type === 'stone_wall' || type === 'wood_wall_1'){
+      if(height >= 2){
+        //return terrain_type = 'Blocking Terrain';
+        return 'Blocking Terrain'
+      }else if(height <= 1){
+        //return terrain_type = 'Obstacle Terrain';
+        return 'Obstacle Terrain'
+      }
+    }else if (type === 'hill'){
+      //return terrain_type = 'Hill Terrain';
+      return 'Hill Terrain'
+    }
   }
 
   /**
@@ -90,8 +114,8 @@ export class ToolTipsComponent implements OnInit {
       const img = new Image(0, 0);
       console.log(p);
       const scaleFactor = p.radius * 2;
-      const text = p.item+", "+p.height;
-        tipCtx.strokeText(text, p.x, (p.y-20), scaleFactor);
+      const text = p.type+", \n"+p.item+", "+p.height;
+        tipCtx.strokeText(text, (p.x-20), (p.y-20), scaleFactor);
         this.itemsLoaded++;
 
     }
@@ -106,13 +130,15 @@ export class ToolTip {
   public item: string;
   public height: number;
   public radius: number;
+  public type: string;
 
-  public constructor(x, y, type, height, radius) {
+  public constructor(x, y, item, height, radius, type) {
     this.x = x;
     this.y = y;
-    this.item = type;
+    this.item = item;
     this.height = height;
     this.radius = radius;
+    this.type = type;
   }
 }
 
