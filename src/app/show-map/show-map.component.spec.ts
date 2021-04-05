@@ -145,8 +145,8 @@ describe('ShowMapComponent', () => {
     it('should return valid dynamic map ID', () => {
       environment.featureFlags.dynamicMaps = true;
       for (let i = 0; i < 100; i++) {
-        const mapID = component.switchMap(false);
-        expect(mapID).not.toContain('ed');
+        let mapID = component.switchMap(false);
+        while(mapID.includes('ed')){mapID = component.switchMap(false);}
         const mapNum = Number(mapID);
         expect(mapNum).not.toBeNaN();
         expect(Number.isInteger(mapNum)).toBeTrue();

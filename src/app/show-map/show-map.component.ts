@@ -136,11 +136,11 @@ export class ShowMapComponent implements OnInit {
     const oldMapID = this.route.snapshot.queryParamMap.get('map');
     mapID = oldMapID;
     while (mapID === oldMapID) { // make sure we're actually picking a new map
-      if (environment.featureFlags.dynamicMaps) {
+      if (environment.featureFlags.dynamicMaps && Math.random() < 0.75) { //picks a random maps 75% of the time
         // generate a random seed
         mapID = DynamicMap.newSeed().toString();
       }
-      else {
+      else { //picks ED maps 25% of the time
         // pick a random Epic Dwarf map
         const mapCount = 20;
         mapID = 'ed' + (Math.round(Math.random() * (mapCount - 1)) + 1);
@@ -151,6 +151,21 @@ export class ShowMapComponent implements OnInit {
       this.router.navigate(['/app'], { queryParams: { map: mapID }, queryParamsHandling: 'merge' });
     }
     return mapID;
+  }
+
+  /**
+   * WIP: Set the amount of available resources for a given generation.
+   * TODO: add UI so user can designate the available resources
+   */
+  setLimitedResources(): boolean{
+    const resourceBounds: number[] = null;
+    let res = '';
+    for(const r of resourceBounds){
+      res += r + ',';
+    }
+    res = res.substring(0,res.length-1);
+    this.router.navigate(['/app'], { queryParams: { resources: res }, queryParamsHandling: 'merge' });
+    return true;
   }
 
   /**
@@ -202,7 +217,12 @@ export class ShowMapComponent implements OnInit {
         console.warn('WARN: Map seed is invalid.');
         return false;
       }
-      this.dynamicMap.generateAndPrintMap(this, mapSeed);
+      const resParam = this.route.snapshot.queryParamMap.get('resources');
+      let resources = null;
+      if(resParam != null){
+        resources = resParam.split(',').map(x=>+x);
+      }
+      this.dynamicMap.generateAndPrintMap(this, mapSeed, resources);
       this.tmpDwarfText = 'Dynamically generated map';
     }
     return true;

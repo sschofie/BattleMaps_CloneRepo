@@ -35,6 +35,7 @@ export class DynamicMap {
     ['wood_building', new TerrainPiece(11, 25, 1, 'wood_building')],
     ['wood_wall_1', new TerrainPiece(12, 40, 1, 'wood_wall_1')],
   ];
+  mapNodes: Node[]; //keep track of the current map for other funcions
   private context: ShowMapComponent;
   private maxRuns = 50; //universal limit to number of runs each generation is allowed.
   private seedrandom = require('seedrandom');
@@ -67,9 +68,10 @@ export class DynamicMap {
    * @param context - the ShowMapComponent to be referenced.
    * @param seed - a 32 bit unsigned int to generate a specific map
    */
-  generateAndPrintMap(context: ShowMapComponent, seed: number) {
+  generateAndPrintMap(context: ShowMapComponent, seed: number, resources: number[]) {
     this.context = context;
-    this.printMap(this.simpleGenerate(400, 600, 50, null, false, seed), 400, 600, false);
+    this.mapNodes = this.simpleGenerate(400, 600, 50, resources, false, seed);
+    this.printMap(this.mapNodes, 400, 600, false);
   }
 
   /**
