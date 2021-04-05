@@ -53,22 +53,24 @@ export class ToolTipsComponent implements OnInit {
   assignTerrainType(type: string, height: number){
     console.log(type);
     //var terrain_type;
-    if(type === 'boulder' || type === 'boulder2' || type === 'boulder3' || type === 'foliage' || type === 'house' || type === 'wood_building'){
-      //return terrain_type = 'Blocking Terrain';
+    if(type === 'boulder' || type === 'boulder2' || type === 'boulder3' || type === 'house' || type === 'wood_building'){
       return 'Blocking Terrain'
-    }else if (type === 'crop_field' || type === 'tree' || type === 'pond'){
-      //return terrain_type = 'Difficult Terrain';
+    }else if (type === 'crop_field' || type === 'pond'){
       return 'Difficult Terrain'
     }else if (type === 'hedge_wall' || type === 'hedge_wall2' || type === 'stone_wall' || type === 'wood_wall_1'){
       if(height >= 2){
-        //return terrain_type = 'Blocking Terrain';
         return 'Blocking Terrain'
       }else if(height <= 1){
-        //return terrain_type = 'Obstacle Terrain';
         return 'Obstacle Terrain'
       }
+    }else if (type === 'tree' || type === 'foliage'){
+      if(height > 2){
+        return 'Blocking Terrain'
+      }else if(height <= 2){
+        return 'Difficult Terrain'
+      }
+
     }else if (type === 'hill'){
-      //return terrain_type = 'Hill Terrain';
       return 'Hill Terrain'
     }
   }
@@ -114,8 +116,18 @@ export class ToolTipsComponent implements OnInit {
       const img = new Image(0, 0);
       console.log(p);
       const scaleFactor = p.radius * 2;
-      const text = p.type+", \n"+p.item+", "+p.height;
-        tipCtx.strokeText(text, (p.x-20), (p.y-20), scaleFactor);
+      const type_text = p.type;
+      const item_text = p.item;
+      const height_text = "Height: "+p.height;
+        if(p.x >= 400){//this is to adjust for any items that go off the map on the right side
+          tipCtx.strokeText(type_text, (p.x-80), (p.y-30));
+          tipCtx.strokeText(item_text, (p.x-80), (p.y-15));
+          tipCtx.strokeText(height_text, (p.x-80), (p.y));
+        }else{
+          tipCtx.strokeText(type_text, (p.x), (p.y-30));
+          tipCtx.strokeText(item_text, (p.x), (p.y-15));
+          tipCtx.strokeText(height_text, (p.x), (p.y));
+        }
         this.itemsLoaded++;
 
     }
