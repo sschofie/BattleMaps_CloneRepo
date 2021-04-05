@@ -20,7 +20,7 @@
       </div>
     </div>
   </div>
-  <div class="content m-0 p-0" id="map-holder" #showWidth style="position:relative;  height:550px">
+  <div class="content m-0 p-0" id="map-holder" #showWidth>
       <canvas id="mapViewer" width="500" style="border: 1px solid rgb(95, 115, 46);"></canvas>
       <canvas id="tooltipViewer" width="500"></canvas>
     <div *ngIf="showToolTips" id="tooltipOverlay">
@@ -32,14 +32,11 @@
       </div>
     </div>
   </div>
-  <i style="color: darkslategray;">{{dwarfText}}</i>
+  <i style="color: darkslategray; align-content: center;">{{dwarfText}}</i>
   <div class="container">
     <div class="row align-items-center mt-4">
-      <div class="custom-control custom-switch">
-        <button id="tooltipButton" value="Show Tooltips" type="button" class="btn btn-success" (click)="toggleToolTips()">{{tooltipButton}}</button>
-      </div>
       <div class="col justify-content-start">
-        <!-- this is just for spacing right now, may be used later -->
+        <button id="tooltipButton" value="Show Tooltips" type="button" class="btn btn-success" (click)="toggleToolTips()">{{tooltipButton}}</button>
       </div>
       <div class="col justify-content-center">
         <button id="generateButton" type="button" class="btn btn-success" (click)="switchMapAndScenario()">Generate Map</button>

@@ -48,7 +48,7 @@ export class ShowMapComponent implements OnInit {
   public mapDisplay: string;
   public mapNodes: Node[];
   showToolTips: boolean = false;
-  tooltipButton = "Show ToolTips";
+  tooltipButton = "Show Map Legend";
   tipViewer;
 
 
@@ -119,8 +119,7 @@ export class ShowMapComponent implements OnInit {
         map: this.switchMap(false)
       }
     });
-    //this.showToolTips = false;
-    //this.tipViewer.style.display="none";
+    this.hideToolTips();
   }
 
   /**
@@ -278,30 +277,37 @@ export class ShowMapComponent implements OnInit {
   }
 
   passNodes(){
-    //this.clickPassNodes.emit(this.mapNodes);
     return this.mapNodes;
   }
-  //function to recieve getToolTips() from Tool-Tips Component
+  /*
+   * Function to recieve getToolTips() from Tool-Tips Component
+   */
   passToolTips(){
   }
 
+  /**
+   * Function called with switchMapand Scenario to clear Tooltips display
+   */
   hideToolTips(){
     this.tipViewer.style.display="none";
+    this.tooltipButton = "Show Map Legend";
+    this.showToolTips=false;
   }
 
-  /*Function to get Tooltips from ToolTipsComponent*/
+  /*
+   * Function to get Tooltips from ToolTipsComponent
+   */
   toggleToolTips(){
     console.log(this.showToolTips);
     this.showToolTips = !this.showToolTips;
     this.tipViewer = document.getElementById("tooltipViewer") as HTMLCanvasElement;
     if(this.showToolTips==true){
-      this.tooltipButton = "Tooltips On";
+      this.tooltipButton = "Showing Map Legend";
       this.displayToolTips();
-      //this.tipViewer.style.display="block";
+      this.tipViewer.style.display="block";
     }else{
-      this.tooltipButton = "Tooltips Off";
+      this.tooltipButton = "Hiding Map Legend";
       this.tipViewer.style.display="none";
-
     };
   }
 
@@ -311,7 +317,6 @@ export class ShowMapComponent implements OnInit {
     this.passToolTips();
     tipViewer.style.display="block";
   }
-
 
 
 }

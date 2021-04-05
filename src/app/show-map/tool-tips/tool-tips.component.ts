@@ -52,28 +52,28 @@ export class ToolTipsComponent implements OnInit {
 
   assignTerrainType(type: string, height: number){
     console.log(type);
-    //var terrain_type;
     if(type === 'boulder' || type === 'boulder2' || type === 'boulder3' || type === 'house' || type === 'wood_building'){
-      return 'Blocking Terrain'
+      return 'Blocking Terrain';
     }else if (type === 'crop_field' || type === 'pond'){
-      return 'Difficult Terrain'
+      return 'Difficult Terrain';
     }else if (type === 'hedge_wall' || type === 'hedge_wall2' || type === 'stone_wall' || type === 'wood_wall_1'){
       if(height >= 2){
-        return 'Blocking Terrain'
+        return 'Blocking Terrain';
       }else if(height <= 1){
-        return 'Obstacle Terrain'
-      }
+        return 'Obstacle Terrain';
+      };
     }else if (type === 'tree' || type === 'foliage'){
       if(height > 2){
-        return 'Blocking Terrain'
+        return 'Blocking Terrain';
       }else if(height <= 2){
-        return 'Difficult Terrain'
-      }
-
+        return 'Difficult Terrain';
+      };
     }else if (type === 'hill'){
-      return 'Hill Terrain'
-    }
+      return 'Hill Terrain';
+    };
   }
+
+
 
   /**
    * this function takes the array of tooltips and prints it to the canvas.
@@ -119,14 +119,17 @@ export class ToolTipsComponent implements OnInit {
       const type_text = p.type;
       const item_text = p.item;
       const height_text = "Height: "+p.height;
+      const textWidth = tipCtx.measureText(type_text).width;
         if(p.x >= 400){//this is to adjust for any items that go off the map on the right side
-          tipCtx.strokeText(type_text, (p.x-80), (p.y-30));
-          tipCtx.strokeText(item_text, (p.x-80), (p.y-15));
-          tipCtx.strokeText(height_text, (p.x-80), (p.y));
+          tipCtx.fillText(type_text, (p.x-80), (p.y-30));
+          tipCtx.fillText(item_text, (p.x-80), (p.y-15));
+          tipCtx.fillText(height_text, (p.x-80), (p.y));
+          tipCtx.strokeRect((p.x-90), (p.y-40), textWidth+15, 50);
         }else{
-          tipCtx.strokeText(type_text, (p.x), (p.y-30));
-          tipCtx.strokeText(item_text, (p.x), (p.y-15));
-          tipCtx.strokeText(height_text, (p.x), (p.y));
+          tipCtx.fillText(type_text, (p.x), (p.y-30));
+          tipCtx.fillText(item_text, (p.x), (p.y-15));
+          tipCtx.fillText(height_text, (p.x), (p.y));
+          tipCtx.strokeRect((p.x-5), (p.y-40), textWidth+15, 50);
         }
         this.itemsLoaded++;
 
