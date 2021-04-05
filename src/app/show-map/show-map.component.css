@@ -28,6 +28,43 @@
   height: 100%;
 }
 
+#tooltipOverlay {
+  position: relative;
+  align-content: center;
+  /*width: 100%;
+  height: 100%;*/
+  opacity: .5;
+  /*top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;*/
+  z-index: 2;
+}
+
+#fillViewer{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1
+}
+#mapViewer{
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0
+}
+#tooltipViewer {
+  background-color: transparent;
+  position: absolute;
+  align-content: center;
+  opacity: .5;
+  left: 0;
+  top: 0;
+  z-index: 2;
+}
+
 #share-modal-content {
   margin: auto;
   width: auto;

@@ -53,6 +53,7 @@ export class DynamicMap {
   private rand;
   private itemsToLoad: number;
   private itemsLoaded: number;
+  public mapNodes: Node[];
 
   static newSeed(): number {
     return Math.floor(Math.random() * DynamicMap.maxInt32Unsigned);
@@ -84,6 +85,7 @@ export class DynamicMap {
     this.context = context;
     this.mapNodes = this.simpleGenerate(400, 600, 50, resources, false, seed);
     this.printMap(this.mapNodes, 400, 600, false);
+    return this.mapNodes;
   }
 
   /**

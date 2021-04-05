@@ -6,6 +6,8 @@ import { ClipboardService } from 'ngx-clipboard';
 import { DynamicMap } from '../dynamic-map/dynamic-map';
 import { ToastService } from '../toast/toast.service';
 import { GeneratorSettingsService } from '../collapse-basic/generator-settings.service';
+import { Node } from '../dynamic-map/dynamic-map';
+import { ToolTipsComponent } from '../show-map/tool-tips/tool-tips.component';
 
 @Component({
   selector: 'app-show-map',
@@ -42,6 +44,14 @@ export class ShowMapComponent implements OnInit {
   private isLoading: boolean;
   private tmpDwarfText: string;
   private tmpSelectedScenario: string;
+  @ViewChild('ToolTipsComponent') tooltips: ToolTipsComponent;
+  public mapDisplay: string;
+  public mapNodes: Node[];
+  showToolTips: boolean = false;
+  tooltipButton = "Show ToolTips";
+  tipViewer;
+  //tipViewer = document.getElementById("tooltipViewer") as HTMLCanvasElement;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -106,6 +116,8 @@ export class ShowMapComponent implements OnInit {
         map: this.switchMap(false)
       }
     });
+    //this.showToolTips = false;
+    //this.tipViewer.style.display="none";
   }
 
   /**
@@ -229,7 +241,10 @@ export class ShowMapComponent implements OnInit {
       if (resParam != null) {
         resources = resParam.split(',').map(x => +x);
       }
-      this.dynamicMap.generateAndPrintMap(this, mapSeed, resources);
+
+      this.mapNodes = this.dynamicMap.generateAndPrintMap(this, mapSeed, resources);
+      this.passNodes();
+      this.passToolTips();
       this.tmpDwarfText = 'Dynamically generated map';
     }
     return true;
@@ -258,6 +273,44 @@ export class ShowMapComponent implements OnInit {
       this.toastService.show('Link copied to clipboard');
     }
   }
+
+  passNodes(){
+    //this.clickPassNodes.emit(this.mapNodes);
+    return this.mapNodes;
+  }
+  //function to recieve getToolTips() from Tool-Tips Component
+  passToolTips(){
+  }
+
+  hideToolTips(){
+    this.tipViewer.style.display="none";
+  }
+
+  /*Function to get Tooltips from ToolTipsComponent*/
+  toggleToolTips(){
+    console.log(this.showToolTips);
+    this.showToolTips = !this.showToolTips;
+    this.tipViewer = document.getElementById("tooltipViewer") as HTMLCanvasElement;
+    if(this.showToolTips==true){
+      this.tooltipButton = "Tooltips On";
+      this.displayToolTips();
+      //this.tipViewer.style.display="block";
+    }else{
+      this.tooltipButton = "Tooltips Off";
+      this.tipViewer.style.display="none";
+
+    };
+  }
+
+  displayToolTips(){
+    var tipViewer = document.getElementById("tooltipViewer") as HTMLCanvasElement;
+    this.passNodes();
+    this.passToolTips();
+    tipViewer.style.display="block";
+  }
+
+
+
 }
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

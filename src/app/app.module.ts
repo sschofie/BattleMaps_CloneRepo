@@ -14,6 +14,7 @@ import { DynamicMap } from './dynamic-map/dynamic-map';
 import { FeatureFlagDirective } from './feature-flag/feature-flag.directive';
 import { ToastComponent } from './toast/toast.component';
 import { CollapseBasicComponent } from './collapse-basic/collapse-basic.component';
+import { ToolTipsComponent } from './show-map/tool-tips/tool-tips.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/landing-page', pathMatch: 'full' },
@@ -29,7 +30,9 @@ const routes: Routes = [
     MapGeneratorPageComponent,
     FeatureFlagDirective,
     ToastComponent,
-    CollapseBasicComponent
+    CollapseBasicComponent,
+    ToolTipsComponent
+
   ],
   imports: [
     BrowserModule,
