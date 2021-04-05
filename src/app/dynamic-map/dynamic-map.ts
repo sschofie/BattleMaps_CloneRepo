@@ -2,7 +2,7 @@ import { ShowMapComponent } from '../show-map/show-map.component';
 import * as epicDwarfMaps from '../../assets/epic-dwarf-maps.json';
 
 //represents a single pre-defined piece of terrain.
-class TerrainPiece {
+export class TerrainPiece {
   public id: number; //index in the terrainPieces array
   public radius: number; //radius of the bounding circle
   public weight: number; // beween 0 and 1
@@ -103,12 +103,12 @@ export class DynamicMap {
     }
     while (nodes.length < numOfNodes && runs < this.maxRuns) {
       const item: TerrainPiece = this.selectTP(numOfItems, weighted, resources);
-      const tempX = Math.floor(this.rand() * (mapWidth - edgeBoundary)) + edgeBoundary;
-      const tempY = Math.floor(this.rand() * (mapHeight - edgeBoundary)) + edgeBoundary;
+      const tempX = Math.floor(this.rand() * (mapWidth - edgeBoundary*2)) + edgeBoundary;
+      const tempY = Math.floor(this.rand() * (mapHeight - edgeBoundary*2)) + edgeBoundary;
       if (!this.checkForOverlap(nodes, item, tempX, tempY)) {
         nodes.push(new Node(tempX, tempY, Math.floor(this.rand() * 2 * Math.PI), (item.radius * boundScaling), item, -1));
         if (resources != null) {
-          resources[item.id]--;
+          resources[item.id]-=1;
         }
       }
     }
@@ -127,8 +127,12 @@ export class DynamicMap {
     let item: TerrainPiece = null;
     while (item == null) {
       item = DynamicMap.terrainPieces[Math.floor(this.rand() * (numOfItems - 1))][1];
-      if ((resources != null) && (resources[item.id] < 1)) {
-        item = null;
+      if(resources != null) {
+        if(item.id >= resources.length) {
+          item = null;
+        }else if(resources[item.id] < 1) {
+          item = null;
+        }
       }
       if (weighted && item.weight < this.rand()) {
         item = null;
@@ -294,7 +298,7 @@ const dist = (x1: number, y1: number, x2: number, y2: number): number => {
 };
 
 //represents a terrain piece and its circle boundary
-class Node {
+export class Node {
   public x: number;
   public y: number;
   public angle: number; // angle of rotation in radians
