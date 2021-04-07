@@ -85,7 +85,7 @@ export class ShowMapComponent implements OnInit {
     });
 
     this.tipViewer = document.getElementById("tooltipViewer") as HTMLCanvasElement;
-    this.tipViewer.style.display="none";
+    this.tipViewer.style.display = "none";
   }
 
   async startSpinner() {
@@ -276,46 +276,46 @@ export class ShowMapComponent implements OnInit {
     }
   }
 
-  passNodes(){
+  passNodes() {
     return this.mapNodes;
   }
   /*
    * Function to recieve getToolTips() from Tool-Tips Component
    */
-  passToolTips(){
+  passToolTips() {
   }
 
   /**
    * Function called with switchMapand Scenario to clear Tooltips display
    */
-  hideToolTips(){
-    this.tipViewer.style.display="none";
+  hideToolTips() {
+    this.tipViewer.style.display = "none";
     this.tooltipButton = "Show Map Legend";
-    this.showToolTips=false;
+    this.showToolTips = false;
   }
 
   /*
    * Function to get Tooltips from ToolTipsComponent
    */
-  toggleToolTips(){
+  toggleToolTips() {
     console.log(this.showToolTips);
     this.showToolTips = !this.showToolTips;
     this.tipViewer = document.getElementById("tooltipViewer") as HTMLCanvasElement;
-    if(this.showToolTips==true){
+    if (this.showToolTips == true) {
       this.tooltipButton = "Showing Map Legend";
       this.displayToolTips();
-      this.tipViewer.style.display="block";
-    }else{
+      this.tipViewer.style.display = "block";
+    } else {
       this.tooltipButton = "Hiding Map Legend";
-      this.tipViewer.style.display="none";
+      this.tipViewer.style.display = "none";
     };
   }
 
-  displayToolTips(){
+  displayToolTips() {
     var tipViewer = document.getElementById("tooltipViewer") as HTMLCanvasElement;
     this.passNodes();
     this.passToolTips();
-    tipViewer.style.display="block";
+    tipViewer.style.display = "block";
   }
 
 

@@ -8,11 +8,11 @@ import { ShowMapComponent } from '../show-map.component';
   styleUrls: ['./tool-tips.component.css']
 })
 export class ToolTipsComponent implements OnInit {
-  @Input() mapNodes:Node[];
+  @Input() mapNodes: Node[];
   @Input() showToolTips: boolean;
   @Input() passNodes: Function;
   @Output() getToolTips = new EventEmitter<void>();
-  tooltips:ToolTip[];
+  tooltips: ToolTip[];
   private itemsToLoad: number;
   private itemsLoaded: number;
   myMapNodes;
@@ -28,15 +28,15 @@ export class ToolTipsComponent implements OnInit {
     this.printTips = this.printToolTips(this.tooltips, 400, 600, true);
   }
 
-  EmitToolTips(){
+  EmitToolTips() {
     console.log(this.tooltips);
     this.getToolTips.emit(this.printTips);
   }
 
-  getNodes(){
+  getNodes() {
     var tooltipNodes: ToolTip[] = [];
     console.log(this.myMapNodes);
-    for(let n in this.myMapNodes){
+    for (let n in this.myMapNodes) {
       tooltipNodes.push(new ToolTip(
         this.mapNodes[n].x,
         this.mapNodes[n].y,
@@ -50,25 +50,25 @@ export class ToolTipsComponent implements OnInit {
     return tooltipNodes;
   }
 
-  assignTerrainType(type: string, height: number){
+  assignTerrainType(type: string, height: number) {
     console.log(type);
-    if(type === 'boulder' || type === 'boulder2' || type === 'boulder3' || type === 'house' || type === 'wood_building'){
+    if (type === 'boulder' || type === 'boulder2' || type === 'boulder3' || type === 'house' || type === 'wood_building') {
       return 'Blocking Terrain';
-    }else if (type === 'crop_field' || type === 'pond'){
+    } else if (type === 'crop_field' || type === 'pond') {
       return 'Difficult Terrain';
-    }else if (type === 'hedge_wall' || type === 'hedge_wall2' || type === 'stone_wall' || type === 'wood_wall_1'){
-      if(height >= 2){
+    } else if (type === 'hedge_wall' || type === 'hedge_wall2' || type === 'stone_wall' || type === 'wood_wall_1') {
+      if (height >= 2) {
         return 'Blocking Terrain';
-      }else if(height <= 1){
+      } else if (height <= 1) {
         return 'Obstacle Terrain';
       };
-    }else if (type === 'tree' || type === 'foliage'){
-      if(height > 2){
+    } else if (type === 'tree' || type === 'foliage') {
+      if (height > 2) {
         return 'Blocking Terrain';
-      }else if(height <= 2){
+      } else if (height <= 2) {
         return 'Difficult Terrain';
       };
-    }else if (type === 'hill'){
+    } else if (type === 'hill') {
       return 'Hill Terrain';
     };
   }
@@ -83,7 +83,7 @@ export class ToolTipsComponent implements OnInit {
    * @param w - indicated the width of the map to be printed
    * @param debug - indicates whether or not to print debug info (bounding circles and spawn pts)
    */
-   printToolTips(encoding: ToolTip[], h: number, w: number, debug: boolean) {
+  printToolTips(encoding: ToolTip[], h: number, w: number, debug: boolean) {
     let tipCanvas = document.getElementById('tooltipViewer') as HTMLCanvasElement;
     if (!tipCanvas) {
       while (!tipCanvas) {
@@ -118,20 +118,20 @@ export class ToolTipsComponent implements OnInit {
       const scaleFactor = p.radius * 2;
       const type_text = p.type;
       const item_text = p.item;
-      const height_text = "Height: "+p.height;
+      const height_text = "Height: " + p.height;
       const textWidth = tipCtx.measureText(type_text).width;
-        if(p.x >= 400){//this is to adjust for any items that go off the map on the right side
-          tipCtx.fillText(type_text, (p.x-80), (p.y-30));
-          tipCtx.fillText(item_text, (p.x-80), (p.y-15));
-          tipCtx.fillText(height_text, (p.x-80), (p.y));
-          tipCtx.strokeRect((p.x-90), (p.y-40), textWidth+15, 50);
-        }else{
-          tipCtx.fillText(type_text, (p.x), (p.y-30));
-          tipCtx.fillText(item_text, (p.x), (p.y-15));
-          tipCtx.fillText(height_text, (p.x), (p.y));
-          tipCtx.strokeRect((p.x-5), (p.y-40), textWidth+15, 50);
-        }
-        this.itemsLoaded++;
+      if (p.x >= 500) {//this is to adjust for any items that go off the map on the right side
+        tipCtx.fillText(type_text, (p.x - 40), (p.y - 20));
+        tipCtx.fillText(item_text, (p.x - 40), (p.y - 5));
+        tipCtx.fillText(height_text, (p.x - 40), (p.y + 10));
+        tipCtx.strokeRect((p.x - 50), (p.y - 32), textWidth + 10, 50);
+      } else {
+        tipCtx.fillText(type_text, (p.x-32), (p.y - 20));
+        tipCtx.fillText(item_text, (p.x-32), (p.y - 5));
+        tipCtx.fillText(height_text, (p.x-32), (p.y + 10));
+        tipCtx.strokeRect((p.x - 35), (p.y - 32), textWidth + 10, 50);
+      }
+      this.itemsLoaded++;
 
     }
   }

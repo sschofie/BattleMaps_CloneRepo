@@ -10,9 +10,8 @@
         <h1>{{selectedScenario}}</h1>
       </div>
       <div class="col-md-push-auto pb-3">
-        <button id="scenarioButton" type="button" class="btn btn-success"
-          (click)="onSwitchScenarioButtonClick()"
-          ngbTooltip="New Scenario">
+        <button id="scenarioButton" type="button" class="btn btn-success" (click)="onSwitchScenarioButtonClick()"
+          ngbTooltip="New Scenario" [openDelay]="500">
           <div class="d-flex align-items-center">
             <i class="icon-shuffle my-1 text-body"></i>
           </div>
@@ -20,11 +19,12 @@
       </div>
     </div>
   </div>
-  <div class="content m-0 p-0" id="map-holder" #showWidth>
-      <canvas id="mapViewer" width="500" style="border: 1px solid rgb(95, 115, 46);"></canvas>
-      <canvas id="tooltipViewer" width="500"></canvas>
+  <div class="content m-0 p-0" id="map-holder"  #showWidth >
+    <canvas id="mapViewer" width="500" style="border: 1px solid rgb(95, 115, 46);"></canvas>
+    <canvas id="tooltipViewer" width="1000"></canvas>
     <div *ngIf="showToolTips" id="tooltipOverlay">
-      <app-map-tooltips #ToolTipsComponent [mapNodes]="mapNodes" [showToolTips]="showToolTips" (passNodes)="passNodes()" (getToolTips)="passToolTips()"></app-map-tooltips>
+      <app-map-tooltips #ToolTipsComponent [mapNodes]="mapNodes" [showToolTips]="showToolTips" (passNodes)="passNodes()"
+        (getToolTips)="passToolTips()"></app-map-tooltips>
     </div>
     <div *ngIf="isLongLoading" id="overlay" class="d-flex justify-content-center align-items-center">
       <div class="spinner-border text-success" role="status">
@@ -36,16 +36,16 @@
   <div class="container">
     <div class="row align-items-center mt-4">
       <div class="col justify-content-start">
-        <button id="tooltipButton" value="Show Tooltips" type="button" class="btn btn-success" (click)="toggleToolTips()">{{tooltipButton}}</button>
+        <button id="tooltipButton" value="Show Tooltips" type="button" class="btn btn-success"
+          (click)="toggleToolTips()">{{tooltipButton}}</button>
       </div>
       <div class="col justify-content-center">
-        <button id="generateButton" type="button" class="btn btn-success" (click)="switchMapAndScenario()">Generate Map</button>
+        <button id="generateButton" type="button" class="btn btn-success" (click)="switchMapAndScenario()">Generate
+          Map</button>
       </div>
       <div class="col justify-content-end">
-        <button id="shareButton" type="button" class="btn btn-outline-success"
-          data-toggle="modal" (click)="openShareModal(shareModal)"
-          [disabled]="isLongLoading"
-          ngbTooltip="Share this map">
+        <button id="shareButton" type="button" class="btn btn-outline-success" data-toggle="modal"
+          (click)="openShareModal(shareModal)" [disabled]="isLongLoading" ngbTooltip="Share this map" [openDelay]="500">
           <div class="d-flex align-items-center">
             <i class="icon-share my-1 text-body"></i>
           </div>
