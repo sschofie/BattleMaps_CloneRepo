@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from 'src/environments/environment';
 import { ClipboardService } from 'ngx-clipboard';
 import { DynamicMap } from '../dynamic-map/dynamic-map';
@@ -12,7 +12,8 @@ import { ToastService } from '../toast/toast.service';
   styleUrls: [
     './show-map.component.css',
     '../../assets/simple-line-icons/css/simple-line-icons.css'
-  ]
+  ],
+  providers: [NgbTooltipConfig]
 })
 
 export class ShowMapComponent implements OnInit {
@@ -47,8 +48,11 @@ export class ShowMapComponent implements OnInit {
     private modalService: NgbModal,
     private clipboardService: ClipboardService,
     private dynamicMap: DynamicMap,
-    public toastService: ToastService
-  ) { }
+    public toastService: ToastService,
+    private config: NgbTooltipConfig
+  ) {
+    config.openDelay = 500;
+   }
 
   ngOnInit() {
     this.startSpinner();
