@@ -1,0 +1,20 @@
+  <br>
+  <p>
+    <button type="button" class="btn btn-success" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed"
+      aria-controls="collapseExample">
+      Settings
+    </button>
+  </p>
+  <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+    <div class="card">
+      <div class="card-body">
+        <p class="text-muted">Generate a new map to apply changes</p>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="switchED" checked="true" (click)="generatorSettings.toggleUseEDMaps()">
+          <label class="custom-control-label" for="switchED">Include maps from Lars' Epic Dwarf pack</label>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

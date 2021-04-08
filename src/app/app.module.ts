@@ -13,6 +13,7 @@ import { MapGeneratorPageComponent } from './map-generator-page/map-generator-pa
 import { DynamicMap } from './dynamic-map/dynamic-map';
 import { FeatureFlagDirective } from './feature-flag/feature-flag.directive';
 import { ToastComponent } from './toast/toast.component';
+import { CollapseBasicComponent } from './collapse-basic/collapse-basic.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/landing-page', pathMatch: 'full' },
@@ -27,7 +28,8 @@ const routes: Routes = [
     LandingPageComponent,
     MapGeneratorPageComponent,
     FeatureFlagDirective,
-    ToastComponent
+    ToastComponent,
+    CollapseBasicComponent
   ],
   imports: [
     BrowserModule,

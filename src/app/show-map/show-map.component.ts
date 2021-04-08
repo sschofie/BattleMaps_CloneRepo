@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { ClipboardService } from 'ngx-clipboard';
 import { DynamicMap } from '../dynamic-map/dynamic-map';
 import { ToastService } from '../toast/toast.service';
+import { GeneratorSettingsService } from '../collapse-basic/generator-settings.service';
 
 @Component({
   selector: 'app-show-map',
@@ -49,6 +50,7 @@ export class ShowMapComponent implements OnInit {
     private clipboardService: ClipboardService,
     private dynamicMap: DynamicMap,
     public toastService: ToastService,
+    public generatorSettings: GeneratorSettingsService,
     private config: NgbTooltipConfig
   ) {
     config.openDelay = 500;
@@ -140,7 +142,8 @@ export class ShowMapComponent implements OnInit {
     const oldMapID = this.route.snapshot.queryParamMap.get('map');
     mapID = oldMapID;
     while (mapID === oldMapID) { // make sure we're actually picking a new map
-      if (environment.featureFlags.dynamicMaps && Math.random() < 0.75) { //picks a random maps 75% of the time
+      if (environment.featureFlags.dynamicMaps &&
+          (!this.generatorSettings.useEDMaps || Math.random() < 0.75)) { //picks a random maps 75% of the time
         // generate a random seed
         mapID = DynamicMap.newSeed().toString();
       }
