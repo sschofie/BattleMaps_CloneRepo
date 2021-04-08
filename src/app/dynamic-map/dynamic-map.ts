@@ -53,7 +53,7 @@ export class DynamicMap {
   private rand;
   private itemsToLoad: number;
   private itemsLoaded: number;
-  public mapNodes: Node[];
+
 
   static newSeed(): number {
     return Math.floor(Math.random() * DynamicMap.maxInt32Unsigned);
