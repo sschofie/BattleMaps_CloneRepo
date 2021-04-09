@@ -4,11 +4,6 @@
     "projects/**/*"
   ],
   "overrides": [
-    /**
-     * -----------------------------------------------------
-     * TYPESCRIPT FILES (COMPONENTS, SERVICES ETC) (.ts)
-     * -----------------------------------------------------
-     */
     {
       "files": [
         "*.ts"
@@ -56,19 +51,17 @@
         "no-console": [
           "error",
           {
-            "allow": ["warn", "error", "debug"]
+            "allow": [
+              "warn",
+              "error",
+              "debug"
+            ]
           }
         ],
         "no-shadow": "off",
         "@typescript-eslint/no-shadow": ["error"]
       }
     },
-
-    /**
-     * -----------------------------------------------------
-     * COMPONENT TEMPLATES
-     * -----------------------------------------------------
-     */
     {
       "files": [
         "*.html"
