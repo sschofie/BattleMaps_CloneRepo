@@ -3,20 +3,20 @@ import { ShowMapComponent } from '../show-map.component';
 
 
 @Component({
-  selector: 'app-map-tooltips',
-  templateUrl: './tool-tips.component.html',
-  styleUrls: ['./tool-tips.component.css']
+  selector: 'app-map-legend',
+  templateUrl: './map-legend.component.html',
+  styleUrls: ['./map-legend.component.css']
 })
-export class ToolTipsComponent implements OnInit {
+export class MapLegendComponent implements OnInit {
   @Input() mapNodes: Node[];
-  @Input() showToolTips: boolean;
+  @Input() showLegend: boolean;
   @Input() passNodes: Function;
-  @Output() getToolTips = new EventEmitter<void>();
-  tooltips: ToolTip[];
+  @Output() getLegendNodes = new EventEmitter<void>();
+  legend: Legend[];
   private itemsToLoad: number;
   private itemsLoaded: number;
   myMapNodes;
-  printTips;
+  printLegend;
 
   constructor(
     private showmapComponent: ShowMapComponent
@@ -24,20 +24,20 @@ export class ToolTipsComponent implements OnInit {
 
   ngOnInit() {
     this.myMapNodes = this.showmapComponent.passNodes();
-    this.tooltips = this.getNodes();
-    this.printTips = this.printToolTips(this.tooltips, 400, 600, true);
+    this.legend = this.getNodes();
+    this.printLegend = this.printMapLegend(this.legend, 400, 600, true);
   }
 
   EmitToolTips() {
-    console.log(this.tooltips);
-    this.getToolTips.emit(this.printTips);
+    console.log(this.legend);
+    this.getLegendNodes.emit(this.printLegend);
   }
 
   getNodes() {
-    var tooltipNodes: ToolTip[] = [];
+    var legendNodes: Legend[] = [];
     console.log(this.myMapNodes);
     for (let n in this.myMapNodes) {
-      tooltipNodes.push(new ToolTip(
+      legendNodes.push(new Legend(
         this.mapNodes[n].x,
         this.mapNodes[n].y,
         this.mapNodes[n].item.svg,
@@ -46,8 +46,8 @@ export class ToolTipsComponent implements OnInit {
         this.assignTerrainType(this.mapNodes[n].item.svg, this.mapNodes[n].height)
       ));
     }
-    console.log(tooltipNodes);
-    return tooltipNodes;
+    console.log(legendNodes);
+    return legendNodes;
   }
 
   assignTerrainType(type: string, height: number) {
@@ -83,31 +83,31 @@ export class ToolTipsComponent implements OnInit {
    * @param w - indicated the width of the map to be printed
    * @param debug - indicates whether or not to print debug info (bounding circles and spawn pts)
    */
-  printToolTips(encoding: ToolTip[], h: number, w: number, debug: boolean) {
-    let tipCanvas = document.getElementById('tooltipViewer') as HTMLCanvasElement;
-    if (!tipCanvas) {
-      while (!tipCanvas) {
+   printMapLegend(encoding: Legend[], h: number, w: number, debug: boolean) {
+    let lCanvas = document.getElementById('legendViewer') as HTMLCanvasElement;
+    if (!lCanvas) {
+      while (!lCanvas) {
         // sometimes the canvas takes a bit to load in
-        console.debug('[printToolTips] Looking for canvas "tooltipViewer"...');
-        tipCanvas = document.getElementById('tooltipViewer') as HTMLCanvasElement;
+        console.debug('[printMapLegend] Looking for canvas "legendViewer"...');
+        lCanvas = document.getElementById('legendViewer') as HTMLCanvasElement;
         //await sleep(150);
       }
-      console.debug('[printToolTips] Found canvas!');
+      console.debug('[printMapLegend] Found canvas!');
     }
-    const tipCtx = tipCanvas.getContext('2d') as CanvasRenderingContext2D;
-    tipCtx.clearRect(0, 0, tipCtx.canvas.width, tipCtx.canvas.height);
+    const lCtx = lCanvas.getContext('2d') as CanvasRenderingContext2D;
+    lCtx.clearRect(0, 0, lCtx.canvas.width, lCtx.canvas.height);
     if (!this.showmapComponent.showWidth) {
       while (!this.showmapComponent.showWidth) {
         // showWidth takes a moment to load when page refreshes
-        console.debug('[printToolTips] Looking for showWidth...');
+        console.debug('[printMapLegend] Looking for showWidth...');
         //await sleep(150);
       }
-      console.debug('[printToolTips] Found showWidth!');
+      console.debug('[printMapLegend] Found showWidth!');
     }
     const width = this.showmapComponent.showWidth.nativeElement.offsetWidth;
-    tipCtx.canvas.width = width;
-    tipCtx.canvas.height = width * .66;
-    tipCtx.scale(width / w, width * .66 / h);
+    lCtx.canvas.width = width;
+    lCtx.canvas.height = width * .66;
+    lCtx.scale(width / w, width * .66 / h);
 
     //code to draw items
     this.itemsToLoad = encoding.length; //these are used to make sure onLoad is called when all items have been rendered
@@ -119,17 +119,17 @@ export class ToolTipsComponent implements OnInit {
       const type_text = p.type;
       const item_text = p.item;
       const height_text = "Height: " + p.height;
-      const textWidth = tipCtx.measureText(type_text).width;
+      const textWidth = lCtx.measureText(type_text).width;
       if (p.x >= 500) {//this is to adjust for any items that go off the map on the right side
-        tipCtx.fillText(type_text, (p.x - 40), (p.y - 20));
-        tipCtx.fillText(item_text, (p.x - 40), (p.y - 5));
-        tipCtx.fillText(height_text, (p.x - 40), (p.y + 10));
-        tipCtx.strokeRect((p.x - 50), (p.y - 32), textWidth + 10, 50);
+        lCtx.fillText(type_text, (p.x - 40), (p.y - 20));
+        lCtx.fillText(item_text, (p.x - 40), (p.y - 5));
+        lCtx.fillText(height_text, (p.x - 40), (p.y + 10));
+        lCtx.strokeRect((p.x - 50), (p.y - 32), textWidth + 10, 50);
       } else {
-        tipCtx.fillText(type_text, (p.x-32), (p.y - 20));
-        tipCtx.fillText(item_text, (p.x-32), (p.y - 5));
-        tipCtx.fillText(height_text, (p.x-32), (p.y + 10));
-        tipCtx.strokeRect((p.x - 35), (p.y - 32), textWidth + 10, 50);
+        lCtx.fillText(type_text, (p.x-32), (p.y - 20));
+        lCtx.fillText(item_text, (p.x-32), (p.y - 5));
+        lCtx.fillText(height_text, (p.x-32), (p.y + 10));
+        lCtx.strokeRect((p.x - 35), (p.y - 32), textWidth + 10, 50);
       }
       this.itemsLoaded++;
 
@@ -139,7 +139,7 @@ export class ToolTipsComponent implements OnInit {
 }
 
 
-export class ToolTip {
+export class Legend {
   public x: number;
   public y: number;
   public item: string;

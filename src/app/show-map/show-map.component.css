@@ -30,7 +30,7 @@
   height: 100%;
 }
 
-#tooltipOverlay {
+#legendOverlay {
   position: absolute;
   align-content: center;
   width: 100%;
@@ -46,7 +46,7 @@
   top: 0;
 }
 
-#tooltipViewer {
+#legendViewer {
   background-color: white;
   border: 1px solid blue;
   position: absolute;
@@ -55,6 +55,10 @@
   left: 0;
   top: 0;
   z-index: 1;
+}
+
+#LegendButton {
+  font-size: 11px;
 }
 
 #share-modal-content {

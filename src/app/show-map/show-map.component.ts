@@ -7,7 +7,7 @@ import { DynamicMap } from '../dynamic-map/dynamic-map';
 import { ToastService } from '../toast/toast.service';
 import { GeneratorSettingsService } from '../collapse-basic/generator-settings.service';
 import { Node } from '../dynamic-map/dynamic-map';
-import { ToolTipsComponent } from '../show-map/tool-tips/tool-tips.component';
+import { MapLegendComponent } from './map-legend/map-legend.component';
 
 @Component({
   selector: 'app-show-map',
@@ -44,12 +44,12 @@ export class ShowMapComponent implements OnInit {
   private isLoading: boolean;
   private tmpDwarfText: string;
   private tmpSelectedScenario: string;
-  @ViewChild('ToolTipsComponent') tooltips: ToolTipsComponent;
+  @ViewChild('MapLegendComponent') legend: MapLegendComponent;
   public mapDisplay: string;
   public mapNodes: Node[];
-  showToolTips: boolean = false;
-  tooltipButton = "Show Map Legend";
-  tipViewer;
+  showLegend: boolean = false;
+  legendButton = "Show Map Legend";
+  legendViewer;
 
 
 
@@ -84,8 +84,8 @@ export class ShowMapComponent implements OnInit {
       this.changeScenarioOnly = false;
     });
 
-    this.tipViewer = document.getElementById("tooltipViewer") as HTMLCanvasElement;
-    this.tipViewer.style.display = "none";
+    this.legendViewer = document.getElementById("legendViewer") as HTMLCanvasElement;
+    this.legendViewer.style.display = "none";
   }
 
   async startSpinner() {
@@ -119,7 +119,7 @@ export class ShowMapComponent implements OnInit {
         map: this.switchMap(false)
       }
     });
-    this.hideToolTips();
+    this.hideMapLegend();
   }
 
   /**
@@ -246,7 +246,7 @@ export class ShowMapComponent implements OnInit {
 
       this.mapNodes = this.dynamicMap.generateAndPrintMap(this, mapSeed, resources);
       this.passNodes();
-      this.passToolTips();
+      this.passLegendNodes();
       this.tmpDwarfText = 'Dynamically generated map';
     }
     return true;
@@ -282,40 +282,40 @@ export class ShowMapComponent implements OnInit {
   /*
    * Function to recieve getToolTips() from Tool-Tips Component
    */
-  passToolTips() {
+  passLegendNodes() {
   }
 
   /**
    * Function called with switchMapand Scenario to clear Tooltips display
    */
-  hideToolTips() {
-    this.tipViewer.style.display = "none";
-    this.tooltipButton = "Show Map Legend";
-    this.showToolTips = false;
+  hideMapLegend() {
+    this.legendViewer.style.display = "none";
+    this.legendButton = "Show Map Legend";
+    this.showLegend = false;
   }
 
   /*
    * Function to get Tooltips from ToolTipsComponent
    */
-  toggleToolTips() {
-    console.log(this.showToolTips);
-    this.showToolTips = !this.showToolTips;
-    this.tipViewer = document.getElementById("tooltipViewer") as HTMLCanvasElement;
-    if (this.showToolTips == true) {
-      this.tooltipButton = "Showing Map Legend";
-      this.displayToolTips();
-      this.tipViewer.style.display = "block";
+  toggleMapLegend() {
+    console.log(this.showLegend);
+    this.showLegend = !this.showLegend;
+    this.legendViewer = document.getElementById("legendViewer") as HTMLCanvasElement;
+    if (this.showLegend == true) {
+      this.legendButton = "Showing Map Legend";
+      this.displayMapLegend();
+      this.legendViewer.style.display = "block";
     } else {
-      this.tooltipButton = "Hiding Map Legend";
-      this.tipViewer.style.display = "none";
+      this.legendButton = "Hiding Map Legend";
+      this.legendViewer.style.display = "none";
     };
   }
 
-  displayToolTips() {
-    var tipViewer = document.getElementById("tooltipViewer") as HTMLCanvasElement;
+  displayMapLegend() {
+    var legendViewer = document.getElementById("legendViewer") as HTMLCanvasElement;
     this.passNodes();
-    this.passToolTips();
-    tipViewer.style.display = "block";
+    this.passLegendNodes();
+    this.legendViewer.style.display = "block";
   }
 
 

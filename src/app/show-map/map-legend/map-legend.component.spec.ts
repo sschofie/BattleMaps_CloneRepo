@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { ToolTipsComponent } from './tool-tips.component';
+import { MapLegendComponent } from './map-legend.component';
 
 describe('ToolTipsComponent', () => {
-  let component: ToolTipsComponent;
-  let fixture: ComponentFixture<ToolTipsComponent>;
+  let component: MapLegendComponent;
+  let fixture: ComponentFixture<MapLegendComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ToolTipsComponent ]
+      declarations: [ MapLegendComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ToolTipsComponent);
+    fixture = TestBed.createComponent(MapLegendComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
