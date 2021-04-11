@@ -18,7 +18,7 @@
   position: relative;
   width: 100%;
   min-height: 375px;
-  height: 66vh;
+  /*height: 66vh;*/
 }
 
 #overlay {
@@ -44,21 +44,24 @@
   align-content: center;
   left: 0;
   top: 0;
+  height: 66vh;
 }
 
 #legendViewer {
-  background-color: white;
-  border: 1px solid blue;
   position: absolute;
   align-content: center;
-  opacity: 0.5;
   left: 0;
   top: 0;
+  height: 66vh;
   z-index: 1;
 }
 
 #LegendButton {
   font-size: 11px;
+}
+
+#buttonContainer {
+  z-index:3;
 }
 
 #share-modal-content {

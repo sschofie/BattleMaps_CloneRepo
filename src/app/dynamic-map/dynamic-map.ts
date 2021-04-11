@@ -71,7 +71,9 @@ export class DynamicMap {
    */
   printEpicDwarfMap(context: ShowMapComponent, mapNum: number) {
     this.context = context;
-    this.printMap(this.getEpicDwarfMapEncoding(mapNum), 400, 600, false);
+    this.mapNodes =this.getEpicDwarfMapEncoding(mapNum);
+    this.printMap(this.mapNodes, 400, 600, false);
+    return this.mapNodes;
   }
 
   /**

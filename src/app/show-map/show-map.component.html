@@ -11,7 +11,7 @@
       </div>
       <div class="col-md-push-auto pb-3">
         <button id="scenarioButton" type="button" class="btn btn-success" (click)="onSwitchScenarioButtonClick()"
-          ngbTooltip="New Scenario" [openDelay]="500">
+          ngbTooltip="New Scenario">
           <div class="d-flex align-items-center">
             <i class="icon-shuffle my-1 text-body"></i>
           </div>
@@ -24,7 +24,7 @@
     <canvas id="legendViewer" width="1000"></canvas>
     <div *ngIf="showLegend" id="legendOverlay">
       <app-map-legend #MapLegendComponent [mapNodes]="mapNodes" [showLegend]="showLegend" (passNodes)="passNodes()"
-        (getLegendNodes)="passLegendNodes()"></app-map-legend>
+        (getlegendNodes)="passLegendNodes()"></app-map-legend>
     </div>
     <div *ngIf="isLongLoading" id="overlay" class="d-flex justify-content-center align-items-center">
       <div class="spinner-border text-success" role="status">
@@ -33,10 +33,10 @@
     </div>
   </div>
   <i style="color: darkslategray; align-content: center;">{{dwarfText}}</i>
-  <div class="container">
+  <div class="container" id="buttonContainer">
     <div class="row align-items-center mt-4">
       <div class="col justify-content-start">
-        <button id="LegendButton" value="Show Map Legend" type="button" class="btn btn-success"
+        <button id="LegendButton" value="Map Legend" type="button" class="btn btn-success"
           (click)="toggleMapLegend()">{{legendButton}}</button>
       </div>
       <div class="col justify-content-center">
@@ -45,7 +45,7 @@
       </div>
       <div class="col justify-content-end">
         <button id="shareButton" type="button" class="btn btn-outline-success" data-toggle="modal"
-          (click)="openShareModal(shareModal)" [disabled]="isLongLoading" ngbTooltip="Share this map" [openDelay]="500">
+          (click)="openShareModal(shareModal)" [disabled]="isLongLoading" ngbTooltip="Share this map">
           <div class="d-flex align-items-center">
             <i class="icon-share my-1 text-body"></i>
           </div>

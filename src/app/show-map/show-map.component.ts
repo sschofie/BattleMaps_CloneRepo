@@ -35,21 +35,22 @@ export class ShowMapComponent implements OnInit {
     `Smoke & Mirrors`
   ];
   @ViewChild('showWidth') showWidth: ElementRef;
+  @ViewChild('MapLegendComponent') legend: MapLegendComponent;
   dwarfText = '';
   selectedScenario = '';
   isLongLoading = false;
   currentURL = '';
+  showLegend = false;
+  legendButton = 'Show Map Legend';
+  legendViewer: HTMLCanvasElement;
+  public mapDisplay: string;
+  public mapNodes: Node[];
   private baseURL = environment.appURL;
   private changeScenarioOnly = false;
   private isLoading: boolean;
   private tmpDwarfText: string;
   private tmpSelectedScenario: string;
-  @ViewChild('MapLegendComponent') legend: MapLegendComponent;
-  public mapDisplay: string;
-  public mapNodes: Node[];
-  showLegend: boolean = false;
-  legendButton = "Show Map Legend";
-  legendViewer;
+
 
 
 
@@ -84,8 +85,8 @@ export class ShowMapComponent implements OnInit {
       this.changeScenarioOnly = false;
     });
 
-    this.legendViewer = document.getElementById("legendViewer") as HTMLCanvasElement;
-    this.legendViewer.style.display = "none";
+    this.legendViewer = document.getElementById('legendViewer') as HTMLCanvasElement;
+    this.legendViewer.style.display = 'none';
   }
 
   async startSpinner() {
@@ -223,7 +224,9 @@ export class ShowMapComponent implements OnInit {
         console.warn('WARN: Invalid Epic Dwarf map ID.');
         return false;
       }
-      this.dynamicMap.printEpicDwarfMap(this, mapNum);
+      this.mapNodes = this.dynamicMap.printEpicDwarfMap(this, mapNum);
+      this.passNodes();
+      this.passLegendNodes();
       this.tmpDwarfText = 'Lars\' Epic Dwarf map #' + mapNum;
     }
     else {
@@ -289,8 +292,9 @@ export class ShowMapComponent implements OnInit {
    * Function called with switchMapand Scenario to clear Tooltips display
    */
   hideMapLegend() {
-    this.legendViewer.style.display = "none";
-    this.legendButton = "Show Map Legend";
+    this.legendViewer = document.getElementById('legendViewer') as HTMLCanvasElement;
+    this.legendViewer.style.display = 'none';
+    this.legendButton = 'Show Map Legend';
     this.showLegend = false;
   }
 
@@ -298,24 +302,25 @@ export class ShowMapComponent implements OnInit {
    * Function to get Tooltips from ToolTipsComponent
    */
   toggleMapLegend() {
-    console.log(this.showLegend);
     this.showLegend = !this.showLegend;
-    this.legendViewer = document.getElementById("legendViewer") as HTMLCanvasElement;
-    if (this.showLegend == true) {
-      this.legendButton = "Showing Map Legend";
+    //this.legendViewer = document.getElementById("legendViewer") as HTMLCanvasElement;
+    if (this.showLegend === true) {
+      this.legendViewer = document.getElementById('legendViewer') as HTMLCanvasElement;
+      this.legendButton = 'Showing Map Legend';
       this.displayMapLegend();
-      this.legendViewer.style.display = "block";
+      this.legendViewer.style.display = 'block';
     } else {
-      this.legendButton = "Hiding Map Legend";
-      this.legendViewer.style.display = "none";
+      this.legendViewer = document.getElementById('legendViewer') as HTMLCanvasElement;
+      this.legendButton = 'Hiding Map Legend';
+      this.legendViewer.style.display = 'none';
     };
   }
 
   displayMapLegend() {
-    var legendViewer = document.getElementById("legendViewer") as HTMLCanvasElement;
+    const legendViewer = document.getElementById('legendViewer') as HTMLCanvasElement;
     this.passNodes();
     this.passLegendNodes();
-    this.legendViewer.style.display = "block";
+    this.legendViewer.style.display = 'block';
   }
 
 
