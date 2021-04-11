@@ -15,6 +15,7 @@ import { FeatureFlagDirective } from './feature-flag/feature-flag.directive';
 import { ToastComponent } from './toast/toast.component';
 import { CollapseBasicComponent } from './collapse-basic/collapse-basic.component';
 import { MapLegendComponent } from './show-map/map-legend/map-legend.component';
+import { GeneratorSettingsService } from './collapse-basic/generator-settings.service';
 
 const routes: Routes = [
   { path: '', redirectTo: '/landing-page', pathMatch: 'full' },
@@ -43,7 +44,8 @@ const routes: Routes = [
   ],
   providers: [
     DynamicMap,
-    FeatureFlagsService
+    FeatureFlagsService,
+    GeneratorSettingsService
   ],
   bootstrap: [AppComponent]
 })

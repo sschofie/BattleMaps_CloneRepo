@@ -1,5 +1,7 @@
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { ShowMapComponent } from '../show-map.component';
+import { Node } from '../../dynamic-map/dynamic-map';
+
 
 @Component({
   selector: 'app-map-legend',
@@ -35,7 +37,7 @@ export class MapLegendComponent implements OnInit {
    */
    getNodes() {
     const legendNodes: Legend[] = [];
-    for (const n of this.myMapNodes) {
+    for (let n of this.myMapNodes) {
       legendNodes.push(new Legend(
         n.x,
         n.y,

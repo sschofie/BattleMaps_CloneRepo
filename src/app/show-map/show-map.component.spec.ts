@@ -8,14 +8,14 @@ import { environment } from 'src/environments/environment';
 import { DynamicMap } from '../dynamic-map/dynamic-map';
 import { MapGeneratorPageComponent } from '../map-generator-page/map-generator-page.component';
 import { ToastComponent } from '../toast/toast.component';
-
 import { ShowMapComponent } from './show-map.component';
+import { CollapseBasicComponent } from '../collapse-basic/collapse-basic.component.spec';
 
 describe('ShowMapComponent', () => {
   const baseTestBed = {
     declarations: [
       ShowMapComponent,
-      ToastComponent
+      ToastComponent,
     ],
     imports: [
       RouterTestingModule.withRoutes(
