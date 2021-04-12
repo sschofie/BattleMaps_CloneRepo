@@ -18,7 +18,7 @@
   position: relative;
   width: 100%;
   min-height: 375px;
-  /*height: 66vh;*/
+  height: 66vh;
 }
 
 #overlay {
@@ -54,10 +54,6 @@
   top: 0;
   height: 66vh;
   z-index: 1;
-}
-
-#LegendButton {
-  font-size: 11px;
 }
 
 #buttonContainer {

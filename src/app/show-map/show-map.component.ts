@@ -8,6 +8,7 @@ import { ToastService } from '../toast/toast.service';
 import { GeneratorSettingsService } from '../collapse-basic/generator-settings.service';
 import { Node } from '../dynamic-map/dynamic-map';
 import { MapLegendComponent } from './map-legend/map-legend.component';
+import { CheckboxControlValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'app-show-map',

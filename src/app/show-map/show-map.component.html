@@ -36,8 +36,10 @@
   <div class="container" id="buttonContainer">
     <div class="row align-items-center mt-4">
       <div class="col justify-content-start">
-        <button id="LegendButton" value="Map Legend" type="button" class="btn btn-success"
-          (click)="toggleMapLegend()">{{legendButton}}</button>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="LegendButton" (click)="toggleMapLegend()">
+          <label class="custom-control-label" for="LegendButton">{{legendButton}}</label>
+        </div>
       </div>
       <div class="col justify-content-center">
         <button id="generateButton" type="button" class="btn btn-success" (click)="switchMapAndScenario()">Generate
