@@ -164,14 +164,14 @@ export class ShowMapComponent implements OnInit {
    * WIP: Set the amount of available resources for a given generation.
    * TODO: add UI so user can designate the available resources
    */
-  setLimitedResources(): boolean{
+  setLimitedResources(): boolean {
     const resourceBounds: number[] = null;
     let res = '';
-    for(const r of resourceBounds){
+    for (const r of resourceBounds) {
       res += r + ',';
     }
-    res = res.substring(0,res.length-1);
-    this.router.navigate(['/app'], { queryParams: { resources: res }, queryParamsHandling: 'merge' });
+    res = res.substring(0, res.length - 1);
+    this.router.navigate(['/app'], { queryParams: { r: res }, queryParamsHandling: 'merge' });
     return true;
   }
 
@@ -224,10 +224,10 @@ export class ShowMapComponent implements OnInit {
         console.warn('WARN: Map seed is invalid.');
         return false;
       }
-      const resParam = this.route.snapshot.queryParamMap.get('resources');
+      const resParam = this.route.snapshot.queryParamMap.get('r');
       let resources = null;
-      if(resParam != null){
-        resources = resParam.split(',').map(x=>+x);
+      if (resParam != null) {
+        resources = resParam.split(',').map(x => +x);
       }
       this.dynamicMap.generateAndPrintMap(this, mapSeed, resources);
       this.tmpDwarfText = 'Dynamically generated map';

@@ -4,36 +4,47 @@ import * as epicDwarfMaps from '../../assets/epic-dwarf-maps.json';
 //represents a single pre-defined piece of terrain.
 export class TerrainPiece {
   public id: number; //index in the terrainPieces array
+  public type: TerrainPiece.Type;
   public radius: number; //radius of the bounding circle
   public weight: number; // beween 0 and 1
   public svg: string; //name of the svg image.
   public height: number;
 
-  public constructor(id: number, r: number, w: number, img: string) {
+  public constructor(id: number, type: TerrainPiece.Type, r: number, w: number, img: string) {
     this.id = id;
+    this.type = type;
     this.radius = r;
     this.weight = w;
     this.svg = img;
   }
 }
 
+export namespace TerrainPiece { // eslint-disable-line @typescript-eslint/no-namespace
+  export enum Type {
+    blocking = 0,
+    difficult,
+    obstacle,
+    hill,
+    forest
+  }
+}
+
 export class DynamicMap {
   static readonly maxInt32Unsigned = 4294967296;
-  //reference array for pre-defined items. Others culd be read in from Json file.
   static readonly terrainPieces: [string, TerrainPiece][] = [
-    ['stone_wall', new TerrainPiece(0, 35, 1, 'stone_wall')],
-    ['pond', new TerrainPiece(1, 45, 1, 'pond')],
-    ['house', new TerrainPiece(2, 25, 1, 'house')],
-    ['tree', new TerrainPiece(3, 40, 1, 'tree')],
-    ['boulder', new TerrainPiece(4, 38, 1, 'boulder')],  // mountain
-    ['boulder2', new TerrainPiece(5, 40, 1, 'boulder2')], // rock hill
-    ['boulder3', new TerrainPiece(6, 40, 1, 'boulder3')], // grass hill
-    ['foliage', new TerrainPiece(7, 40, 1, 'foliage')],
-    ['crop_field', new TerrainPiece(8, 35, 1, 'crop_field')],
-    ['stone_wall', new TerrainPiece(9, 35, 1, 'hedge_wall')],
-    ['stone_wall', new TerrainPiece(10, 35, 1, 'hedge_wall2')],
-    ['wood_building', new TerrainPiece(11, 25, 1, 'wood_building')],
-    ['wood_wall_1', new TerrainPiece(12, 40, 1, 'wood_wall_1')],
+    ['stone_wall', new TerrainPiece(0, TerrainPiece.Type.obstacle, 35, 1, 'stone_wall')],
+    ['pond', new TerrainPiece(1, TerrainPiece.Type.difficult, 45, 1, 'pond')],
+    ['house', new TerrainPiece(2, TerrainPiece.Type.blocking, 25, 1, 'house')],
+    ['tree', new TerrainPiece(3, TerrainPiece.Type.forest, 40, 1, 'tree')],
+    ['boulder', new TerrainPiece(4, TerrainPiece.Type.blocking, 38, 1, 'boulder')],  // mountain
+    ['boulder2', new TerrainPiece(5, TerrainPiece.Type.hill, 40, 1, 'boulder2')], // rock hill
+    ['boulder3', new TerrainPiece(6, TerrainPiece.Type.hill, 40, 1, 'boulder3')], // grass hill
+    ['foliage', new TerrainPiece(7, TerrainPiece.Type.forest, 40, 1, 'foliage')],
+    ['crop_field', new TerrainPiece(8, TerrainPiece.Type.difficult, 35, 1, 'crop_field')],
+    ['stone_wall', new TerrainPiece(9, TerrainPiece.Type.obstacle, 35, 1, 'hedge_wall')],
+    ['stone_wall', new TerrainPiece(10, TerrainPiece.Type.obstacle, 35, 1, 'hedge_wall2')],
+    ['wood_building', new TerrainPiece(11, TerrainPiece.Type.blocking, 25, 1, 'wood_building')],
+    ['wood_wall_1', new TerrainPiece(12, TerrainPiece.Type.obstacle, 40, 1, 'wood_wall_1')],
   ];
   mapNodes: Node[]; //keep track of the current map for other funcions
   private context: ShowMapComponent;
@@ -67,6 +78,7 @@ export class DynamicMap {
    *
    * @param context - the ShowMapComponent to be referenced.
    * @param seed - a 32 bit unsigned int to generate a specific map
+   * @param resources - an array containing the quantity of each item type in order of: Blocking, Difficult, Obstacle, Hill, Forest
    */
   generateAndPrintMap(context: ShowMapComponent, seed: number, resources: number[]) {
     this.context = context;
@@ -80,20 +92,26 @@ export class DynamicMap {
    * @param mapHeight - height of the map (usually 400)
    * @param mapWidth - width of the map (usually 600)
    * @param edgeBoundary - distance from the map edge in which objects cannot spawn
-   * @param resources - an array of numbers representing the available resources where index equals id
+   * @param resources - an array containing the quantity of each item type in order of: Blocking, Difficult, Obstacle, Hill, Forest
    * @param weighted - toggle weighted generation
    * @param seed - a 32 bit unsigned int to generate a specific map
    */
   private simpleGenerate(mapHeight: number, mapWidth: number, edgeBoundary: number,
     resources: number[], weighted: boolean, seed: number): Node[] {
     this.rand = this.seedrandom(seed);
-    const numOfItems = DynamicMap.terrainPieces.length;
     const boundScaling = 0.85; //this scales the bounding circle allowing object to overlap slightly.
     const nodes: Node[] = [];
-    const runs = 0;
+    let runs = 0;
     let numOfNodes = Math.floor(this.rand() * 4) + 8; //designates number of terrain pieces with a max of 12 and min of 8.
     let numPiecesAvailable = 0;
     if (resources != null) {
+      // discard extra values if the resources array is longer than list of terrain types
+      resources = resources.slice(0, Object.keys(TerrainPiece.Type).length / 2);
+      if (resources.every(val => val === 0)) {
+        // if there is zero of every resource, don't bother trying to place nodes
+        this.context.onLoad();
+        return [];
+      }
       for (const n of resources) {
         numPiecesAvailable += n;
       }
@@ -102,15 +120,16 @@ export class DynamicMap {
       }
     }
     while (nodes.length < numOfNodes && runs < this.maxRuns) {
-      const item: TerrainPiece = this.selectTP(numOfItems, weighted, resources);
-      const tempX = Math.floor(this.rand() * (mapWidth - edgeBoundary*2)) + edgeBoundary;
-      const tempY = Math.floor(this.rand() * (mapHeight - edgeBoundary*2)) + edgeBoundary;
+      const item: TerrainPiece = this.selectTP(weighted, resources);
+      const tempX = Math.floor(this.rand() * (mapWidth - edgeBoundary * 2)) + edgeBoundary;
+      const tempY = Math.floor(this.rand() * (mapHeight - edgeBoundary * 2)) + edgeBoundary;
       if (!this.checkForOverlap(nodes, item, tempX, tempY)) {
         nodes.push(new Node(tempX, tempY, Math.floor(this.rand() * 2 * Math.PI), (item.radius * boundScaling), item, -1));
         if (resources != null) {
-          resources[item.id]-=1;
+          resources[item.type]--;
         }
       }
+      runs++;
     }
     return nodes;
   }
@@ -118,26 +137,30 @@ export class DynamicMap {
   /**
    * Selects a random terrain piece
    *
-   * @param numOfItems - the number of items in TerrainPieces
    * @param weighted - toggle whether the generation is weighted
-   * @param resources - an array of numbers representing the available resources where index equals id
+   * @param resources - an array containing the quantity of each item type in order of: Blocking, Difficult, Obstacle, Hill, Forest
    * @returns a random TerrainPiece
    */
-  private selectTP(numOfItems: number, weighted: boolean, resources: number[]): TerrainPiece {
-    let item: TerrainPiece = null;
-    while (item == null) {
-      item = DynamicMap.terrainPieces[Math.floor(this.rand() * (numOfItems - 1))][1];
-      if(resources != null) {
-        if(item.id >= resources.length) {
-          item = null;
-        }else if(resources[item.id] < 1) {
-          item = null;
+  private selectTP(weighted: boolean, resources: number[]): TerrainPiece {
+    // get a random type (constrained by provided resources)
+    let type: TerrainPiece.Type = null;
+    while (type == null) {
+      type = Math.floor(this.rand() * Object.keys(TerrainPiece.Type).length / 2) as TerrainPiece.Type;
+      if (resources != null) { // if we have resources, make sure there's enough of this type
+        if (type >= resources.length) {
+          type = null;
+        } else if (resources[type] < 1) {
+          type = null;
         }
       }
-      if (weighted && item.weight < this.rand()) {
-        item = null;
-      }
     }
+
+    // get a random TerrainPiece of that type
+    let item: TerrainPiece = null;
+    do {
+      item = DynamicMap.terrainPieces[Math.floor(this.rand() * DynamicMap.terrainPieces.length)][1];
+    } while (item.type !== type || (weighted && item.weight < this.rand()));
+
     return item;
   }
 
@@ -321,10 +344,9 @@ export class Node {
       let num = 0;
       if (this.item.svg === 'pond') {
         num = 0;
-      } else if (this.item.svg === 'stone_wall' || this.item.svg === 'hedge_wall' ||
-        this.item.svg === 'hedge_wall2' || this.item.svg === 'crop_field' || this.item.svg === 'wood_wall') {
+      } else if (this.item.type === TerrainPiece.Type.obstacle || this.item.svg === 'crop_field') {
         num = 1;
-      } else if (this.item.svg === 'foliage') {
+      } else if (this.item.type === TerrainPiece.Type.forest) {
         num = 2;
       } else {
         num = Math.floor(Math.random() * 3) + 2;
