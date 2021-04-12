@@ -41,7 +41,7 @@ export class MapLegendComponent implements OnInit {
       return null;
     }
     const legendNodes: Legend[] = [];
-    for (let n of this.myMapNodes) {
+    for (const n of this.myMapNodes) {
       legendNodes.push(new Legend(
         n.x,
         n.y,
