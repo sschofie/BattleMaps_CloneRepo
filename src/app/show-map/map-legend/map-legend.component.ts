@@ -3,6 +3,7 @@ import { ShowMapComponent } from '../show-map.component';
 import { Node } from '../../dynamic-map/dynamic-map';
 
 
+
 @Component({
   selector: 'app-map-legend',
   templateUrl: './map-legend.component.html',
@@ -14,7 +15,7 @@ export class MapLegendComponent implements OnInit {
   @Input() passNodes: () => void;
   @Output() getlegendNodes = new EventEmitter<void>();
   legend: Legend[];
-  myMapNodes;
+  myMapNodes: Node[];
   printLegend;
 
   constructor(
@@ -36,6 +37,9 @@ export class MapLegendComponent implements OnInit {
    * and makes an array of Legend to print to canvas
    */
    getNodes() {
+    if(!this.myMapNodes){
+      return null;
+    }
     const legendNodes: Legend[] = [];
     for (let n of this.myMapNodes) {
       legendNodes.push(new Legend(
