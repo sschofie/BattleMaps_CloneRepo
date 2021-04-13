@@ -2,6 +2,11 @@
   <link href="https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica&display=swap" rel="stylesheet">
 </head>
 
+<div *ngIf="!isProduction" class="col justify-content-center">
+  <!-- TODO remove this button before turning making tokens live -->
+  <button id="generateButton" type="button" class="btn btn-success" (click)="switchMap(true)">Switch Map Only
+    [DEBUG]</button>
+</div>
 <div class="content">
   <div class="container">
     <div class="row justify-content-center align-items-center">
@@ -10,9 +15,8 @@
         <h1>{{selectedScenario}}</h1>
       </div>
       <div class="col-md-push-auto pb-3">
-        <button id="scenarioButton" type="button" class="btn btn-success"
-          (click)="onSwitchScenarioButtonClick()"
-          ngbTooltip="New Scenario" [openDelay]="500">
+        <button id="scenarioButton" type="button" class="btn btn-success" (click)="onSwitchScenarioButtonClick()"
+          ngbTooltip="New Scenario">
           <div class="d-flex align-items-center">
             <i class="icon-shuffle my-1 text-body"></i>
           </div>
@@ -21,27 +25,31 @@
     </div>
   </div>
   <div class="content m-0 p-0" id="map-holder" #showWidth>
+    <canvas *appFeatureFlag="'tokens'" id="tokenViewer" width="500"></canvas>
     <canvas id="mapViewer" width="500" style="border: 1px solid rgb(95, 115, 46);"></canvas>
     <div *ngIf="isLongLoading" id="overlay" class="d-flex justify-content-center align-items-center">
       <div class="spinner-border text-success" role="status">
         <span class="sr-only">Loading...</span>
       </div>
-    </div>  
+    </div>
   </div>
   <i style="color: darkslategray;">{{dwarfText}}</i>
   <div class="container">
     <div class="row align-items-center mt-4">
       <div class="col justify-content-start">
-        <!-- this is just for spacing right now, may be used later -->
+        <div *appFeatureFlag="'tokens'" class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="switchTokens" checked="true"
+            (click)="onTokenSwitchClick()">
+          <label class="custom-control-label" for="switchTokens">Tokens</label>
+        </div>
       </div>
       <div class="col justify-content-center">
-        <button id="generateButton" type="button" class="btn btn-success" (click)="switchMapAndScenario()">Generate Map</button>
+        <button id="generateButton" type="button" class="btn btn-success" (click)="switchMapAndScenario()">Generate
+          Map</button>
       </div>
       <div class="col justify-content-end">
-        <button id="shareButton" type="button" class="btn btn-outline-success"
-          data-toggle="modal" (click)="openShareModal(shareModal)"
-          [disabled]="isLongLoading"
-          ngbTooltip="Share this map" [openDelay]="500">
+        <button id="shareButton" type="button" class="btn btn-outline-success" data-toggle="modal"
+          (click)="openShareModal(shareModal)" [disabled]="isLongLoading" ngbTooltip="Share this map">
           <div class="d-flex align-items-center">
             <i class="icon-share my-1 text-body"></i>
           </div>

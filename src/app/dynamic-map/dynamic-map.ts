@@ -69,9 +69,11 @@ export class DynamicMap {
    * @param context - the ShowMapComponent to be referenced.
    * @param mapNum - an integer 1-20 indicating the Epic Dwarf map to print.
    */
-  printEpicDwarfMap(context: ShowMapComponent, mapNum: number) {
+  printEpicDwarfMap(context: ShowMapComponent, mapNum: number): Node[] {
     this.context = context;
-    this.printMap(this.getEpicDwarfMapEncoding(mapNum), 400, 600, false);
+    this.mapNodes = this.getEpicDwarfMapEncoding(mapNum);
+    this.printMap(this.mapNodes, 400, 600, false);
+    return this.mapNodes;
   }
 
   /**
@@ -81,10 +83,11 @@ export class DynamicMap {
    * @param seed - a 32 bit unsigned int to generate a specific map
    * @param resources - an array containing the quantity of each item type in order of: Blocking, Difficult, Obstacle, Hill, Forest
    */
-  generateAndPrintMap(context: ShowMapComponent, seed: number, resources: number[]) {
+  generateAndPrintMap(context: ShowMapComponent, seed: number, resources: number[]): Node[] {
     this.context = context;
     this.mapNodes = this.simpleGenerate(400, 600, 50, resources, false, seed);
     this.printMap(this.mapNodes, 400, 600, false);
+    return this.mapNodes;
   }
 
   /**
@@ -325,7 +328,7 @@ export class DynamicMap {
   }
 }
 
-const dist = (x1: number, y1: number, x2: number, y2: number): number => {
+export const dist = (x1: number, y1: number, x2: number, y2: number): number => {
   const a = x1 - x2;
   const b = y1 - y2;
   return Math.sqrt(a * a + b * b);

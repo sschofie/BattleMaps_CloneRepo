@@ -14,6 +14,7 @@ import { DynamicMap } from './dynamic-map/dynamic-map';
 import { FeatureFlagDirective } from './feature-flag/feature-flag.directive';
 import { ToastComponent } from './toast/toast.component';
 import { CollapseBasicComponent } from './collapse-basic/collapse-basic.component';
+import { DynamicTokens } from './dynamic-tokens/dynamic-tokens';
 
 const routes: Routes = [
   { path: '', redirectTo: '/landing-page', pathMatch: 'full' },
@@ -40,6 +41,7 @@ const routes: Routes = [
   ],
   providers: [
     DynamicMap,
+    DynamicTokens,
     FeatureFlagsService
   ],
   bootstrap: [AppComponent]

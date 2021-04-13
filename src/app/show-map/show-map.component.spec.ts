@@ -6,6 +6,7 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { DynamicMap } from '../dynamic-map/dynamic-map';
+import { DynamicTokens } from '../dynamic-tokens/dynamic-tokens';
 import { MapGeneratorPageComponent } from '../map-generator-page/map-generator-page.component';
 import { ToastComponent } from '../toast/toast.component';
 
@@ -26,6 +27,7 @@ describe('ShowMapComponent', () => {
     ],
     providers: [
       DynamicMap,
+      DynamicTokens,
       {
         provide: ActivatedRoute,
         useValue: {
@@ -339,7 +341,7 @@ describe('ShowMapComponent', () => {
         queryParams: of({}),
         snapshot: {
           queryParamMap: {
-            get: () => '11'
+            get: () => ShowMapComponent.scenarios.length.toString()
           }
         }
       };

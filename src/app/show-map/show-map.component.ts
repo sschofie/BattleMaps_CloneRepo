@@ -3,9 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from 'src/environments/environment';
 import { ClipboardService } from 'ngx-clipboard';
-import { DynamicMap } from '../dynamic-map/dynamic-map';
+import { DynamicMap, Node } from '../dynamic-map/dynamic-map';
 import { ToastService } from '../toast/toast.service';
 import { GeneratorSettingsService } from '../collapse-basic/generator-settings.service';
+import { DynamicTokens } from '../dynamic-tokens/dynamic-tokens';
 
 @Component({
   selector: 'app-show-map',
@@ -29,14 +30,18 @@ export class ShowMapComponent implements OnInit {
     `Pillage`,
     `Plunder`,
     `Push`,
+    `Raze`,
     `Salt the Earth`,
     `Smoke & Mirrors`
   ];
   @ViewChild('showWidth') showWidth: ElementRef;
+  isProduction = environment.production;
   dwarfText = '';
   selectedScenario = '';
   isLongLoading = false;
   currentURL = '';
+  mapNodes: Node[];
+  showTokens = true;
   private baseURL = environment.appURL;
   private changeScenarioOnly = false;
   private isLoading: boolean;
@@ -51,6 +56,7 @@ export class ShowMapComponent implements OnInit {
     private dynamicMap: DynamicMap,
     public toastService: ToastService,
     public generatorSettings: GeneratorSettingsService,
+    private dynamicTokens: DynamicTokens,
     private config: NgbTooltipConfig
   ) {
     config.openDelay = 500;
@@ -93,6 +99,19 @@ export class ShowMapComponent implements OnInit {
   onSwitchScenarioButtonClick() {
     this.changeScenarioOnly = true;
     this.switchScenario(true);
+  }
+
+  /**
+   * Called when "Tokens" switch is toggled. Displays tokens if switched on, clears tokens if switched off.
+   */
+  onTokenSwitchClick() {
+    this.showTokens = !this.showTokens;
+    if (this.showTokens) {
+      this.dynamicTokens.generateAndPrintTokens(this, this.mapNodes, this.selectedScenario);
+    }
+    else {
+      this.dynamicTokens.clearTokens();
+    }
   }
 
   /**
@@ -187,7 +206,12 @@ export class ShowMapComponent implements OnInit {
     this.tmpSelectedScenario = ShowMapComponent.scenarios[scenarioID];
     // check that we have a valid scenario
     if (!this.tmpSelectedScenario) { console.warn('WARN: Invalid scenario ID.'); return false; }
-    if (this.changeScenarioOnly) { this.onLoad(); }
+    if (this.changeScenarioOnly) {
+      if (this.showTokens) {
+        this.dynamicTokens.generateAndPrintTokens(this, this.mapNodes, this.tmpSelectedScenario);
+      }
+      this.onLoad();
+    }
     return true;
   }
 
@@ -208,7 +232,7 @@ export class ShowMapComponent implements OnInit {
         console.warn('WARN: Invalid Epic Dwarf map ID.');
         return false;
       }
-      this.dynamicMap.printEpicDwarfMap(this, mapNum);
+      this.mapNodes = this.dynamicMap.printEpicDwarfMap(this, mapNum);
       this.tmpDwarfText = 'Lars\' Epic Dwarf map #' + mapNum;
     }
     else {
@@ -228,8 +252,11 @@ export class ShowMapComponent implements OnInit {
       if (resParam != null) {
         resources = resParam.split(',').map(x => +x);
       }
-      this.dynamicMap.generateAndPrintMap(this, mapSeed, resources);
+      this.mapNodes = this.dynamicMap.generateAndPrintMap(this, mapSeed, resources);
       this.tmpDwarfText = 'Dynamically generated map';
+    }
+    if (this.showTokens) {
+      this.dynamicTokens.generateAndPrintTokens(this, this.mapNodes, this.tmpSelectedScenario);
     }
     return true;
   }
