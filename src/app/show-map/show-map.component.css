@@ -18,7 +18,7 @@
   position: relative;
   width: 100%;
   min-height: 375px;
-  height: 66vh;
+  height: 50vh;
 }
 
 #overlay {
@@ -30,30 +30,18 @@
   height: 100%;
 }
 
-#legendOverlay {
-  position: absolute;
-  align-content: center;
-  width: 100%;
-  height: 100%;
-  opacity: 0.5;
-  z-index: 1;
-}
-
 #mapViewer {
   position: absolute;
   align-content: center;
-  left: 0;
-  top: 0;
-  height: 66vh;
+  width: 100%;
+  z-index: 1;
 }
 
 #legendViewer {
   position: absolute;
   align-content: center;
-  left: 0;
-  top: 0;
-  height: 66vh;
-  z-index: 1;
+  width: 100%;
+  z-index: 2;
 }
 
 #buttonContainer {

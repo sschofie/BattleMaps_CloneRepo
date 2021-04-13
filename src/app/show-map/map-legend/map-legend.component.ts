@@ -1,6 +1,6 @@
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { ShowMapComponent } from '../show-map.component';
-import { Node } from '../../dynamic-map/dynamic-map';
+import { Node, TerrainPiece } from '../../dynamic-map/dynamic-map';
 
 
 
@@ -48,32 +48,11 @@ export class MapLegendComponent implements OnInit {
         n.item.svg,
         n.height,
         n.radius,
-        this.assignTerrainType(n.item.type)
+        TerrainPiece.Type[n.item.type]
       ));
     }
     return legendNodes;
   }
-
-
-  /**
-   * this function takes the type of Terrain Piece, which is a string
-   * and returns the type of Terrain (Blocking, Difficult, Obstacle, Hill)
-   *
-   */
-  assignTerrainType(type: number) {
-    if ( type === 0 ) {
-      return 'Blocking';
-    } else if (type === 1 ) {
-      return 'Difficult';
-    } else if (type === 2) {
-        return 'Obstacle';
-    } else if (type === 3) {
-        return 'Hill';
-    } else if (type === 4) {
-      return 'Forest';
-    };
-  }
-
 
   /**
    * this function takes the array of 'legends' and prints them to the canvas.
@@ -104,6 +83,8 @@ export class MapLegendComponent implements OnInit {
         lCtx.fillRect((p.x-25), (p.y-27), textWidth+25, 40);
       }else if (itemText === 'house'){
         lCtx.fillRect((p.x-25), (p.y-25), textWidth+20, 40);
+      }else if (itemText === 'wood_building'){
+        lCtx.fillRect((p.x-25), (p.y-27), textWidth+5, 40);
       }else{
         lCtx.fillRect((p.x-25), (p.y-27), textWidth+15, 40);
       }
