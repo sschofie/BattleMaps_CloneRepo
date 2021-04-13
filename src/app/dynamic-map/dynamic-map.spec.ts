@@ -91,21 +91,32 @@ describe('DynamicMap', () => {
     it('should generate nodes within the boundary limit', () => {
       const seed = Math.floor(Math.random() * DynamicMap.maxInt32Unsigned);
       const setLimit = 50;
-      const randomLimit = Math.floor(Math.random() * 100);
+      const hillLimit = 100;
+      const randomLimit = Math.floor(Math.random()*100);
       let map = dynamicMap[gen](400, 600, setLimit, null, false, seed);
       for (const m of map) {
         expect(m.x).toBeGreaterThanOrEqual(setLimit, 'Piece out of bounds on x');
         expect(m.x).toBeLessThanOrEqual(600 - setLimit, 'Piece out of bounds on x');
-        expect(m.y).toBeGreaterThanOrEqual(setLimit, 'Piece out of bounds on y');
-        expect(m.y).toBeLessThanOrEqual(400 - setLimit, 'Piece out of bounds on y');
+        if(m.item.type === TerrainPiece.Type.hill) {
+          expect(m.y).toBeGreaterThanOrEqual(hillLimit, 'Hill out of bounds on y');
+          expect(m.y).toBeLessThanOrEqual(400 - hillLimit, 'Hill out of bounds on y');
+        } else {
+          expect(m.y).toBeGreaterThanOrEqual(setLimit, 'Piece out of bounds on y');
+          expect(m.y).toBeLessThanOrEqual(400 - setLimit, 'Piece out of bounds on y');
+        }
       }
       for (let x = 0; x < 10; x++) { //tests multiple times to check for out of bounds generations.
         map = dynamicMap[gen](400, 600, randomLimit, null, false, seed);
         for (const m of map) {
           expect(m.x).toBeGreaterThanOrEqual(randomLimit, 'Piece out of bounds on x');
           expect(m.x).toBeLessThanOrEqual(600 - randomLimit, 'Piece out of bounds on x');
-          expect(m.y).toBeGreaterThanOrEqual(randomLimit, 'Piece out of bounds on y');
-          expect(m.y).toBeLessThanOrEqual(400 - randomLimit, 'Piece out of bounds on y');
+          if(m.item.type === TerrainPiece.Type.hill) {
+            expect(m.y).toBeGreaterThanOrEqual(hillLimit, 'Hill out of bounds on y');
+            expect(m.y).toBeLessThanOrEqual(400 - hillLimit, 'Hill out of bounds on y');
+          } else {
+            expect(m.y).toBeGreaterThanOrEqual(randomLimit, 'Piece out of bounds on y');
+            expect(m.y).toBeLessThanOrEqual(400 - randomLimit, 'Piece out of bounds on y');
+          }
         }
       }
     });

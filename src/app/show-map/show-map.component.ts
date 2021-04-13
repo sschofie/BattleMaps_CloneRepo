@@ -55,7 +55,6 @@ export class ShowMapComponent implements OnInit {
   ) {
     config.openDelay = 500;
    }
-
   ngOnInit() {
     this.startSpinner();
     // update the displayed information whenever the queries are updated
