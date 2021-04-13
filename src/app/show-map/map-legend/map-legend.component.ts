@@ -48,7 +48,7 @@ export class MapLegendComponent implements OnInit {
         n.item.svg,
         n.height,
         n.radius,
-        this.assignTerrainType(n.item.svg, n.height)
+        this.assignTerrainType(n.item.type)
       ));
     }
     return legendNodes;
@@ -56,33 +56,23 @@ export class MapLegendComponent implements OnInit {
 
 
   /**
-   * this function takes the type and height of each Terrain Piece from the array of Legends
+   * this function takes the type of Terrain Piece, which is a string
    * and returns the type of Terrain (Blocking, Difficult, Obstacle, Hill)
    *
-   * this function will be replace with future restructuring
    */
-  assignTerrainType(type: string, height: number) {
-    if ( type === 'house' || type === 'wood_building') {
+  assignTerrainType(type: number) {
+    if ( type === 0 ) {
       return 'Blocking';
-    } else if (type === 'crop_field' || type === 'pond') {
+    } else if (type === 1 ) {
       return 'Difficult';
-    } else if (type === 'hedge_wall' || type === 'hedge_wall2' || type === 'stone_wall' || type === 'wood_wall_1') {
-      if (height >= 2) {
-        return 'Blocking Terrain';
-      } else if (height <= 1) {
+    } else if (type === 2) {
         return 'Obstacle';
-      };
-    } else if (type === 'tree' || type === 'foliage') {
-      if (height > 2) {
-        return 'Blocking';
-      } else if (height <= 2) {
-        return 'Difficult';
-      };
-    } else if (type === 'boulder' || type === 'boulder2' || type === 'boulder3') {
-      return 'Hill';
+    } else if (type === 3) {
+        return 'Hill';
+    } else if (type === 4) {
+      return 'Forest';
     };
   }
-
 
 
   /**
