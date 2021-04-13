@@ -103,9 +103,9 @@ export class MapLegendComponent implements OnInit {
       }else if (itemText === 'pond'){
         lCtx.fillRect((p.x-25), (p.y-27), textWidth+25, 40);
       }else if (itemText === 'house'){
-        lCtx.fillRect((p.x-25), (p.y-27), textWidth+20, 40);
+        lCtx.fillRect((p.x-25), (p.y-25), textWidth+20, 40);
       }else{
-        lCtx.fillRect((p.x-25), (p.y-27), textWidth+17, 40);
+        lCtx.fillRect((p.x-25), (p.y-27), textWidth+15, 40);
       }
 
       lCtx.fillStyle = 'black';
