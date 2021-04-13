@@ -20,7 +20,7 @@ describe('MapLegendComponent', () => {
         provide: ShowMapComponent,
         useValue: {
           passNodes: () => [],
-          ElementRef: {
+          elementRef: {
             showWidth: {
               nativeElement:{
                 offsetWidth: 600
