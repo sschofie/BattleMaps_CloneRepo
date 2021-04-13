@@ -53,6 +53,7 @@ export class DynamicMap {
   private rand;
   private itemsToLoad: number;
   private itemsLoaded: number;
+  private restrictHills = false;
 
 
   static newSeed(): number {
@@ -124,13 +125,23 @@ export class DynamicMap {
       }
     }
     while (nodes.length < numOfNodes && runs < this.maxRuns) {
-      const item: TerrainPiece = this.selectTP(weighted, resources);
-      const tempX = Math.floor(this.rand() * (mapWidth - edgeBoundary * 2)) + edgeBoundary;
-      const tempY = Math.floor(this.rand() * (mapHeight - edgeBoundary * 2)) + edgeBoundary;
-      if (!this.checkForOverlap(nodes, item, tempX, tempY)) {
-        nodes.push(new Node(tempX, tempY, Math.floor(this.rand() * 2 * Math.PI), (item.radius * boundScaling), item, -1));
-        if (resources != null) {
-          resources[item.type]--;
+      const item: TerrainPiece = this.selectTP( weighted, resources);
+      const tempX = Math.floor(this.rand() * (mapWidth - edgeBoundary*2)) + edgeBoundary;
+      if(item.type === TerrainPiece.Type.hill && !this.restrictHills) {
+        const tempY = Math.floor(this.rand()/2 * (mapHeight - edgeBoundary*4)) + mapHeight/4;
+        if (!this.checkForOverlap(nodes, item, tempX, tempY)) {
+          nodes.push(new Node(tempX, tempY, 0, (item.radius * boundScaling), item, -1));
+          if (resources != null) {
+            resources[item.type]--;
+          }
+        }
+      } else{
+        const tempY = Math.floor(this.rand() * (mapHeight - edgeBoundary*2)) + edgeBoundary;
+        if (!this.checkForOverlap(nodes, item, tempX, tempY)) {
+          nodes.push(new Node(tempX, tempY, Math.floor(this.rand() * 2 * Math.PI), (item.radius * boundScaling), item, -1));
+          if (resources != null) {
+            resources[item.type]--;
+          }
         }
       }
       runs++;
