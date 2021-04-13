@@ -36,8 +36,8 @@ export class MapLegendComponent implements OnInit {
    * this function takes the array of mapNodes
    * and makes an array of Legend to print to canvas
    */
-   getNodes() {
-    if(!this.myMapNodes){
+  getNodes() {
+    if (!this.myMapNodes) {
       return null;
     }
     const legendNodes: Legend[] = [];
@@ -61,7 +61,7 @@ export class MapLegendComponent implements OnInit {
    * @param h - indicates the height of the map to be printed
    * @param w - indicated the width of the map to be printed
    */
-   printMapLegend(encoding: Legend[], h: number, w: number) {
+  printMapLegend(encoding: Legend[], h: number, w: number) {
     const lCanvas = document.getElementById('legendViewer') as HTMLCanvasElement;
     const lCtx = lCanvas.getContext('2d') as CanvasRenderingContext2D;
     lCtx.clearRect(0, 0, lCtx.canvas.width, lCtx.canvas.height);
@@ -77,22 +77,55 @@ export class MapLegendComponent implements OnInit {
       const heightText = 'Height: ' + p.height;
       const textWidth = lCtx.measureText(itemText).width;
       lCtx.fillStyle = 'white';
-      if(itemText === 'tree'){
-        lCtx.fillRect((p.x-25), (p.y-27), textWidth+30, 40);
-      }else if (itemText === 'pond'){
-        lCtx.fillRect((p.x-25), (p.y-27), textWidth+25, 40);
-      }else if (itemText === 'house'){
-        lCtx.fillRect((p.x-25), (p.y-25), textWidth+20, 40);
-      }else if (itemText === 'wood_building'){
-        lCtx.fillRect((p.x-25), (p.y-27), textWidth+5, 40);
-      }else{
-        lCtx.fillRect((p.x-25), (p.y-27), textWidth+15, 40);
+      if (itemText === 'tree') {
+        lCtx.fillRect((p.x - 25), (p.y - 27), textWidth + 30, 40);
+        lCtx.fillStyle = 'black';
+        lCtx.fillText(typeText, (p.x - 22), (p.y - 16));
+        lCtx.fillText(itemText, (p.x - 22), (p.y - 5));
+        lCtx.fillText(heightText, (p.x - 22), (p.y + 7));
+      } else if (itemText === 'pond') {
+        lCtx.fillRect((p.x - 25), (p.y - 27), textWidth + 25, 40);
+        lCtx.fillStyle = 'black';
+        lCtx.fillText(typeText, (p.x - 22), (p.y - 16));
+        lCtx.fillText(itemText, (p.x - 22), (p.y - 5));
+        lCtx.fillText(heightText, (p.x - 22), (p.y + 7));
+      } else if (itemText === 'house') {
+        lCtx.fillRect((p.x - 25), (p.y - 25), textWidth + 20, 40);
+        lCtx.fillStyle = 'black';
+        lCtx.fillText(typeText, (p.x - 22), (p.y - 16));
+        lCtx.fillText(itemText, (p.x - 22), (p.y - 5));
+        lCtx.fillText(heightText, (p.x - 22), (p.y + 7));
+      } else if (itemText === 'wood_building') {
+        lCtx.fillRect((p.x - 31), (p.y - 25), textWidth + 2, 40);
+        lCtx.fillStyle = 'black';
+        lCtx.fillText(typeText, (p.x - 30), (p.y - 12));
+        lCtx.fillText(itemText, (p.x - 30), (p.y - 2));
+        lCtx.fillText(heightText, (p.x - 30), (p.y + 9));
+      } else if (itemText === 'stone_wall') {
+        lCtx.fillRect((p.x - 31), (p.y - 25), textWidth + 2, 40);
+        lCtx.fillStyle = 'black';
+        lCtx.fillText(typeText, (p.x - 30), (p.y - 12));
+        lCtx.fillText(itemText, (p.x - 30), (p.y - 2));
+        lCtx.fillText(heightText, (p.x - 30), (p.y + 9));
+      } else if (itemText === 'hedge_wall') {
+        lCtx.fillRect((p.x - 31), (p.y - 25), textWidth + 2, 40);
+        lCtx.fillStyle = 'black';
+        lCtx.fillText(typeText, (p.x - 30), (p.y - 12));
+        lCtx.fillText(itemText, (p.x - 30), (p.y - 2));
+        lCtx.fillText(heightText, (p.x - 30), (p.y + 9));
+      } else if (itemText === 'hedge_wall2') {
+        lCtx.fillRect((p.x - 31), (p.y - 25), textWidth + 2, 40);
+        lCtx.fillStyle = 'black';
+        lCtx.fillText(typeText, (p.x - 30), (p.y - 12));
+        lCtx.fillText(itemText, (p.x - 30), (p.y - 2));
+        lCtx.fillText(heightText, (p.x - 30), (p.y + 9));
+      } else {
+        lCtx.fillRect((p.x - 25), (p.y - 27), textWidth + 15, 40);
+        lCtx.fillStyle = 'black';
+        lCtx.fillText(typeText, (p.x - 22), (p.y - 16));
+        lCtx.fillText(itemText, (p.x - 22), (p.y - 5));
+        lCtx.fillText(heightText, (p.x - 22), (p.y + 7));
       }
-
-      lCtx.fillStyle = 'black';
-      lCtx.fillText(typeText, (p.x - 22), (p.y - 16));
-      lCtx.fillText(itemText, (p.x - 22), (p.y - 5));
-      lCtx.fillText(heightText, (p.x - 22), (p.y + 7));
     }
   }
 
