@@ -8,7 +8,6 @@ import { ToastService } from '../toast/toast.service';
 import { GeneratorSettingsService } from '../collapse-basic/generator-settings.service';
 import { Node } from '../dynamic-map/dynamic-map';
 import { MapLegendComponent } from './map-legend/map-legend.component';
-import { CheckboxControlValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'app-show-map',
@@ -42,8 +41,9 @@ export class ShowMapComponent implements OnInit {
   isLongLoading = false;
   currentURL = '';
   showLegend = false;
-  legendButton = 'Show Map Legend';
+  legendButton = 'Legend';
   legendViewer: HTMLCanvasElement;
+  toggleLegend;
   public mapDisplay: string;
   public mapNodes: Node[];
   private baseURL = environment.appURL;
@@ -85,9 +85,9 @@ export class ShowMapComponent implements OnInit {
       }
       this.changeScenarioOnly = false;
     });
-
-    this.legendViewer = document.getElementById('legendViewer') as HTMLCanvasElement;
-    this.legendViewer.style.display = 'none';
+    this.showLegend = false;
+    this.toggleLegend = document.getElementById('LegendButton') as HTMLInputElement;
+    this.toggleLegend.checked = false;
   }
 
   async startSpinner() {
@@ -122,6 +122,7 @@ export class ShowMapComponent implements OnInit {
       }
     });
     this.hideMapLegend();
+
   }
 
   /**
@@ -293,10 +294,9 @@ export class ShowMapComponent implements OnInit {
    * Function called with switchMapand Scenario to clear Tooltips display
    */
   hideMapLegend() {
-    this.legendViewer = document.getElementById('legendViewer') as HTMLCanvasElement;
-    this.legendViewer.style.display = 'none';
-    this.legendButton = 'Show Map Legend';
+    this.toggleLegend = document.getElementById('LegendButton') as HTMLInputElement;
     this.showLegend = false;
+    this.toggleLegend.checked = false;
   }
 
   /*
@@ -304,24 +304,10 @@ export class ShowMapComponent implements OnInit {
    */
   toggleMapLegend() {
     this.showLegend = !this.showLegend;
-    //this.legendViewer = document.getElementById("legendViewer") as HTMLCanvasElement;
-    if (this.showLegend === true) {
-      this.legendViewer = document.getElementById('legendViewer') as HTMLCanvasElement;
-      this.legendButton = 'Showing Map Legend';
-      this.displayMapLegend();
-      this.legendViewer.style.display = 'block';
-    } else {
-      this.legendViewer = document.getElementById('legendViewer') as HTMLCanvasElement;
-      this.legendButton = 'Hiding Map Legend';
-      this.legendViewer.style.display = 'none';
-    };
-  }
-
-  displayMapLegend() {
-    const legendViewer = document.getElementById('legendViewer') as HTMLCanvasElement;
-    this.passNodes();
-    this.passLegendNodes();
-    this.legendViewer.style.display = 'block';
+    if (this.showLegend) {
+      this.passNodes();
+      this.passLegendNodes();
+    }
   }
 
 

@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
-import { CUSTOM_ELEMENTS_SCHEMA, DebugElement, NO_ERRORS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement, NO_ERRORS_SCHEMA, ElementRef } from '@angular/core';
 
 import { MapLegendComponent } from './map-legend.component';
 import { ShowMapComponent } from '../show-map.component';
@@ -20,7 +20,7 @@ describe('MapLegendComponent', () => {
         provide: ShowMapComponent,
         useValue: {
           passNodes: () => [],
-          document: {
+          ElementRef: {
             showWidth: {
               nativeElement:{
                 offsetWidth: 600

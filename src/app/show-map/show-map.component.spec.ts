@@ -15,7 +15,7 @@ describe('ShowMapComponent', () => {
   const baseTestBed = {
     declarations: [
       ShowMapComponent,
-      ToastComponent,
+      ToastComponent
     ],
     imports: [
       RouterTestingModule.withRoutes(
