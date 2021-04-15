@@ -16,6 +16,7 @@ import { ToastComponent } from './toast/toast.component';
 import { CollapseBasicComponent } from './collapse-basic/collapse-basic.component';
 import { MapLegendComponent } from './show-map/map-legend/map-legend.component';
 import { GeneratorSettingsService } from './collapse-basic/generator-settings.service';
+import { DynamicTokens } from './dynamic-tokens/dynamic-tokens';
 
 const routes: Routes = [
   { path: '', redirectTo: '/landing-page', pathMatch: 'full' },
@@ -45,7 +46,9 @@ const routes: Routes = [
   providers: [
     DynamicMap,
     FeatureFlagsService,
-    GeneratorSettingsService
+    GeneratorSettingsService,
+    DynamicTokens,
+    FeatureFlagsService
   ],
   bootstrap: [AppComponent]
 })

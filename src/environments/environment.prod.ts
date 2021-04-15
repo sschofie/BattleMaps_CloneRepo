@@ -6,6 +6,7 @@ export const environment = {
   copyrightYear: new Date().getFullYear(),
   featureFlags: {
     sharing: false,
-    dynamicMaps: true
+    dynamicMaps: true,
+    tokens: false
   }
 };

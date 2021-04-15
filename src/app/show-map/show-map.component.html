@@ -2,6 +2,11 @@
   <link href="https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica&display=swap" rel="stylesheet">
 </head>
 
+<div *ngIf="!isProduction" class="col justify-content-center">
+  <!-- TODO remove this button before turning making tokens live -->
+  <button id="generateButton" type="button" class="btn btn-success" (click)="switchMap(true)">Switch Map Only
+    [DEBUG]</button>
+</div>
 <div class="content">
   <div class="container">
     <div class="row justify-content-center align-items-center">
@@ -20,6 +25,8 @@
     </div>
   </div>
   <div class="content m-0 p-0" id="map-holder"  #showWidth >
+  <div class="content m-0 p-0" id="map-holder" #showWidth>
+    <canvas *appFeatureFlag="'tokens'" id="tokenViewer" width="500"></canvas>
     <canvas id="mapViewer" width="500" style="border: 1px solid rgb(95, 115, 46);"></canvas>
     <canvas *ngIf="showLegend" id="legendViewer" width="500"></canvas>
     <div *ngIf="showLegend" id="legendOverlay">
@@ -39,6 +46,10 @@
         <div class="custom-control custom-switch">
           <input type="checkbox" class="custom-control-input" id="LegendButton" (click)="toggleMapLegend()">
           <label class="custom-control-label" for="LegendButton">{{legendButton}}</label>
+        <div *appFeatureFlag="'tokens'" class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="switchTokens" checked="true"
+            (click)="onTokenSwitchClick()">
+          <label class="custom-control-label" for="switchTokens">Tokens</label>
         </div>
       </div>
       <div class="col justify-content-center">
@@ -48,7 +59,6 @@
       <div class="col justify-content-end">
         <button id="shareButton" type="button" class="btn btn-outline-success" data-toggle="modal"
           (click)="openShareModal(shareModal)" [disabled]="isLongLoading" ngbTooltip="Share this map">
-
           <div class="d-flex align-items-center">
             <i class="icon-share my-1 text-body"></i>
           </div>
