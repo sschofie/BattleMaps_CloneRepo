@@ -285,6 +285,11 @@ export class ShowMapComponent implements OnInit {
         console.warn('WARN: Map seed is invalid.');
         return false;
       }
+      const resParam = this.route.snapshot.queryParamMap.get('r');
+      let resources = null;
+      if (resParam != null) {
+        resources = resParam.split(',').map(x => +x);
+      }
       this.mapNodes = this.dynamicMap.generateAndPrintMap(this, mapSeed);
       this.passNodes();
       this.passLegendNodes();
@@ -377,6 +382,8 @@ export class ShowMapComponent implements OnInit {
       this.passLegendNodes();
     }
   }
+
+
 }
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
