@@ -6,7 +6,6 @@ import { ClipboardService } from 'ngx-clipboard';
 import { DynamicMap, Node } from '../dynamic-map/dynamic-map';
 import { ToastService } from '../toast/toast.service';
 import { GeneratorSettingsService } from '../collapse-basic/generator-settings.service';
-import { Node } from '../dynamic-map/dynamic-map';
 import { MapLegendComponent } from './map-legend/map-legend.component';
 import { DynamicTokens } from '../dynamic-tokens/dynamic-tokens';
 
