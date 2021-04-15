@@ -9,8 +9,8 @@ import { DynamicMap } from '../dynamic-map/dynamic-map';
 import { DynamicTokens } from '../dynamic-tokens/dynamic-tokens';
 import { MapGeneratorPageComponent } from '../map-generator-page/map-generator-page.component';
 import { ToastComponent } from '../toast/toast.component';
-
 import { ShowMapComponent } from './show-map.component';
+import { CollapseBasicComponent } from '../collapse-basic/collapse-basic.component.spec';
 
 describe('ShowMapComponent', () => {
   const baseTestBed = {

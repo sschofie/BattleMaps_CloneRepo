@@ -57,6 +57,7 @@ export class DynamicMap {
   private itemsToLoad: number;
   private itemsLoaded: number;
 
+
   static newSeed(): number {
     return Math.floor(Math.random() * DynamicMap.maxInt32Unsigned);
   }
@@ -283,9 +284,10 @@ export class DynamicMap {
       }
       console.debug('[DynamicMap] Found showWidth!');
     }
+
     const width = this.context.showWidth.nativeElement.offsetWidth;
     ctx.canvas.width = width;
-    ctx.canvas.height = width * .66;
+    ctx.canvas.height = width * .66 ;
     ctx.scale(width / w, width * .66 / h);
     ctx.fillStyle = 'rgb(112,179,68)';
     ctx.strokeStyle = 'rgb(95, 115, 46)';

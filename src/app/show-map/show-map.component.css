@@ -37,7 +37,18 @@
     z-index: 100;
 }
 
+
+#legendViewer {
+  position: absolute;
+  align-content: center;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  font: 'IM Fell DW Pica';
+}
+
+
 #share-modal-content {
-    margin: auto;
-    width: auto;
+  margin: auto;
+  width: auto;
 }

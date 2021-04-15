@@ -14,6 +14,8 @@ import { DynamicMap } from './dynamic-map/dynamic-map';
 import { FeatureFlagDirective } from './feature-flag/feature-flag.directive';
 import { ToastComponent } from './toast/toast.component';
 import { CollapseBasicComponent } from './collapse-basic/collapse-basic.component';
+import { MapLegendComponent } from './show-map/map-legend/map-legend.component';
+import { GeneratorSettingsService } from './collapse-basic/generator-settings.service';
 import { DynamicTokens } from './dynamic-tokens/dynamic-tokens';
 
 const routes: Routes = [
@@ -30,7 +32,9 @@ const routes: Routes = [
     MapGeneratorPageComponent,
     FeatureFlagDirective,
     ToastComponent,
-    CollapseBasicComponent
+    CollapseBasicComponent,
+    MapLegendComponent
+
   ],
   imports: [
     BrowserModule,
@@ -41,6 +45,8 @@ const routes: Routes = [
   ],
   providers: [
     DynamicMap,
+    FeatureFlagsService,
+    GeneratorSettingsService,
     DynamicTokens,
     FeatureFlagsService
   ],
