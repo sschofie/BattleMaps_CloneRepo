@@ -3,12 +3,23 @@ import { dist, Node, TerrainPiece } from '../dynamic-map/dynamic-map';
 import { environment } from 'src/environments/environment';
 
 export class DynamicTokens {
+  static readonly maxInt32Unsigned = 4294967296;
   private readonly width = 600;
   private readonly height = 400;
   private readonly maxAttempts = 100; // max number of attempts to place a token
+  private seedrandom = require('seedrandom');
+  private rand: () => number;
   private showMapComponent: ShowMapComponent;
   private mapNodes: Node[];
   private tokens: Token[];
+
+  static newSeed(): number {
+    return Math.floor(Math.random() * DynamicTokens.maxInt32Unsigned);
+  }
+
+  static isValidSeed(seed: number): boolean {
+    return !isNaN(seed) && seed > 0 && seed < DynamicTokens.maxInt32Unsigned;
+  }
 
   /**
    * Dynamically generate tokens for the given scenario and print them to the 'tokenViewer' canvas.
@@ -17,11 +28,11 @@ export class DynamicTokens {
    * @param mapNodes Array that contains the current map encoding.
    * @param scenario The scenario for which to generate tokens.
    */
-  generateAndPrintTokens(showMapComponent: ShowMapComponent, mapNodes: Node[], scenario: string) {
+  generateAndPrintTokens(showMapComponent: ShowMapComponent, mapNodes: Node[], scenario: string, seed: number) {
     if (!environment.featureFlags.tokens) { return; }
     this.mapNodes = mapNodes;
     this.showMapComponent = showMapComponent;
-    this.generateTokens(scenario);
+    this.generateTokens(scenario, seed);
     if (environment.production) {
       this.printTokens(this.tokens, this.width, this.height);
     } else {
@@ -32,19 +43,30 @@ export class DynamicTokens {
   /**
    * Clear the 'tokenViewer' canvas.
    */
-  clearTokens() {
+  async clearTokens() {
     this.tokens = [];
-    const canvas = document.getElementById('tokenViewer') as HTMLCanvasElement;
+    let canvas = document.getElementById('tokenViewer') as HTMLCanvasElement;
+    if (!canvas) {
+      while (!canvas) {
+        // sometimes the canvas takes a bit to load in
+        console.debug('[DynamicTokens] Looking for canvas "tokenViewer"...');
+        canvas = document.getElementById('tokenViewer') as HTMLCanvasElement;
+        await sleep(150);
+      }
+      console.debug('[DynamicTokens] Found canvas!');
+    }
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     ctx.clearRect(0, 0, 600, 400);
   }
 
   /**
-   * Dynamically generate tokens for the given scenario, placing them into this.mapNodes.
+   * Dynamically generate tokens for the given scenario, placing them into this.tokens.
    *
    * @param scenario The scenario for which to generate tokens.
    */
-  private generateTokens(scenario: string) {
+  private generateTokens(scenario: string, seed: number) {
+    if (!this.mapNodes || this.mapNodes.length < 1) { return; }
+    this.rand = this.seedrandom(seed);
     switch (scenario) {
       case `Fool's Gold` || `Smoke & Mirrors`:
         while (!this.generateFGSaMTokens()) { ; }
@@ -85,6 +107,7 @@ export class DynamicTokens {
    * 2 (Blocking terrain + Token distancing radius)
    */
   private async printTokens(tokens: Token[], w: number, h: number, debugLevel = 0) {
+    this.clearTokens();
     if (!tokens) { return; } // if there aren't any tokens to print, don't bother trying
 
     let canvas = document.getElementById('tokenViewer') as HTMLCanvasElement;
@@ -144,7 +167,7 @@ export class DynamicTokens {
   private checkMapCollisions(token: Token): Node {
     for (const node of this.mapNodes) {
       if (node.item.type !== TerrainPiece.Type.blocking) { continue; }
-      if (dist(token.x, token.y, node.x, node.y) < (25 + node.radius)) {
+      if (dist(token.x, token.y, node.x, node.y) < (25 + node.item.radius)) {
         return node;
       }
     }
@@ -266,7 +289,7 @@ export class DynamicTokens {
           console.warn('[DynamicTokens] Warn: MaxAttempts exceeded trying to place token ' + (i + 1));
           return false;
         }
-        t = new Token(Math.random() * (this.width - 50) + 25, y);
+        t = new Token(this.rand() * (this.width - 50) + 25, y);
       } while (this.checkTokenCollisions(t, this.tokens) || this.checkMapCollisions(t));
       this.tokens.push(t);
     }
@@ -285,7 +308,7 @@ export class DynamicTokens {
   }
 }
 
-class Token {
+export class Token {
   public x: number;
   public y: number;
 

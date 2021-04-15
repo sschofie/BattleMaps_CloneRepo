@@ -1,29 +1,31 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCollapseModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { QRCodeModule } from 'angularx-qrcode';
 import { of } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { CollapseBasicComponent } from '../collapse-basic/collapse-basic.component';
 import { DynamicMap } from '../dynamic-map/dynamic-map';
 import { DynamicTokens } from '../dynamic-tokens/dynamic-tokens';
 import { MapGeneratorPageComponent } from '../map-generator-page/map-generator-page.component';
 import { ToastComponent } from '../toast/toast.component';
 import { ShowMapComponent } from './show-map.component';
-import { CollapseBasicComponent } from '../collapse-basic/collapse-basic.component.spec';
 
 describe('ShowMapComponent', () => {
   const baseTestBed = {
     declarations: [
       ShowMapComponent,
-      ToastComponent
+      ToastComponent,
+      CollapseBasicComponent
     ],
     imports: [
       RouterTestingModule.withRoutes(
         [{ path: 'app', component: MapGeneratorPageComponent }]
       ),
       NgbTooltipModule,
-      QRCodeModule
+      QRCodeModule,
+      NgbCollapseModule
     ],
     providers: [
       DynamicMap,
@@ -55,6 +57,9 @@ describe('ShowMapComponent', () => {
   }));
 
   beforeEach(() => {
+    environment.featureFlags.dynamicMaps = true;
+    environment.featureFlags.tokens = true;
+    environment.featureFlags.sharing = true;
     fixture = TestBed.createComponent(ShowMapComponent);
     component = fixture.componentInstance;
   });
@@ -100,13 +105,15 @@ describe('ShowMapComponent', () => {
     });
   }));
 
-  it('should switch only scenario when "New Scenario" button is clicked', waitForAsync(() => {
+  it('should switch only scenario and tokens when "New Scenario" button is clicked', waitForAsync(() => {
     const switchScenario = spyOn(component, 'switchScenario');
+    const switchTokens = spyOn(component, 'switchTokens');
     const switchMap = spyOn(component, 'switchMap');
     const button = fixture.debugElement.nativeElement.querySelector('#scenarioButton');
     button.click();
     fixture.whenStable().then(() => {
-      expect(switchScenario).toHaveBeenCalledWith(true);
+      expect(switchScenario).toHaveBeenCalledWith(false);
+      expect(switchTokens).toHaveBeenCalledWith(false);
       expect(switchMap).not.toHaveBeenCalled();
     });
   }));
@@ -153,7 +160,7 @@ describe('ShowMapComponent', () => {
         expect(mapNum).not.toBeNaN();
         expect(Number.isInteger(mapNum)).toBeTrue();
         expect(mapNum).toBeGreaterThanOrEqual(0);
-        expect(mapNum).toBeLessThanOrEqual(ShowMapComponent.maxInt32Unsigned);
+        expect(mapNum).toBeLessThanOrEqual(DynamicMap.maxInt32Unsigned);
       }
     });
 
@@ -161,6 +168,33 @@ describe('ShowMapComponent', () => {
       const mapID = component.switchMap(true);
       expect(TestBed.inject(Router).navigate).toHaveBeenCalledWith(
         ['/app'], { queryParams: { map: mapID }, queryParamsHandling: 'merge' }
+      );
+    });
+  });
+
+  describe('switchTokens', () => {
+    it('should return valid token seed', () => {
+      for (let i = 0; i < 100; i++) {
+        const tokenSeed = component.switchTokens(false);
+        expect(tokenSeed).not.toBeNaN();
+        expect(Number.isInteger(tokenSeed)).toBe(true, tokenSeed + ' should be an integer.');
+        expect(tokenSeed).toBeGreaterThanOrEqual(0);
+        expect(tokenSeed).toBeLessThanOrEqual(DynamicTokens.maxInt32Unsigned);
+      }
+    });
+
+    it('should return no token seed if tokens flag is off', () => {
+      environment.featureFlags.tokens = false;
+      for (let i = 0; i < 100; i++) {
+        const tokenSeed = component.switchTokens(false);
+        expect(tokenSeed).toBe(null);
+      }
+    });
+
+    it('should set query param `t` to new token seed', () => {
+      const tokenSeed = component.switchTokens(true);
+      expect(TestBed.inject(Router).navigate).toHaveBeenCalledWith(
+        ['/app'], { queryParams: { t: tokenSeed }, queryParamsHandling: 'merge' }
       );
     });
   });
@@ -374,6 +408,80 @@ describe('ShowMapComponent', () => {
 
       const didSetScenario = component.setScenarioFromQuery();
       expect(didSetScenario).toBeFalse();
+    });
+  });
+
+  describe('setTokensFromQuery', () => {
+    let mockActivatedRoute;
+
+    it('should return false when given no token seed', () => {
+      const didSetTokens = component.setTokensFromQuery();
+      expect(didSetTokens).toBeFalse();
+    });
+
+    beforeEach(() => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule(baseTestBed);
+    });
+
+    it('should return true when given valid token seed', () => {
+      mockActivatedRoute = {
+        queryParams: of({}),
+        snapshot: {
+          queryParamMap: {
+            get: () => '1234567'
+          }
+        }
+      };
+      TestBed.overrideProvider(ActivatedRoute, {
+        useFactory: () => mockActivatedRoute
+      });
+      TestBed.compileComponents();
+      fixture = TestBed.createComponent(ShowMapComponent);
+      component = fixture.componentInstance;
+
+      const didSetTokens = component.setTokensFromQuery();
+      expect(didSetTokens).toBeTrue();
+    });
+
+    it('should return false when given invalid token seed (out of bounds)', () => {
+      mockActivatedRoute = {
+        queryParams: of({}),
+        snapshot: {
+          queryParamMap: {
+            get: () => '-123'
+          }
+        }
+      };
+      TestBed.overrideProvider(ActivatedRoute, {
+        useFactory: () => mockActivatedRoute
+      });
+      TestBed.compileComponents();
+      fixture = TestBed.createComponent(ShowMapComponent);
+      component = fixture.componentInstance;
+
+      const didSetTokens = component.setTokensFromQuery();
+      expect(didSetTokens).toBeFalse();
+    });
+
+    it('should return false when given invalid token seed (non-numeric)', () => {
+      mockActivatedRoute = {
+        queryParams: of({}),
+        snapshot: {
+          queryParamMap: {
+            get: () => 'tedwo'
+          }
+        }
+      };
+      TestBed.overrideProvider(ActivatedRoute, {
+        useFactory: () => mockActivatedRoute
+      });
+      TestBed.compileComponents();
+      fixture = TestBed.createComponent(ShowMapComponent);
+      component = fixture.componentInstance;
+
+      const didSetTokens = component.setTokensFromQuery();
+      expect(didSetTokens).toBeFalse();
     });
   });
 

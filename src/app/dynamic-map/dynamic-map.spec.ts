@@ -169,14 +169,4 @@ describe('DynamicMap', () => {
     });
 
   });
-
-  // Here is an example for how to test private methods:
-
-  // it('should do a thing', () => {
-  //   const dynamicMap = new DynamicMap();
-  //   const simpleGenerate = spyOn<any>(dynamicMap, 'simpleGenerate'); // add <any> to avoid errors
-  //   expect(simpleGenerate).not.toHaveBeenCalled();
-  //   dynamicMap['simpleGenerate'](400, 600, 50, null, false, DynamicMap.maxInt32Unsigned); // use ['<methodName'](args) instead
-  //   expect(simpleGenerate).toHaveBeenCalled();
-  // });
 });

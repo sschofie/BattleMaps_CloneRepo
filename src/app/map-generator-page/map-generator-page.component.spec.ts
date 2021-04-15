@@ -1,6 +1,7 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCollapseModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { CollapseBasicComponent } from '../collapse-basic/collapse-basic.component';
 import { DynamicMap } from '../dynamic-map/dynamic-map';
 import { DynamicTokens } from '../dynamic-tokens/dynamic-tokens';
 import { ShowMapComponent } from '../show-map/show-map.component';
@@ -19,7 +20,8 @@ describe('MapGeneratorComponent', () => {
         MapGeneratorPageComponent,
         ShowMapComponent,
         ToastComponent,
-        MapLegendComponent
+        MapLegendComponent,
+        CollapseBasicComponent
       ],
       providers: [
         DynamicMap,
@@ -29,7 +31,8 @@ describe('MapGeneratorComponent', () => {
         RouterTestingModule.withRoutes(
           [{path: 'app', component: MapGeneratorPageComponent}]
         ),
-        NgbTooltipModule
+        NgbTooltipModule,
+        NgbCollapseModule
       ]
     })
     .compileComponents();
