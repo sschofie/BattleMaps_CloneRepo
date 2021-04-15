@@ -1,6 +1,7 @@
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { ShowMapComponent } from '../show-map.component';
 import { Node, TerrainPiece } from '../../dynamic-map/dynamic-map';
+import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 
 
 
@@ -45,13 +46,39 @@ export class MapLegendComponent implements OnInit {
       legendNodes.push(new Legend(
         n.x,
         n.y,
-        n.item.svg,
+        this.getsvgName(n.item.svg),
         n.height,
         n.radius,
         TerrainPiece.Type[n.item.type]
       ));
     }
     return legendNodes;
+  }
+
+  /**
+   * this function takes the svg name and maps to a concise name to print
+   */
+  getsvgName(svg: string){
+    const svgMap = new Map([
+      ['boulder', 'Hill'],
+      ['boulder2', 'Hill'],
+      ['boulder3', 'Hill'],
+      ['crop_field', 'Field'],
+      ['foliage', 'Forest'],
+      ['hedge_wall', 'Wall'],
+      ['hedge_wall2', 'Wall'],
+      ['house', 'Building'],
+      ['pond', 'Pond'],
+      ['stone_wall', 'Wall'],
+      ['tree', 'Tree'],
+      ['wood_building', 'Building'],
+      ['wood_wall_1', 'Wall']
+    ]);
+    for(const entry of svgMap.entries()){
+        if ( svg === entry[0]){
+        return entry[1];
+      }
+    }
   }
 
   /**
@@ -75,52 +102,17 @@ export class MapLegendComponent implements OnInit {
       const typeText = p.type;
       const itemText = p.item;
       const heightText = 'Height: ' + p.height;
-      const textWidth = lCtx.measureText(itemText).width;
-      lCtx.fillStyle = 'white';
-      if (itemText === 'tree') {
-        lCtx.fillRect((p.x - 25), (p.y - 27), textWidth + 30, 40);
+      const textWidth = lCtx.measureText(heightText).width;
+      lCtx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+      if ( p.item === 'Hill'){
+        lCtx.fillRect((p.x - 25), (p.y - 17), textWidth + 5, 30);
+        lCtx.font = 'IM Fell DW Pica';
         lCtx.fillStyle = 'black';
-        lCtx.fillText(typeText, (p.x - 22), (p.y - 16));
         lCtx.fillText(itemText, (p.x - 22), (p.y - 5));
         lCtx.fillText(heightText, (p.x - 22), (p.y + 7));
-      } else if (itemText === 'pond') {
-        lCtx.fillRect((p.x - 25), (p.y - 27), textWidth + 25, 40);
-        lCtx.fillStyle = 'black';
-        lCtx.fillText(typeText, (p.x - 22), (p.y - 16));
-        lCtx.fillText(itemText, (p.x - 22), (p.y - 5));
-        lCtx.fillText(heightText, (p.x - 22), (p.y + 7));
-      } else if (itemText === 'house') {
-        lCtx.fillRect((p.x - 25), (p.y - 25), textWidth + 20, 40);
-        lCtx.fillStyle = 'black';
-        lCtx.fillText(typeText, (p.x - 22), (p.y - 16));
-        lCtx.fillText(itemText, (p.x - 22), (p.y - 5));
-        lCtx.fillText(heightText, (p.x - 22), (p.y + 7));
-      } else if (itemText === 'wood_building') {
-        lCtx.fillRect((p.x - 31), (p.y - 25), textWidth + 2, 40);
-        lCtx.fillStyle = 'black';
-        lCtx.fillText(typeText, (p.x - 30), (p.y - 12));
-        lCtx.fillText(itemText, (p.x - 30), (p.y - 2));
-        lCtx.fillText(heightText, (p.x - 30), (p.y + 9));
-      } else if (itemText === 'stone_wall') {
-        lCtx.fillRect((p.x - 31), (p.y - 25), textWidth + 2, 40);
-        lCtx.fillStyle = 'black';
-        lCtx.fillText(typeText, (p.x - 30), (p.y - 12));
-        lCtx.fillText(itemText, (p.x - 30), (p.y - 2));
-        lCtx.fillText(heightText, (p.x - 30), (p.y + 9));
-      } else if (itemText === 'hedge_wall') {
-        lCtx.fillRect((p.x - 31), (p.y - 25), textWidth + 2, 40);
-        lCtx.fillStyle = 'black';
-        lCtx.fillText(typeText, (p.x - 30), (p.y - 12));
-        lCtx.fillText(itemText, (p.x - 30), (p.y - 2));
-        lCtx.fillText(heightText, (p.x - 30), (p.y + 9));
-      } else if (itemText === 'hedge_wall2') {
-        lCtx.fillRect((p.x - 31), (p.y - 25), textWidth + 2, 40);
-        lCtx.fillStyle = 'black';
-        lCtx.fillText(typeText, (p.x - 30), (p.y - 12));
-        lCtx.fillText(itemText, (p.x - 30), (p.y - 2));
-        lCtx.fillText(heightText, (p.x - 30), (p.y + 9));
-      } else {
-        lCtx.fillRect((p.x - 25), (p.y - 27), textWidth + 15, 40);
+      }else{
+        lCtx.fillRect((p.x - 25), (p.y - 27), textWidth + 5, 40);
+        lCtx.font = 'IM Fell DW Pica';
         lCtx.fillStyle = 'black';
         lCtx.fillText(typeText, (p.x - 22), (p.y - 16));
         lCtx.fillText(itemText, (p.x - 22), (p.y - 5));
@@ -128,7 +120,6 @@ export class MapLegendComponent implements OnInit {
       }
     }
   }
-
 }
 
 
