@@ -6,6 +6,7 @@ import { ClipboardService } from 'ngx-clipboard';
 import { DynamicMap, Node } from '../dynamic-map/dynamic-map';
 import { ToastService } from '../toast/toast.service';
 import { GeneratorSettingsService } from '../collapse-basic/generator-settings.service';
+import { MapLegendComponent } from './map-legend/map-legend.component';
 import { DynamicTokens } from '../dynamic-tokens/dynamic-tokens';
 
 @Component({
@@ -35,11 +36,17 @@ export class ShowMapComponent implements OnInit {
     `Smoke & Mirrors`
   ];
   @ViewChild('showWidth') showWidth: ElementRef;
+  @ViewChild('MapLegendComponent') legend: MapLegendComponent;
   isProduction = environment.production;
   dwarfText = '';
   selectedScenario = '';
   isLongLoading = false;
   currentURL = '';
+  showLegend = false;
+  legendButton = 'Legend';
+  legendViewer: HTMLCanvasElement;
+  toggleLegend;
+  public mapDisplay: string;
   mapNodes: Node[];
   showTokens = true;
   private baseURL = environment.appURL;
@@ -47,6 +54,9 @@ export class ShowMapComponent implements OnInit {
   private isLoading: boolean;
   private tmpDwarfText: string;
   private tmpSelectedScenario: string;
+
+
+
 
   constructor(
     private route: ActivatedRoute,
@@ -78,6 +88,9 @@ export class ShowMapComponent implements OnInit {
       }
       this.changeScenarioOnly = false;
     });
+    this.showLegend = false;
+    this.toggleLegend = document.getElementById('LegendButton') as HTMLInputElement;
+    this.toggleLegend.checked = false;
   }
 
   async startSpinner() {
@@ -124,6 +137,8 @@ export class ShowMapComponent implements OnInit {
         map: this.switchMap(false)
       }
     });
+    this.hideMapLegend();
+
   }
 
   /**
@@ -233,6 +248,8 @@ export class ShowMapComponent implements OnInit {
         return false;
       }
       this.mapNodes = this.dynamicMap.printEpicDwarfMap(this, mapNum);
+      this.passNodes();
+      this.passLegendNodes();
       this.tmpDwarfText = 'Lars\' Epic Dwarf map #' + mapNum;
     }
     else {
@@ -253,6 +270,8 @@ export class ShowMapComponent implements OnInit {
         resources = resParam.split(',').map(x => +x);
       }
       this.mapNodes = this.dynamicMap.generateAndPrintMap(this, mapSeed, resources);
+      this.passNodes();
+      this.passLegendNodes();
       this.tmpDwarfText = 'Dynamically generated map';
     }
     if (this.showTokens) {
@@ -284,6 +303,37 @@ export class ShowMapComponent implements OnInit {
       this.toastService.show('Link copied to clipboard');
     }
   }
+
+  passNodes() {
+    return this.mapNodes;
+  }
+  /*
+   * Function to recieve getToolTips() from Tool-Tips Component
+   */
+  passLegendNodes() {
+  }
+
+  /**
+   * Function called with switchMapand Scenario to clear Tooltips display
+   */
+  hideMapLegend() {
+    this.toggleLegend = document.getElementById('LegendButton') as HTMLInputElement;
+    this.showLegend = false;
+    this.toggleLegend.checked = false;
+  }
+
+  /*
+   * Function to get Tooltips from ToolTipsComponent
+   */
+  toggleMapLegend() {
+    this.showLegend = !this.showLegend;
+    if (this.showLegend) {
+      this.passNodes();
+      this.passLegendNodes();
+    }
+  }
+
+
 }
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

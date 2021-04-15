@@ -7,6 +7,7 @@ import { ShowMapComponent } from '../show-map/show-map.component';
 import { ToastComponent } from '../toast/toast.component';
 
 import { MapGeneratorPageComponent } from './map-generator-page.component';
+import { MapLegendComponent } from '../show-map/map-legend/map-legend.component';
 
 describe('MapGeneratorComponent', () => {
   let component: MapGeneratorPageComponent;
@@ -17,7 +18,8 @@ describe('MapGeneratorComponent', () => {
       declarations: [
         MapGeneratorPageComponent,
         ShowMapComponent,
-        ToastComponent
+        ToastComponent,
+        MapLegendComponent
       ],
       providers: [
         DynamicMap,

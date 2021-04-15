@@ -24,19 +24,29 @@
       </div>
     </div>
   </div>
+  <div class="content m-0 p-0" id="map-holder"  #showWidth >
   <div class="content m-0 p-0" id="map-holder" #showWidth>
     <canvas *appFeatureFlag="'tokens'" id="tokenViewer" width="500"></canvas>
     <canvas id="mapViewer" width="500" style="border: 1px solid rgb(95, 115, 46);"></canvas>
+    <canvas *ngIf="showLegend" id="legendViewer" width="500"></canvas>
+    <div *ngIf="showLegend" id="legendOverlay">
+      <app-map-legend #MapLegendComponent [mapNodes]="mapNodes" [showLegend]="showLegend" (passNodes)="passNodes()"
+        (getlegendNodes)="passLegendNodes()"></app-map-legend>
+    </div>
     <div *ngIf="isLongLoading" id="overlay" class="d-flex justify-content-center align-items-center">
       <div class="spinner-border text-success" role="status">
         <span class="sr-only">Loading...</span>
       </div>
     </div>
   </div>
-  <i style="color: darkslategray;">{{dwarfText}}</i>
-  <div class="container">
+  <i style="color: darkslategray; align-content: center;">{{dwarfText}}</i>
+  <div class="container" id="buttonContainer">
     <div class="row align-items-center mt-4">
       <div class="col justify-content-start">
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="LegendButton" (click)="toggleMapLegend()">
+          <label class="custom-control-label" for="LegendButton">{{legendButton}}</label>
+        </div>
         <div *appFeatureFlag="'tokens'" class="custom-control custom-switch">
           <input type="checkbox" class="custom-control-input" id="switchTokens" checked="true"
             (click)="onTokenSwitchClick()">
@@ -56,12 +66,11 @@
         </button>
       </div>
     </div>
-  </div>
-  <div>
-    <app-ngbd-collapse-basic></app-ngbd-collapse-basic>
+    <div>
+      <app-ngbd-collapse-basic></app-ngbd-collapse-basic>
+    </div>
   </div>
 </div>
-
 <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
 
 <!-- Share Modal -->
