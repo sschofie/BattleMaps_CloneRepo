@@ -345,7 +345,7 @@ export class Node {
   public height: number; // height of terrain piece
   public item: TerrainPiece;
 
-  public constructor(x, y, angle, radius, item, height) {
+  public constructor(x: number, y: number, angle: number, radius: number, item: TerrainPiece, height: number) {
     this.x = x;
     this.y = y;
     this.angle = angle;

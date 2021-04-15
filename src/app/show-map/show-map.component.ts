@@ -80,11 +80,16 @@ export class ShowMapComponent implements OnInit {
         console.debug('Generating new scenario...');
         this.switchScenario(true);
       }
-      // check whether we're only changing the scenario, then:
+      // check whether we're only changing the scenario or tokens, then:
       // if setting the map fails, pick a new map
       if (!this.changeScenarioOnly && !this.setMapFromQuery()) {
         console.debug('Generating new map...');
         this.switchMap(true);
+      }
+      // if setting the tokens fails, pick a new token seed
+      if (!this.setTokensFromQuery()) {
+        console.debug('Generating new tokens...');
+        this.switchTokens(true);
       }
       this.changeScenarioOnly = false;
     });
@@ -111,7 +116,13 @@ export class ShowMapComponent implements OnInit {
    */
   onSwitchScenarioButtonClick() {
     this.changeScenarioOnly = true;
-    this.switchScenario(true);
+    this.router.navigate(['/app'], {
+      queryParams: {
+        s: this.switchScenario(false),
+        t: this.switchTokens(false)
+      },
+      queryParamsHandling: 'merge'
+    });
   }
 
   /**
@@ -120,7 +131,7 @@ export class ShowMapComponent implements OnInit {
   onTokenSwitchClick() {
     this.showTokens = !this.showTokens;
     if (this.showTokens) {
-      this.dynamicTokens.generateAndPrintTokens(this, this.mapNodes, this.selectedScenario);
+      this.setTokensFromQuery();
     }
     else {
       this.dynamicTokens.clearTokens();
@@ -194,6 +205,28 @@ export class ShowMapComponent implements OnInit {
   }
 
   /**
+   * Pick a new random token seed.
+   *
+   * @param navigate Whether to update URL query parameters.
+   *
+   * @returns New token seed.
+   */
+  switchTokens(navigate: boolean): number {
+    if (!environment.featureFlags.tokens) { return null; }
+    let tokenSeed: number;
+    const oldTokenSeed = Number(this.route.snapshot.queryParamMap.get('t'));
+    tokenSeed = oldTokenSeed;
+    while (Number.isNaN(tokenSeed) || tokenSeed === oldTokenSeed) { // make sure we're actually picking a new seed
+      tokenSeed = DynamicTokens.newSeed();
+    }
+    if (navigate) {
+      // update the URL with the chosen information
+      this.router.navigate(['/app'], { queryParams: { t: tokenSeed }, queryParamsHandling: 'merge' });
+    }
+    return tokenSeed;
+  }
+
+  /**
    * WIP: Set the amount of available resources for a given generation.
    * TODO: add UI so user can designate the available resources
    */
@@ -222,9 +255,6 @@ export class ShowMapComponent implements OnInit {
     // check that we have a valid scenario
     if (!this.tmpSelectedScenario) { console.warn('WARN: Invalid scenario ID.'); return false; }
     if (this.changeScenarioOnly) {
-      if (this.showTokens) {
-        this.dynamicTokens.generateAndPrintTokens(this, this.mapNodes, this.tmpSelectedScenario);
-      }
       this.onLoad();
     }
     return true;
@@ -274,9 +304,27 @@ export class ShowMapComponent implements OnInit {
       this.passLegendNodes();
       this.tmpDwarfText = 'Dynamically generated map';
     }
-    if (this.showTokens) {
-      this.dynamicTokens.generateAndPrintTokens(this, this.mapNodes, this.tmpSelectedScenario);
+    return true;
+  }
+
+  /**
+   * Set the tokens based on the current url query parameters.
+   *
+   * @returns False if token seed is invalid or does not exist.
+   */
+  setTokensFromQuery(): boolean {
+    if (!this.showTokens) { return true; } // don't bother if we're not showing the tokens anyway
+    // load the token seed
+    const tokenSeedParam = this.route.snapshot.queryParamMap.get('t');
+    // check that the 't' parameter exists
+    if (!tokenSeedParam) { console.debug('Token seed not provided.'); return false; }
+
+    const tokenSeed = Number(tokenSeedParam);
+    if (!DynamicMap.isValidSeed(tokenSeed)) {
+      console.warn('WARN: Token seed is invalid.');
+      return false;
     }
+    this.dynamicTokens.generateAndPrintTokens(this, this.mapNodes, this.tmpSelectedScenario, tokenSeed);
     return true;
   }
 
