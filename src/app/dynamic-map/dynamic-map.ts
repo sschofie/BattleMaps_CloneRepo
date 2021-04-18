@@ -84,11 +84,10 @@ export class DynamicMap {
    *
    * @param context - the ShowMapComponent to be referenced.
    * @param seed - a 32 bit unsigned int to generate a specific map
-   * @param resources - an array containing the quantity of each item type in order of: Blocking, Difficult, Obstacle, Hill, Forest
    */
-  generateAndPrintMap(context: ShowMapComponent, seed: number, resources: number[]): Node[] {
+  generateAndPrintMap(context: ShowMapComponent, seed: number): Node[] {
     this.context = context;
-    this.mapNodes = this.simpleGenerate(400, 600, 50, resources, false, seed);
+    this.mapNodes = this.simpleGenerate(400, 600, 50, false, seed);
     this.printMap(this.mapNodes, 400, 600, false);
     return this.mapNodes;
   }
@@ -99,21 +98,19 @@ export class DynamicMap {
    * @param mapHeight - height of the map (usually 400)
    * @param mapWidth - width of the map (usually 600)
    * @param edgeBoundary - distance from the map edge in which objects cannot spawn
-   * @param resources - an array containing the quantity of each item type in order of: Blocking, Difficult, Obstacle, Hill, Forest
    * @param weighted - toggle weighted generation
    * @param seed - a 32 bit unsigned int to generate a specific map
    */
   private simpleGenerate(mapHeight: number, mapWidth: number, edgeBoundary: number,
-    resources: number[], weighted: boolean, seed: number): Node[] {
+    weighted: boolean, seed: number): Node[] {
+    const resources = this.generatorSettings.resources.slice();
     this.rand = this.seedrandom(seed);
     const boundScaling = 0.85; //this scales the bounding circle allowing object to overlap slightly.
     const nodes: Node[] = [];
     let runs = 0;
     let numOfNodes = Math.floor(this.rand() * 4) + 8; //designates number of terrain pieces with a max of 12 and min of 8.
     let numPiecesAvailable = 0;
-    if (resources != null) {
-      // discard extra values if the resources array is longer than list of terrain types
-      resources = resources.slice(0, Object.keys(TerrainPiece.Type).length / 2);
+    if (resources.length > 0) {
       if (resources.every(val => val === 0)) {
         // if there is zero of every resource, don't bother trying to place nodes
         this.context.onLoad();
@@ -127,7 +124,7 @@ export class DynamicMap {
       }
     }
     while (nodes.length < numOfNodes && runs < this.maxRuns) {
-      const item: TerrainPiece = this.selectTP( weighted, resources);
+      const item: TerrainPiece = this.selectTP(weighted, resources);
       const tempX = Math.floor(this.rand() * (mapWidth - edgeBoundary*2)) + edgeBoundary;
       const restrictHills = (this.generatorSettings === null || this.generatorSettings === undefined) ? true :
         this.generatorSettings.hillNotInZones;
@@ -135,7 +132,7 @@ export class DynamicMap {
         const tempY = Math.floor(this.rand()/2 * (mapHeight - edgeBoundary*4)) + mapHeight/4;
         if (!this.checkForOverlap(nodes, item, tempX, tempY)) {
           nodes.push(new Node(tempX, tempY, 0, (item.radius * boundScaling), item, -1));
-          if (resources != null) {
+          if (resources.length > 0) {
             resources[item.type]--;
           }
         }
@@ -144,7 +141,7 @@ export class DynamicMap {
         if (!this.checkForOverlap(nodes, item, tempX, tempY)) {
           const angle = (item.type === TerrainPiece.Type.hill) ? 0 : Math.floor(this.rand() * 2 * Math.PI);
           nodes.push(new Node(tempX, tempY, angle, (item.radius * boundScaling), item, -1));
-          if (resources != null) {
+          if (resources.length > 0) {
             resources[item.type]--;
           }
         }
@@ -162,11 +159,11 @@ export class DynamicMap {
    * @returns a random TerrainPiece
    */
   private selectTP(weighted: boolean, resources: number[]): TerrainPiece {
-    // get a random type (constrained by provided resources)
+    // get a random type (constrained by resources)
     let type: TerrainPiece.Type = null;
     while (type == null) {
       type = Math.floor(this.rand() * Object.keys(TerrainPiece.Type).length / 2) as TerrainPiece.Type;
-      if (resources != null) { // if we have resources, make sure there's enough of this type
+      if (resources.length > 0) { // if we have resources, make sure there's enough of this type
         if (type >= resources.length) {
           type = null;
         } else if (resources[type] < 1) {

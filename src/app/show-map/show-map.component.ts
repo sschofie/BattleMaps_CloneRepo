@@ -78,6 +78,8 @@ export class ShowMapComponent implements OnInit {
     this.startSpinner();
     // update the displayed information whenever the queries are updated
     this.route.queryParams.subscribe(() => {
+      // apply the generator settings first, so the map will be created properly
+      this.setGeneratorSettingsFromQuery();
       // if setting the scenario fails, pick a new scenario
       if (!this.setScenarioFromQuery()) {
         console.debug('Generating new scenario...');
@@ -148,11 +150,12 @@ export class ShowMapComponent implements OnInit {
     this.router.navigate(['/app'], {
       queryParams: {
         s: this.switchScenario(false),
-        map: this.switchMap(false)
+        map: this.switchMap(false),
+        settings: this.generatorSettings.settingsParamValue(),
+        r: this.generatorSettings.resourcesParamValue()
       }
     });
     this.hideMapLegend();
-
   }
 
   /**
@@ -230,21 +233,6 @@ export class ShowMapComponent implements OnInit {
   }
 
   /**
-   * WIP: Set the amount of available resources for a given generation.
-   * TODO: add UI so user can designate the available resources
-   */
-  setLimitedResources(): boolean {
-    const resourceBounds: number[] = null;
-    let res = '';
-    for (const r of resourceBounds) {
-      res += r + ',';
-    }
-    res = res.substring(0, res.length - 1);
-    this.router.navigate(['/app'], { queryParams: { r: res }, queryParamsHandling: 'merge' });
-    return true;
-  }
-
-  /**
    * Set the scenario based on the current url query parameters.
    *
    * @returns False if scenario ID is invalid or does not exist.
@@ -253,7 +241,7 @@ export class ShowMapComponent implements OnInit {
     // load the scenario ID
     const scenarioID = this.route.snapshot.queryParamMap.get('s');
     // check that the 'scenario' parameter exists
-    if (!scenarioID) { console.debug('Scenario ID not provided.'); return false; }
+    if (!scenarioID) { return false; }
     this.tmpSelectedScenario = ShowMapComponent.scenarios[scenarioID];
     // check that we have a valid scenario
     if (!this.tmpSelectedScenario) { console.warn('WARN: Invalid scenario ID.'); return false; }
@@ -272,7 +260,7 @@ export class ShowMapComponent implements OnInit {
     // load the map ID
     const mapID = this.route.snapshot.queryParamMap.get('map');
     // check that the 'map' parameter exists
-    if (!mapID) { console.debug('Map ID not provided.'); return false; }
+    if (!mapID) { return false; }
     if (mapID.startsWith('ed', 0)) {
       const mapNum = Number(mapID.replace('ed', ''));
       // check that we have a valid map number
@@ -297,12 +285,7 @@ export class ShowMapComponent implements OnInit {
         console.warn('WARN: Map seed is invalid.');
         return false;
       }
-      const resParam = this.route.snapshot.queryParamMap.get('r');
-      let resources = null;
-      if (resParam != null) {
-        resources = resParam.split(',').map(x => +x);
-      }
-      this.mapNodes = this.dynamicMap.generateAndPrintMap(this, mapSeed, resources);
+      this.mapNodes = this.dynamicMap.generateAndPrintMap(this, mapSeed);
       this.passNodes();
       this.passLegendNodes();
       this.tmpDwarfText = 'Dynamically generated map';
@@ -320,7 +303,7 @@ export class ShowMapComponent implements OnInit {
     // load the token seed
     const tokenSeedParam = this.route.snapshot.queryParamMap.get('t');
     // check that the 't' parameter exists
-    if (!tokenSeedParam) { console.debug('Token seed not provided.'); return false; }
+    if (!tokenSeedParam) { return false; }
 
     const tokenSeed = Number(tokenSeedParam);
     if (!DynamicMap.isValidSeed(tokenSeed)) {
@@ -329,6 +312,17 @@ export class ShowMapComponent implements OnInit {
     }
     this.dynamicTokens.generateAndPrintTokens(this, this.mapNodes, this.tmpSelectedScenario, tokenSeed);
     return true;
+  }
+
+  /**
+   * Set the generator settings based on the current url query parameters.
+   */
+  setGeneratorSettingsFromQuery() {
+    // load the settings value
+    const settingsParam = this.route.snapshot.queryParamMap.get('settings');
+    // load the resources value
+    const resParam = this.route.snapshot.queryParamMap.get('r');
+    this.generatorSettings.applySettingsFromQuery(settingsParam, resParam);
   }
 
   /**
@@ -383,8 +377,6 @@ export class ShowMapComponent implements OnInit {
       this.passLegendNodes();
     }
   }
-
-
 }
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
