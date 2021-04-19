@@ -58,7 +58,6 @@ export class DynamicMap {
   private itemsLoaded: number;
 
 
-
   static newSeed(): number {
     return Math.floor(Math.random() * DynamicMap.maxInt32Unsigned);
   }
