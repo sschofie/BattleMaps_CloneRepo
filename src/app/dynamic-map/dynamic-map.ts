@@ -1,5 +1,7 @@
 import { ShowMapComponent } from '../show-map/show-map.component';
+import { GeneratorSettingsService } from '../collapse-basic/generator-settings.service';
 import * as epicDwarfMaps from '../../assets/epic-dwarf-maps.json';
+import { SystemJsNgModuleLoader } from '@angular/core';
 
 //represents a single pre-defined piece of terrain.
 export class TerrainPiece {
@@ -47,13 +49,13 @@ export class DynamicMap {
     ['wood_wall_1', new TerrainPiece(12, TerrainPiece.Type.obstacle, 40, 1, 'wood_wall_1')],
   ];
   mapNodes: Node[]; //keep track of the current map for other funcions
+  generatorSettings: GeneratorSettingsService;
   private context: ShowMapComponent;
   private maxRuns = 50; //universal limit to number of runs each generation is allowed.
   private seedrandom = require('seedrandom');
   private rand;
   private itemsToLoad: number;
   private itemsLoaded: number;
-  private restrictHills = false;
 
 
   static newSeed(): number {
@@ -127,7 +129,9 @@ export class DynamicMap {
     while (nodes.length < numOfNodes && runs < this.maxRuns) {
       const item: TerrainPiece = this.selectTP( weighted, resources);
       const tempX = Math.floor(this.rand() * (mapWidth - edgeBoundary*2)) + edgeBoundary;
-      if(item.type === TerrainPiece.Type.hill && !this.restrictHills) {
+      const restrictHills = (this.generatorSettings === null || this.generatorSettings === undefined) ? true :
+        this.generatorSettings.hillNotInZones;
+      if(item.type === TerrainPiece.Type.hill && restrictHills) {
         const tempY = Math.floor(this.rand()/2 * (mapHeight - edgeBoundary*4)) + mapHeight/4;
         if (!this.checkForOverlap(nodes, item, tempX, tempY)) {
           nodes.push(new Node(tempX, tempY, 0, (item.radius * boundScaling), item, -1));
@@ -138,7 +142,8 @@ export class DynamicMap {
       } else{
         const tempY = Math.floor(this.rand() * (mapHeight - edgeBoundary*2)) + edgeBoundary;
         if (!this.checkForOverlap(nodes, item, tempX, tempY)) {
-          nodes.push(new Node(tempX, tempY, Math.floor(this.rand() * 2 * Math.PI), (item.radius * boundScaling), item, -1));
+          const angle = (item.type === TerrainPiece.Type.hill) ? 0 : Math.floor(this.rand() * 2 * Math.PI);
+          nodes.push(new Node(tempX, tempY, angle, (item.radius * boundScaling), item, -1));
           if (resources != null) {
             resources[item.type]--;
           }

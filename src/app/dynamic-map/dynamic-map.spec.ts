@@ -1,4 +1,5 @@
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
+import { GeneratorSettingsService } from '../collapse-basic/generator-settings.service';
 import { ShowMapComponent } from '../show-map/show-map.component';
 import { DynamicMap, Node, TerrainPiece } from './dynamic-map';
 
@@ -148,7 +149,7 @@ describe('DynamicMap', () => {
     it('should run validation on resource array', () => {
       // injecting a dummy ShowMapComponent so simpleGenerate has an onLoad() to "call"
       dynamicMap['context'] = // eslint-disable-line @typescript-eslint/dot-notation
-        new ShowMapComponent(null, null, null, null, null, null, null, null, new NgbTooltipConfig(null));
+        new ShowMapComponent(null, null, null, null, null, null, new GeneratorSettingsService(), null, new NgbTooltipConfig(null));
 
       const seed = DynamicMap.newSeed();
       // test shorter resource array

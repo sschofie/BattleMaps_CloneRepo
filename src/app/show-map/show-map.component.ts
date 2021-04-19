@@ -70,6 +70,9 @@ export class ShowMapComponent implements OnInit {
     private config: NgbTooltipConfig
   ) {
     config.openDelay = 500;
+    if(dynamicMap !== null) {
+      dynamicMap.generatorSettings = generatorSettings;
+    }
    }
   ngOnInit() {
     this.startSpinner();
