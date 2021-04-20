@@ -47,9 +47,13 @@ describe('DynamicMap', () => {
     const dynamicMap = new DynamicMap();
     const gen = 'simpleGenerate';
 
+    beforeEach(() => {
+      dynamicMap.generatorSettings = new GeneratorSettingsService();
+    });
+
     it('should return a non-empty map', () => {
       const seed = Math.floor(Math.random() * DynamicMap.maxInt32Unsigned);
-      const map = dynamicMap[gen](400, 600, 50, null, false, seed);
+      const map = dynamicMap[gen](400, 600, 50, false, seed);
       expect(map.length).toBeGreaterThanOrEqual(1);
     });
 
@@ -59,8 +63,8 @@ describe('DynamicMap', () => {
       const testSeed3 = DynamicMap.maxInt32Unsigned;
       const testSeeds = [testSeed1, testSeed2, testSeed3];
       for (const seed of testSeeds) {
-        const map1 = dynamicMap[gen](400, 600, 50, null, false, seed);
-        const map2 = dynamicMap[gen](400, 600, 50, null, false, seed);
+        const map1 = dynamicMap[gen](400, 600, 50, false, seed);
+        const map2 = dynamicMap[gen](400, 600, 50, false, seed);
         for (let i = 0; i < map1.length; i++) {
           expect(map1[i].angle).toEqual(map2[i].angle);
           expect(map1[i].x).toEqual(map2[i].x);
@@ -77,8 +81,8 @@ describe('DynamicMap', () => {
         testSeeds[i] = Math.floor(Math.random() * DynamicMap.maxInt32Unsigned);
       }
       for (const seed of testSeeds) {
-        const map1 = dynamicMap[gen](400, 600, 50, null, false, seed);
-        const map2 = dynamicMap[gen](400, 600, 50, null, false, seed);
+        const map1 = dynamicMap[gen](400, 600, 50, false, seed);
+        const map2 = dynamicMap[gen](400, 600, 50, false, seed);
         for (let i = 0; i < map1.length; i++) {
           expect(map1[i].angle).toEqual(map2[i].angle);
           expect(map1[i].x).toEqual(map2[i].x);
@@ -94,7 +98,7 @@ describe('DynamicMap', () => {
       const setLimit = 50;
       const hillLimit = 100;
       const randomLimit = Math.floor(Math.random()*100);
-      let map = dynamicMap[gen](400, 600, setLimit, null, false, seed);
+      let map = dynamicMap[gen](400, 600, setLimit, false, seed);
       for (const m of map) {
         expect(m.x).toBeGreaterThanOrEqual(setLimit, 'Piece out of bounds on x');
         expect(m.x).toBeLessThanOrEqual(600 - setLimit, 'Piece out of bounds on x');
@@ -107,7 +111,7 @@ describe('DynamicMap', () => {
         }
       }
       for (let x = 0; x < 10; x++) { //tests multiple times to check for out of bounds generations.
-        map = dynamicMap[gen](400, 600, randomLimit, null, false, seed);
+        map = dynamicMap[gen](400, 600, randomLimit, false, seed);
         for (const m of map) {
           expect(m.x).toBeGreaterThanOrEqual(randomLimit, 'Piece out of bounds on x');
           expect(m.x).toBeLessThanOrEqual(600 - randomLimit, 'Piece out of bounds on x');
@@ -124,25 +128,24 @@ describe('DynamicMap', () => {
 
     it('should generate map with limited resources', () => {
       const seed = DynamicMap.newSeed();
-      let resources = [3, 0, 3, 0, 0];
-      let map = dynamicMap[gen](400, 600, 50, resources, false, seed);
+      dynamicMap.generatorSettings.resources = [3, 0, 3, 0, 0];
+      let map = dynamicMap[gen](400, 600, 50, false, seed);
       expect(map.length).toBe(6, 'Incorrect number of pieces');
       for (const node of map) {
         expect([TerrainPiece.Type.blocking, TerrainPiece.Type.obstacle]).toContain(node.item.type, 'Incorrect item Type');
       }
 
       const numTypes = Object.keys(TerrainPiece.Type).length / 2;
-      resources = new Array(numTypes);
-      resources.fill(0);
+      dynamicMap.generatorSettings.resources = new Array(numTypes).fill(0);
       for (let i = 0; i < numTypes; i++) {
-        resources[Math.floor(Math.random() * numTypes)] += 1;
+        dynamicMap.generatorSettings.resources[Math.floor(Math.random() * numTypes)] += 1;
       }
-      map = dynamicMap[gen](400, 600, 50, resources, false, seed);
+      map = dynamicMap[gen](400, 600, 50, false, seed);
       expect(map.length).toBeLessThanOrEqual(numTypes, 'Too many pieces');
       //checks to see if resource limit was exceeded
-      for (let i = 0; i < resources.length; i++) {
-        expect(resources[i]).toBeGreaterThan(-1, 'Exceeded limit of item Type: ' +
-          TerrainPiece.Type[i] + ' by ' + (-1 * resources[i]));
+      for (let i = 0; i < dynamicMap.generatorSettings.resources.length; i++) {
+        expect(dynamicMap.generatorSettings.resources[i]).toBeGreaterThan(-1, 'Exceeded limit of item Type: ' +
+          TerrainPiece.Type[i] + ' by ' + (-1 * dynamicMap.generatorSettings.resources[i]));
       }
     });
 
@@ -153,18 +156,18 @@ describe('DynamicMap', () => {
 
       const seed = DynamicMap.newSeed();
       // test shorter resource array
-      let resources = [1, 2, 3];
-      let map = dynamicMap[gen](400, 600, 50, resources, false, seed);
+      dynamicMap.generatorSettings.resources = [1, 2, 3];
+      let map = dynamicMap[gen](400, 600, 50, false, seed);
       expect(map.length).toEqual(6, 'Incorrect number of pieces');
 
       // test longer resource array
-      resources = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-      map = dynamicMap[gen](400, 600, 50, resources, false, seed);
+      dynamicMap.generatorSettings.resources = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      map = dynamicMap[gen](400, 600, 50, false, seed);
       expect(map.length).toBeLessThanOrEqual(15, 'Incorrect number of pieces');
 
       // test resource array of zeroes
-      resources = new Array(Object.keys(TerrainPiece.Type).length / 2).fill(0);
-      map = dynamicMap[gen](400, 600, 50, resources, false, seed);
+      dynamicMap.generatorSettings.resources = new Array(Object.keys(TerrainPiece.Type).length / 2).fill(0);
+      map = dynamicMap[gen](400, 600, 50, false, seed);
       expect(map.length).toEqual(0, 'Incorrect number of pieces');
     });
 

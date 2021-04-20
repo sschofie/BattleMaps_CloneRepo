@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 
+import { GeneratorSettingsService } from '../collapse-basic/generator-settings.service';
 import { DynamicMap, dist, TerrainPiece, Node } from '../dynamic-map/dynamic-map';
 import { ShowMapComponent } from '../show-map/show-map.component';
 import { DynamicTokens, Token } from './dynamic-tokens';
@@ -65,7 +66,8 @@ describe('DynamicTokens', () => {
   describe('generateTokens', () => {
     const dynamicTokens = new DynamicTokens();
     const dynamicMap = new DynamicMap();
-    dynamicTokens['mapNodes'] = dynamicMap['simpleGenerate'](400, 600, 50, null, null, DynamicMap.newSeed());
+    dynamicMap.generatorSettings = new GeneratorSettingsService();
+    dynamicTokens['mapNodes'] = dynamicMap['simpleGenerate'](400, 600, 50, null, DynamicMap.newSeed());
 
     it('should return the same tokens from same seeds', () => {
       const testSeeds = [];
@@ -130,7 +132,7 @@ describe('DynamicTokens', () => {
       scenarios:
       for (const scenario of ShowMapComponent.scenarios) {
         for (let x = 0; x < 10; x++) { // test multiple maps per scenario
-          dynamicTokens['mapNodes'] = dynamicMap['simpleGenerate'](400, 600, 50, null, null, DynamicMap.newSeed());
+          dynamicTokens['mapNodes'] = dynamicMap['simpleGenerate'](400, 600, 50, null, DynamicMap.newSeed());
           dynamicTokens['generateTokens'](scenario, DynamicTokens.newSeed());
           const tokens = dynamicTokens['tokens'];
           if (!tokens) { continue scenarios; } // skip this scenario if it doesn't generate tokens

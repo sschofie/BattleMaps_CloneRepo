@@ -9,13 +9,17 @@
         <div class="card-body">
             <p class="text-muted">Generate a new map to apply changes</p>
             <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="switchED" checked="true" (click)="generatorSettings.toggleUseEDMaps()">
+                <input type="checkbox" class="custom-control-input" id="switchED" checked (click)="generatorSettings.toggleUseEDMaps()">
                 <label class="custom-control-label" for="switchED">Include maps from Lars' Epic Dwarf pack</label>
             </div>
             <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="switchHills" checked="true" (click)="generatorSettings.toggleHillSettings()">
+                <input type="checkbox" class="custom-control-input" id="switchHills" checked (click)="generatorSettings.toggleHillSettings()">
                 <label class="custom-control-label" for="switchHills">Keep hills out of deployment zones</label>
             </div>
+            <br>
+            <button type="button" class="btn btn-success btn-sm" (click)="generatorSettings.restoreDefaults()">
+                Restore Defaults
+            </button>
         </div>
     </div>
 </div>
