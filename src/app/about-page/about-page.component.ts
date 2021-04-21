@@ -2,15 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-landing-page',
-  templateUrl: './landing-page.component.html',
+  selector: 'app-about-page',
+  templateUrl: './about-page.component.html',
   styleUrls: [
-    './landing-page.component.css',
+    './about-page.component.css',
     '../../assets/simple-line-icons/css/simple-line-icons.css'
   ]
 })
 
-export class LandingPageComponent implements OnInit {
+export class AboutPageComponent implements OnInit {
   version = environment.appVersion;
   copyrightYear = environment.copyrightYear;
 

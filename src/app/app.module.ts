@@ -8,7 +8,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 
 import { AppComponent } from './app.component';
 import { ShowMapComponent } from './show-map/show-map.component';
-import { LandingPageComponent } from './landing-page/landing-page.component';
+import { AboutPageComponent } from './about-page/about-page.component';
 import { MapGeneratorPageComponent } from './map-generator-page/map-generator-page.component';
 import { DynamicMap } from './dynamic-map/dynamic-map';
 import { FeatureFlagDirective } from './feature-flag/feature-flag.directive';
@@ -19,8 +19,9 @@ import { GeneratorSettingsService } from './collapse-basic/generator-settings.se
 import { DynamicTokens } from './dynamic-tokens/dynamic-tokens';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/landing-page', pathMatch: 'full' },
-  { path: 'landing-page', component: LandingPageComponent },
+  { path: '', redirectTo: '/app', pathMatch: 'full' },
+  { path: 'landing-page', redirectTo: '/about', pathMatch: 'full'},
+  { path: 'about', component: AboutPageComponent },
   { path: 'app', component: MapGeneratorPageComponent }
 ];
 
@@ -28,7 +29,7 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     ShowMapComponent,
-    LandingPageComponent,
+    AboutPageComponent,
     MapGeneratorPageComponent,
     FeatureFlagDirective,
     ToastComponent,
