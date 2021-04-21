@@ -109,5 +109,25 @@ export class GeneratorSettingsService {
     // TODO set lanes switch
 
     // TODO set resources sliders
+    const numBlocking = document.getElementById('rangeBlocking') as HTMLInputElement;
+    this.resources.splice(0, 1, numBlocking.valueAsNumber);
+    const numDifficult = document.getElementById('rangeDifficult') as HTMLInputElement;
+    this.resources.splice(1, 1, numDifficult.valueAsNumber);
+    const numObstacle = document.getElementById('rangeObstacle') as HTMLInputElement;
+    this.resources.splice(2, 1, numObstacle.valueAsNumber);
+    const numHill = document.getElementById('rangeHill') as HTMLInputElement;
+    this.resources.splice(3, 1, numHill.valueAsNumber);
+    const numForest = document.getElementById('rangeForest') as HTMLInputElement;
+    this.resources.splice(4, 1, numForest.valueAsNumber);
+  }
+
+  /**
+   * This function takes the string id of the span label and the value of the slider
+   */
+  doSlider(labelstr, val){
+    const output = document.getElementById(labelstr) as HTMLInputElement;
+    output.textContent = val;
+    this.setSwitches();
   }
 }
+

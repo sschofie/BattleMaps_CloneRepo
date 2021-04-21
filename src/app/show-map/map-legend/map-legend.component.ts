@@ -58,21 +58,21 @@ export class MapLegendComponent implements OnInit {
   /**
    * this function takes the svg name and maps to a concise name to print
    */
-  getsvgName(svg: string){
+   getsvgName(svg: string){
     const svgMap = new Map([
-      ['boulder', 'Hill'],
-      ['boulder2', 'Hill'],
-      ['boulder3', 'Hill'],
+      ['boulder', 'Mountain'],
+      ['boulder2', 'Rock Hill'],
+      ['boulder3', 'Grass Hill'],
       ['crop_field', 'Field'],
       ['foliage', 'Forest'],
-      ['hedge_wall', 'Wall'],
-      ['hedge_wall2', 'Wall'],
+      ['hedge_wall', 'Hedge'],
+      ['hedge_wall2', 'Hedge'],
       ['house', 'Building'],
       ['pond', 'Pond'],
-      ['stone_wall', 'Wall'],
+      ['stone_wall', 'Stone Wall'],
       ['tree', 'Tree'],
       ['wood_building', 'Building'],
-      ['wood_wall_1', 'Wall']
+      ['wood_wall_1', 'Wood Wall']
     ]);
     for(const entry of svgMap.entries()){
         if ( svg === entry[0]){
@@ -104,10 +104,23 @@ export class MapLegendComponent implements OnInit {
       const heightText = 'Height: ' + p.height;
       const textWidth = lCtx.measureText(heightText).width;
       lCtx.fillStyle = 'rgba(255, 255, 255, 0.75)';
-      if ( p.item === 'Hill'){
+      if ( p.item === 'Forest' || p.item === 'Tree'){
         lCtx.fillRect((p.x - 25), (p.y - 17), textWidth + 5, 30);
         lCtx.font = 'IM Fell DW Pica';
         lCtx.fillStyle = 'black';
+        lCtx.fillText(typeText, (p.x - 22), (p.y - 5));
+        lCtx.fillText(heightText, (p.x - 22), (p.y + 7));
+      }else if ( p.item === 'Rock Hill' || p.item === 'Grass Hill'){
+        lCtx.fillRect((p.x - 25), (p.y - 17), textWidth + 10, 30);
+        lCtx.font = 'IM Fell DW Pica';
+        lCtx.fillStyle = 'black';
+        lCtx.fillText(itemText, (p.x - 22), (p.y - 5));
+        lCtx.fillText(heightText, (p.x - 22), (p.y + 7));
+      }else if ( p.item === 'Stone Wall' || p.item === 'Wood Wall'){
+        lCtx.fillRect((p.x - 25), (p.y - 27), textWidth + 15, 40);
+        lCtx.font = 'IM Fell DW Pica';
+        lCtx.fillStyle = 'black';
+        lCtx.fillText(typeText, (p.x - 22), (p.y - 16));
         lCtx.fillText(itemText, (p.x - 22), (p.y - 5));
         lCtx.fillText(heightText, (p.x - 22), (p.y + 7));
       }else{
