@@ -262,9 +262,26 @@ export class DynamicTokens {
    *
    * @returns Boolean describing whether tokens were placed successfully.
    */
-  private generatePushTokens(): boolean {
+   private generatePushTokens(): boolean {
     this.tokens = [];
-    // TODO add placement functionality
+    const markers = Math.floor(this.rand()*3+1)*2;
+    let t = new Token(this.width / 2, this.height / 2);
+    this.tokens.push(this.repositionTokenX(t));
+    for(let i = 0; i<markers ; i++) {
+      const y = (i % 2 === 0) ? (Math.floor(this.rand()*(this.height/4-25)+25)) :
+      (Math.floor(this.rand()*(this.height/4-25)+3*this.height/4));
+      let ctr = 0;
+      do {
+        ctr++;
+        if (ctr > this.maxAttempts) {
+          // This token arrangement does not allow all tokens to be used.
+          console.warn('[DynamicTokens] Warn: MaxAttempts exceeded trying to place token ' + (i + 1));
+          return false;
+        }
+        t = new Token(this.rand()* (this.width - 50) + 25, y);
+      } while (this.checkTokenCollisions(t, this.tokens) || this.checkMapCollisions(t));
+      this.tokens.push(t);
+    }
     return true;
   }
 
