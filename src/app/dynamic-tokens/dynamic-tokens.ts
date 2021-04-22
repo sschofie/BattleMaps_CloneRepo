@@ -12,6 +12,7 @@ export class DynamicTokens {
   private showMapComponent: ShowMapComponent;
   private mapNodes: Node[];
   private tokens: Token[];
+  private isPlunder = false;
 
   static newSeed(): number {
     return Math.floor(Math.random() * DynamicTokens.maxInt32Unsigned);
@@ -55,6 +56,7 @@ export class DynamicTokens {
       }
       console.debug('[DynamicTokens] Found canvas!');
     }
+    this.isPlunder = false;
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     ctx.clearRect(0, 0, 600, 400);
   }
@@ -107,8 +109,9 @@ export class DynamicTokens {
    * 2 (Blocking terrain + Token distancing radius)
    */
   private async printTokens(tokens: Token[], w: number, h: number, debugLevel = 0) {
+    const generatePrimary = this.isPlunder;
     this.clearTokens();
-    if (!tokens) { return; } // if there aren't any tokens to print, don't bother trying
+    if (!tokens || tokens.length === 0) { return; } // if there aren't any tokens to print, don't bother trying
 
     let canvas = document.getElementById('tokenViewer') as HTMLCanvasElement;
     if (!canvas) {
@@ -134,13 +137,21 @@ export class DynamicTokens {
     ctx.canvas.width = width;
     ctx.canvas.height = width * .66;
     ctx.scale(width / w, width * .66 / h);
-
+    const primary1 = Math.floor(tokens.length*this.rand());
+    let primary2 = Math.floor(tokens.length*this.rand());
+    while(primary1 === primary2) {
+      primary2 = Math.floor(this.tokens.length*this.rand());
+    }
+    let i = 0;
     for (const t of tokens) {
       ctx.strokeStyle = 'black';
       ctx.beginPath();
       ctx.arc(t.x, t.y, 4.1, 0, 2 * Math.PI);
       ctx.stroke();
       ctx.fillStyle = '#cab9a5';
+      if(generatePrimary && (i === primary1 || i === primary2)) {
+        ctx.fillStyle =  '#800000';
+      }
       ctx.fill();
 
       if (debugLevel) {
@@ -155,6 +166,7 @@ export class DynamicTokens {
           ctx.stroke();
         }
       }
+      i++;
     }
   }
 
@@ -283,7 +295,17 @@ export class DynamicTokens {
    */
   private generatePlunderTokens(): boolean {
     this.tokens = [];
-    // TODO add placement functionality
+    for(let i = 1; i<6; i++) {;
+      let t = new Token(i*this.width/6, this.height / 2);
+      t = this.repositionTokenX(t);
+      let ctr = 0;
+      while(ctr < 100 && this.checkTokenCollisions(t, this.tokens) || this.checkMapCollisions(t)) {
+        t = new Token(t.x+1, t.y);
+        ctr++;
+      }
+      this.tokens.push(t);
+    }
+    this.isPlunder = true;
     return true;
   }
 
