@@ -231,7 +231,22 @@ export class DynamicTokens {
    */
   private generateLootTokens(): boolean {
     this.tokens = [];
-    // TODO add placement functionality
+    let t = new Token(this.width / 2, this.height / 2);
+    this.tokens.push(this.repositionTokenX(t));
+    for (let i = 0; i < 2; i++) {
+      const y = this.height / 2;
+      let ctr = 0;
+      do {
+        ctr++;
+        if (ctr > this.maxAttempts) {
+          // This token arrangement does not allow all tokens to be used.
+          console.warn('[DynamicTokens] Warn: MaxAttempts exceeded trying to place token ' + (i + 1));
+          return false;
+        }
+        t = new Token(this.rand() * (this.width - 50) + 25, y);
+      } while (this.checkTokenCollisions(t, this.tokens) || this.checkMapCollisions(t));
+      this.tokens.push(t);
+    }
     return true;
   }
 
@@ -243,7 +258,7 @@ export class DynamicTokens {
    private generatePillageTokens(): boolean {
     this.tokens = [];
     const square = false;
-    const numTokens = square ? (this.rand()*3+1)+2 : (this.rand()*3+1)+4;
+    const numTokens = square ? (Math.floor(this.rand()*3+1))+2 : (Math.floor(this.rand()*3+1))+4;
     let t = new Token(this.width / 2, this.height / 2);
     for(let i = 0; i < numTokens; i++) {
       let ctr = 0;
