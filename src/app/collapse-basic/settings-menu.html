@@ -16,25 +16,26 @@
                 <input type="checkbox" class="custom-control-input" id="switchHills" checked (click)="generatorSettings.toggleHillSettings()">
                 <label class="custom-control-label" for="switchHills">Keep hills out of deployment zones</label>
             </div>
-            <div>
-              <input #sliderBlocking type="range" class="custom-range is-success" min="0" max="5" value = 3 id="rangeBlocking" (input)="generatorSettings.doSlider('numBlocking', sliderBlocking.value)">
-              <label class="custom-range-label" for="rangeBlocking">Number of Blocking Terrain: <span id="numBlocking">3</span></label>
+            <br>
+            <div class="row align-content-center justify-content-center">
+              <input #sliderBlocking type="range" class="custom-range is-success" min="0" max="5" defaultValue = 3 id="rangeBlocking" (input)="generatorSettings.getSlider('numBlocking', sliderBlocking.value)">
+              <label class="custom-range-label" for="rangeBlocking">Number of Blocking Terrain: <span id="numBlocking"></span></label>
           </div>
-          <div>
-              <input #sliderDifficult type="range" class="custom-range is-success" min="0" max="5" value = 3 id="rangeDifficult" (input)="generatorSettings.doSlider('numDifficult', sliderDifficult.value)">
-              <label class="custom-range-label" for="rangeDifficult">Number of Difficult Terrain: <span id="numDifficult">3</span></label>
+          <div class="row align-content-center justify-content-center">
+              <input #sliderDifficult type="range" class="custom-range is-success" min="0" max="5" defaultValue = 3 id="rangeDifficult" (input)="generatorSettings.getSlider('numDifficult', sliderDifficult.value)">
+              <label class="custom-range-label" for="rangeDifficult">Number of Difficult Terrain: <span id="numDifficult"></span></label>
           </div>
-          <div>
-              <input #sliderObstacle type="range" class="custom-range is-success" min="0" max="5" value = 3 id="rangeObstacle" (input)="generatorSettings.doSlider('numObstacle', sliderObstacle.value)">
-              <label class="custom-range-label" for="rangeObstacle">Number of Obstacle Terrain: <span id="numObstacle">3</span></label>
+          <div class="row align-content-center justify-content-center">
+              <input #sliderObstacle type="range" class="custom-range is-success" min="0" max="5" defaultValue = 3 id="rangeObstacle" (input)="generatorSettings.getSlider('numObstacle', sliderObstacle.value)">
+              <label class="custom-range-label" for="rangeObstacle">Number of Obstacle Terrain: <span id="numObstacle"></span></label>
           </div>
-          <div>
-              <input #sliderHill type="range" class="custom-range is-success" min="0" max="5" value = 3 id="rangeHill" (input)="generatorSettings.doSlider('numHill', sliderHill.value)">
-              <label class="custom-range-label" for="rangeHill">Number of Hill Terrain: <span id="numHill">3</span></label>
+          <div class="row align-content-center justify-content-center">
+              <input #sliderHill type="range" class="custom-range is-success" min="0" max="5" defaultValue = 3 id="rangeHill" (input)="generatorSettings.getSlider('numHill', sliderHill.value)">
+              <label class="custom-range-label" for="rangeHill">Number of Hill Terrain: <span id="numHill"></span></label>
           </div>
-          <div>
-              <input #sliderForest type="range" class="custom-range is-success" min="0" max="5" value = 3 id="rangeForest" (input)="generatorSettings.doSlider('numForest', sliderForest.value)">
-              <label class="custom-range-label" for="rangeForest">Number of Forest Terrain: <span id="numForest">3</span></label>
+          <div class="row align-content-center justify-content-center">
+              <input #sliderForest type="range" class="custom-range is-success" min="0" max="5" defaultValue = 3 id="rangeForest" (input)="generatorSettings.getSlider('numForest', sliderForest.value)">
+              <label class="custom-range-label" for="rangeForest">Number of Forest Terrain: <span id="numForest"></span></label>
           </div>
             <br>
             <button type="button" class="btn btn-success btn-sm" (click)="generatorSettings.restoreDefaults()">
