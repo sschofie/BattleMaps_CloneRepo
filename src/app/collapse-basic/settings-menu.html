@@ -18,24 +18,24 @@
             </div>
             <br>
             <div class="row align-content-center justify-content-center">
-              <input #sliderBlocking type="range" class="custom-range is-success" min="0" max="5" defaultValue = 3 id="rangeBlocking" (input)="generatorSettings.getSlider('numBlocking', sliderBlocking.value)">
-              <label class="custom-range-label" for="rangeBlocking">Number of Blocking Terrain: <span id="numBlocking"></span></label>
+              <input #sliderBlocking type="range" class="custom-range is-success" min="0" max="5" value=3 id="rangeBlocking" (input)="generatorSettings.getSlider(sliderBlocking.value)">
+              <label class="custom-range-label" for="rangeBlocking">Number of Blocking Terrain: {{sliderBlocking.value}}</label>
           </div>
           <div class="row align-content-center justify-content-center">
-              <input #sliderDifficult type="range" class="custom-range is-success" min="0" max="5" defaultValue = 3 id="rangeDifficult" (input)="generatorSettings.getSlider('numDifficult', sliderDifficult.value)">
-              <label class="custom-range-label" for="rangeDifficult">Number of Difficult Terrain: <span id="numDifficult"></span></label>
+              <input #sliderDifficult type="range" class="custom-range is-success" min="0" max="5" value=3 id="rangeDifficult" (input)="generatorSettings.getSlider(sliderDifficult.value)">
+              <label class="custom-range-label" for="rangeDifficult">Number of Difficult Terrain: {{sliderDifficult.value}}</label>
           </div>
           <div class="row align-content-center justify-content-center">
-              <input #sliderObstacle type="range" class="custom-range is-success" min="0" max="5" defaultValue = 3 id="rangeObstacle" (input)="generatorSettings.getSlider('numObstacle', sliderObstacle.value)">
-              <label class="custom-range-label" for="rangeObstacle">Number of Obstacle Terrain: <span id="numObstacle"></span></label>
+              <input #sliderObstacle type="range" class="custom-range is-success" min="0" max="5" value=3 id="rangeObstacle" (input)="generatorSettings.getSlider(sliderObstacle.value)">
+              <label class="custom-range-label" for="rangeObstacle">Number of Obstacle Terrain: {{sliderObstacle.value}}</label>
           </div>
           <div class="row align-content-center justify-content-center">
-              <input #sliderHill type="range" class="custom-range is-success" min="0" max="5" defaultValue = 3 id="rangeHill" (input)="generatorSettings.getSlider('numHill', sliderHill.value)">
-              <label class="custom-range-label" for="rangeHill">Number of Hill Terrain: <span id="numHill"></span></label>
+              <input #sliderHill type="range" class="custom-range is-success" min="0" max="5" value=3 id="rangeHill" (input)="generatorSettings.getSlider(sliderHill.value)">
+              <label class="custom-range-label" for="rangeHill">Number of Hill Terrain: {{sliderHill.value}}</label>
           </div>
           <div class="row align-content-center justify-content-center">
-              <input #sliderForest type="range" class="custom-range is-success" min="0" max="5" defaultValue = 3 id="rangeForest" (input)="generatorSettings.getSlider('numForest', sliderForest.value)">
-              <label class="custom-range-label" for="rangeForest">Number of Forest Terrain: <span id="numForest"></span></label>
+              <input #sliderForest type="range" class="custom-range is-success" min="0" max="5" value=3 id="rangeForest" (input)="generatorSettings.getSlider(sliderForest.value)">
+              <label class="custom-range-label" for="rangeForest">Number of Forest Terrain: {{sliderForest.value}}</label>
           </div>
             <br>
             <button type="button" class="btn btn-success btn-sm" (click)="generatorSettings.restoreDefaults()">

@@ -108,50 +108,33 @@ export class GeneratorSettingsService {
 
     // TODO set lanes switch
 
-    // TODO set resources sliders
     const rangeBlocking = document.getElementById('rangeBlocking') as HTMLInputElement;
-    const numBlocking = document.getElementById('numBlocking') as HTMLInputElement;
-    numBlocking.valueAsNumber = this.resources[0];
     rangeBlocking.valueAsNumber = this.resources[0];
     const rangeDifficult = document.getElementById('rangeDifficult') as HTMLInputElement;
-    const numDifficult = document.getElementById('numDifficult') as HTMLInputElement;
-    numDifficult.valueAsNumber = this.resources[1];
     rangeDifficult.valueAsNumber = this.resources[1];
     const rangeObstacle = document.getElementById('rangeObstacle') as HTMLInputElement;
-    const numObstacle = document.getElementById('numObstacle') as HTMLInputElement;
-    numObstacle.valueAsNumber = this.resources[2];
-    rangeObstacle.valueAsNumber =  this.resources[2];
+     rangeObstacle.valueAsNumber = this.resources[2];
     const rangeHill = document.getElementById('rangeHill') as HTMLInputElement;
-    const numHill = document.getElementById('numHill') as HTMLInputElement;
-    numHill.valueAsNumber = this.resources[3];
     rangeHill.valueAsNumber = this.resources[3];
     const rangeForest = document.getElementById('rangeForest') as HTMLInputElement;
-    const numForest = document.getElementById('numForest') as HTMLInputElement;
-    numForest.valueAsNumber = this.resources[4];
     rangeForest.valueAsNumber = this.resources[4];
-    
   }
 
   /**
    * This function gets the label str and value of the slider and assigns the value in resources
    */
-  getSlider(labelstr, val){
-    const output = document.getElementById(labelstr) as HTMLInputElement;
-    output.textContent = val;
-    if(labelstr === 'numBlocking'){
-      this.resources.splice(0, 1, val);
-    }else if (labelstr === 'numDifficult'){
-      this.resources.splice(1, 1, val);
-    }else if (labelstr === 'numObstacle'){
-      this.resources.splice(2, 1, val);
-    }else if(labelstr === 'numHill'){
-      this.resources.splice(3, 1, val);
-    }else if(labelstr === 'numForest'){
-      this.resources.splice(4, 1, val);
-    }
-    this.setSwitches();
+  getSlider(val){
+    const rangeBlocking = document.getElementById('rangeBlocking') as HTMLInputElement;
+    this.resources[0] = rangeBlocking.valueAsNumber;
+    const rangeDifficult = document.getElementById('rangeDifficult') as HTMLInputElement;
+    this.resources[1] = rangeDifficult.valueAsNumber;
+    const rangeObstacle = document.getElementById('rangeObstacle') as HTMLInputElement;
+    this.resources[2] = rangeObstacle.valueAsNumber;
+    const rangeHill = document.getElementById('rangeHill') as HTMLInputElement;
+    this.resources[3] = rangeHill.valueAsNumber;
+    const rangeForest = document.getElementById('rangeForest') as HTMLInputElement;
+    this.resources[4] = rangeForest.valueAsNumber;
   }
-
 
 }
 
