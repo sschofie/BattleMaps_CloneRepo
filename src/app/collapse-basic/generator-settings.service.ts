@@ -7,6 +7,7 @@ import { TerrainPiece } from '../dynamic-map/dynamic-map';
 export class GeneratorSettingsService {
   public useEDMaps = true;
   public hillNotInZones = true;
+  public useUserTerrain = false;
   /**
    * Array representing the available quantity of each resource type.
    * Set value to `[]` to remove resource restrictions.
@@ -23,6 +24,10 @@ export class GeneratorSettingsService {
 
   toggleHillSettings() {
     this.hillNotInZones = !this.hillNotInZones;
+  }
+
+  toggleUserTerrainSettings(){
+    this.useUserTerrain = !this.useUserTerrain;
   }
 
   /**
@@ -90,7 +95,11 @@ export class GeneratorSettingsService {
   restoreDefaults() {
     this.useEDMaps = true;
     this.hillNotInZones = true;
-    this.resources = [];
+    if(this.useUserTerrain === true){
+      this.resources = [3, 3, 2, 2, 2];
+    }else{
+      this.resources = [];
+    }
     this.setSwitches();
   }
 
@@ -108,6 +117,9 @@ export class GeneratorSettingsService {
 
     // TODO set lanes switch
 
+    const userTerrainSwitch = document.getElementById('switchTerrain') as HTMLInputElement;
+    userTerrainSwitch.checked = this.useUserTerrain;
+
     const rangeBlocking = document.getElementById('rangeBlocking') as HTMLInputElement;
     rangeBlocking.valueAsNumber = this.resources[0];
     const rangeDifficult = document.getElementById('rangeDifficult') as HTMLInputElement;
@@ -121,9 +133,9 @@ export class GeneratorSettingsService {
   }
 
   /**
-   * This function gets the label str and value of the slider and assigns the value in resources
+   * This function takes value of the slider and assigns the value in resources
    */
-  getSlider(val){
+  setResourcesFromSliders(){
     const rangeBlocking = document.getElementById('rangeBlocking') as HTMLInputElement;
     this.resources[0] = rangeBlocking.valueAsNumber;
     const rangeDifficult = document.getElementById('rangeDifficult') as HTMLInputElement;

@@ -16,25 +16,29 @@
                 <input type="checkbox" class="custom-control-input" id="switchHills" checked (click)="generatorSettings.toggleHillSettings()">
                 <label class="custom-control-label" for="switchHills">Keep hills out of deployment zones</label>
             </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="switchTerrain" checked (click)="generatorSettings.toggleUserTerrainSettings()">
+              <label class="custom-control-label" for="switchTerrain">Use User Input to select Terrain Pieces</label>
+          </div>
             <br>
             <div class="row align-content-center justify-content-center">
-              <input #sliderBlocking type="range" class="custom-range is-success" min="0" max="5" value=3 id="rangeBlocking" (input)="generatorSettings.getSlider(sliderBlocking.value)">
+              <input #sliderBlocking type="range" class="custom-range is-success" min="0" max="5" value=3 id="rangeBlocking" (input)="generatorSettings.setResourcesFromSliders()">
               <label class="custom-range-label" for="rangeBlocking">Number of Blocking Terrain: {{sliderBlocking.value}}</label>
           </div>
           <div class="row align-content-center justify-content-center">
-              <input #sliderDifficult type="range" class="custom-range is-success" min="0" max="5" value=3 id="rangeDifficult" (input)="generatorSettings.getSlider(sliderDifficult.value)">
+              <input #sliderDifficult type="range" class="custom-range is-success" min="0" max="5" value=3 id="rangeDifficult" (input)="generatorSettings.setResourcesFromSliders()">
               <label class="custom-range-label" for="rangeDifficult">Number of Difficult Terrain: {{sliderDifficult.value}}</label>
           </div>
           <div class="row align-content-center justify-content-center">
-              <input #sliderObstacle type="range" class="custom-range is-success" min="0" max="5" value=3 id="rangeObstacle" (input)="generatorSettings.getSlider(sliderObstacle.value)">
+              <input #sliderObstacle type="range" class="custom-range is-success" min="0" max="5" value=2 id="rangeObstacle" (input)="generatorSettings.setResourcesFromSliders()">
               <label class="custom-range-label" for="rangeObstacle">Number of Obstacle Terrain: {{sliderObstacle.value}}</label>
           </div>
           <div class="row align-content-center justify-content-center">
-              <input #sliderHill type="range" class="custom-range is-success" min="0" max="5" value=3 id="rangeHill" (input)="generatorSettings.getSlider(sliderHill.value)">
+              <input #sliderHill type="range" class="custom-range is-success" min="0" max="5" value=2 id="rangeHill" (input)="generatorSettings.setResourcesFromSliders()">
               <label class="custom-range-label" for="rangeHill">Number of Hill Terrain: {{sliderHill.value}}</label>
           </div>
           <div class="row align-content-center justify-content-center">
-              <input #sliderForest type="range" class="custom-range is-success" min="0" max="5" value=3 id="rangeForest" (input)="generatorSettings.getSlider(sliderForest.value)">
+              <input #sliderForest type="range" class="custom-range is-success" min="0" max="5" value=2 id="rangeForest" (input)="generatorSettings.setResourcesFromSliders()">
               <label class="custom-range-label" for="rangeForest">Number of Forest Terrain: {{sliderForest.value}}</label>
           </div>
             <br>
