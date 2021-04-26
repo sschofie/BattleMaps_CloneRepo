@@ -53,7 +53,8 @@ export class DynamicMap {
   private context: ShowMapComponent;
   private maxRuns = 50; //universal limit to number of runs each generation is allowed.
   private seedrandom = require('seedrandom');
-  private rand;
+  //private numOfPieces = DynamicMap.terrainPieces.length;
+  private boundScaling = 0.85; //this scales the bounding circle allowing object to overlap slightly.
   private itemsToLoad: number;
   private itemsLoaded: number;
 
@@ -87,28 +88,44 @@ export class DynamicMap {
    */
   generateAndPrintMap(context: ShowMapComponent, seed: number): Node[] {
     this.context = context;
-    this.mapNodes = this.simpleGenerate(400, 600, 50, false, seed);
-    this.printMap(this.mapNodes, 400, 600, false);
+    const board: Board = new Board(400,600,50);
+    //select which generator type to use
+    switch(this.generatorSettings.generator)  {
+      case DynamicMap.GenType.standard:
+        this.mapNodes = this.standardGenerate(seed);
+        break;
+      case DynamicMap.GenType.fourByFour:
+        board.width = 400;
+        const rand = this.seedrandom(seed);
+        this.mapNodes = this.mapGenerate(board,null,Math.floor(rand() * 4) + 8,rand);
+        break;
+      case DynamicMap.GenType.perfectMirror:
+        this.mapNodes = this.mirroredGenerate(board,seed);
+        break;
+      default:
+        this.mapNodes = this.standardGenerate(seed);
+        break;
+    }
+    this.printMap(this.mapNodes, board.height, board.width, false);
     return this.mapNodes;
   }
 
   /**
-   * generate map encoding (Node[])
+   * basic generation code. Should be wrapped in another function like
+   * standardGenerate() or mirroredGenerate(). generates map encoding
    *
-   * @param mapHeight - height of the map (usually 400)
-   * @param mapWidth - width of the map (usually 600)
-   * @param edgeBoundary - distance from the map edge in which objects cannot spawn
-   * @param weighted - toggle weighted generation
-   * @param seed - a 32 bit unsigned int to generate a specific map
+   * @param board - defines the height, width, and edge boundary of the map to be generated
+   * @param prefabs - list of pre-generated Node structures that must be included in the map
+   * @param numOfNodes - the number of Nodes to be generated* (space permitting)
+   * @param rand - seedable randomizer function created in the wrapper function
    */
-  private simpleGenerate(mapHeight: number, mapWidth: number, edgeBoundary: number,
-    weighted: boolean, seed: number): Node[] {
+  private mapGenerate(board: Board, prefabs: Node[], numOfNodes: number, rand: () => number): Node[] {
     const resources = this.generatorSettings.resources.slice();
-    this.rand = this.seedrandom(seed);
-    const boundScaling = 0.85; //this scales the bounding circle allowing object to overlap slightly.
-    const nodes: Node[] = [];
+    let nodes: Node[] = [];
+    if(prefabs != null){
+      for(const n of prefabs){nodes.push(n);};
+    }
     let runs = 0;
-    let numOfNodes = Math.floor(this.rand() * 4) + 8; //designates number of terrain pieces with a max of 12 and min of 8.
     let numPiecesAvailable = 0;
     if (resources.length > 0) {
       if (resources.every(val => val === 0)) {
@@ -124,49 +141,127 @@ export class DynamicMap {
       }
     }
     while (nodes.length < numOfNodes && runs < this.maxRuns) {
-      const item: TerrainPiece = this.selectTP(weighted, resources);
-      const tempX = Math.floor(this.rand() * (mapWidth - edgeBoundary*2)) + edgeBoundary;
+      const item: TerrainPiece = this.selectTP(resources, rand);
+      const tempX = Math.floor(rand() * (board.width - board.edgeBoundary*2)) + board.edgeBoundary;
       const restrictHills = (this.generatorSettings === null || this.generatorSettings === undefined) ? true :
         this.generatorSettings.hillNotInZones;
       if(item.type === TerrainPiece.Type.hill && restrictHills) {
-        const tempY = Math.floor(this.rand()/2 * (mapHeight - edgeBoundary*4)) + mapHeight/4;
+        const tempY = Math.floor(rand()/2 * (board.height - board.edgeBoundary*4)) + board.height/4;
         if (!this.checkForOverlap(nodes, item, tempX, tempY)) {
-          nodes.push(new Node(tempX, tempY, 0, (item.radius * boundScaling), item, -1));
+          nodes.push(new Node(tempX, tempY, 0, (item.radius * this.boundScaling), item, -1));
           if (resources.length > 0) {
             resources[item.type]--;
           }
         }
       } else{
-        const tempY = Math.floor(this.rand() * (mapHeight - edgeBoundary*2)) + edgeBoundary;
+        const tempY = Math.floor(rand() * (board.height - board.edgeBoundary*2)) + board.edgeBoundary;
         if (!this.checkForOverlap(nodes, item, tempX, tempY)) {
-          const angle = (item.type === TerrainPiece.Type.hill) ? 0 : Math.floor(this.rand() * 2 * Math.PI);
-          nodes.push(new Node(tempX, tempY, angle, (item.radius * boundScaling), item, -1));
+          const angle = (item.type === TerrainPiece.Type.hill) ? 0 : Math.floor(rand() * 2 * Math.PI);
+          nodes.push(new Node(tempX, tempY, angle, (item.radius * this.boundScaling), item, -1));
           if (resources.length > 0) {
-            resources[item.type]--;
+            resources[item.type]-=1;
           }
         }
       }
       runs++;
     }
+    nodes = nodes.filter( (x)=> x.item.id > -1);
     return nodes;
   }
 
   /**
+   * To be depricated. Use standardGenerate instead.
+   * generates map encoding (Node[])
+   *
+   * @param mapHeight - height of the map (usually 400)
+   * @param mapWidth - width of the map (usually 600)
+   * @param edgeBoundary - distance from the map edge in which objects cannot spawn
+   * @param seed - a 32 bit unsigned int to generate a specific map
+   * @returns - map encoding Node[]
+   */
+  private simpleGenerate(mapHeight: number, mapWidth: number, edgeBoundary: number, seed: number): Node[] {
+      const board = new Board(mapHeight,mapWidth,edgeBoundary);
+      const rand = this.seedrandom(seed);
+      const numOfNodes = Math.floor(rand() * 4) + 8; //designates number of terrain pieces with a max of 12 and min of 8.
+      return this.mapGenerate(board,null,numOfNodes,rand);
+    }
+
+  /**
+   *
+   * replaces simpleGenerate(). Generates the standard type of map encoding
+   * Size: 400X600, Boundary: 50, Piece-Count: 8-12, Wieghted: no
+   * Prefabs: none
+   *
+   * @param resources - an array of numbers representing the available resources where index equals id
+   * @param seed - a 32 bit unsigned int to generate a specific map
+   * @returns - map encoding (Node[])
+   */
+  private standardGenerate(seed: number): Node[] {
+      const board = new Board(400,600,50);
+      const rand = this.seedrandom(seed);
+      const numOfNodes = Math.floor(rand() * 4) + 8; //designates number of terrain pieces with a max of 12 and min of 8.
+      return this.mapGenerate(board,null,numOfNodes,rand);
+    }
+
+  /**
+   *
+   * Generates a map mirrored by rotating the left side 180 degrees.
+   * Items can spawn in the center.
+   *
+   * @param board - object containing the height, width, and edge boundary of map
+   * @param seed - a 32 bit unsigned int to generate a specific map
+   */
+  private mirroredGenerate(board: Board, seed: number): Node[] {
+      const resources = this.generatorSettings.resources.slice();
+      const rand = this.seedrandom(seed);
+      let numOfNodes = Math.floor(rand() * 4) + 8; //designates number of terrain pieces with a max of 12 and min of 8.
+      const prefab: Node[] = [];
+      let mid: Node = null;
+      if((Math.floor(numOfNodes%2) === 1) && (rand() > 0.5)){
+        const tp = this.selectTP(resources, rand);
+        const y = board.height/2;
+        const blankPiece = new TerrainPiece(-1,-1,tp.radius,0,'');
+        mid = new Node(board.width/2,y, Math.floor(rand() * 2 * Math.PI), (tp.radius * this.boundScaling),tp,-1);
+        prefab.push(new Node(mid.x,y, mid.angle, mid.radius,blankPiece,-1));
+        if(resources != null){
+          resources[tp.id] --;
+        }
+      }else{
+        numOfNodes--;
+      }
+      numOfNodes = Math.floor(numOfNodes/2);
+      if(resources != null){
+        resources.forEach((x) => Math.floor(x/2));
+      }
+      const halfBoard = new Board(board.height,board.width/2,board.edgeBoundary);
+      const halfMap = this.mapGenerate(halfBoard,prefab,numOfNodes,rand);
+      const map: Node[] = [];
+      if(mid != null){
+        map.push(mid);
+      }
+      for(const n of halfMap){
+        map.push(n);
+        map.push(new Node((board.width-n.x),(board.height-n.y),n.angle,n.radius,n.item,n.height)); //need complement of angle
+      }
+      return map;
+    }
+
+  /**
    * Selects a random terrain piece
    *
-   * @param weighted - toggle whether the generation is weighted
-   * @param resources - an array containing the quantity of each item type in order of: Blocking, Difficult, Obstacle, Hill, Forest
+   * @param resources - an array of numbers representing the available resources where index equals id
+   * @param rand - seedable randomizer function created in the wrapper function
    * @returns a random TerrainPiece
    */
-  private selectTP(weighted: boolean, resources: number[]): TerrainPiece {
+  private selectTP(resources: number[], rand: () => number): TerrainPiece {
     // get a random type (constrained by resources)
     let type: TerrainPiece.Type = null;
     while (type == null) {
-      type = Math.floor(this.rand() * Object.keys(TerrainPiece.Type).length / 2) as TerrainPiece.Type;
-      if (resources.length > 0) { // if we have resources, make sure there's enough of this type
-        if (type >= resources.length) {
+      type = Math.floor(rand() * Object.keys(TerrainPiece.Type).length / 2) as TerrainPiece.Type;
+      if (resources.length > 0){
+        if(type >= resources.length){
           type = null;
-        } else if (resources[type] < 1) {
+        }else if(resources[type] < 1){
           type = null;
         }
       }
@@ -175,8 +270,8 @@ export class DynamicMap {
     // get a random TerrainPiece of that type
     let item: TerrainPiece = null;
     do {
-      item = DynamicMap.terrainPieces[Math.floor(this.rand() * DynamicMap.terrainPieces.length)][1];
-    } while (item.type !== type || (weighted && item.weight < this.rand()));
+      item = DynamicMap.terrainPieces[Math.floor(rand() * DynamicMap.terrainPieces.length)][1];
+    } while (item.type !== type || (item.weight < rand()));
 
     return item;
   }
@@ -332,6 +427,19 @@ export class DynamicMap {
   }
 }
 
+export namespace DynamicMap { // eslint-disable-line @typescript-eslint/no-namespace
+  export enum GenType {
+    standard = 0,
+    fourByFour,
+    perfectMirror,
+    psudoMirror,
+    lanes,
+    customSize,
+    customWeights,
+    playerDefinedStructures
+  }
+}
+
 export const dist = (x1: number, y1: number, x2: number, y2: number): number => {
   const a = x1 - x2;
   const b = y1 - y2;
@@ -384,6 +492,18 @@ class Group {
     this.weight = w;
     this.radius = r;
     this.items = i;
+  }
+}
+
+class Board {
+  public height: number;
+  public width: number;
+  public edgeBoundary: number;
+
+  public constructor(h: number, w: number, b: number){
+    this.height = h;
+    this.width = w;
+    this.edgeBoundary = b;
   }
 }
 
