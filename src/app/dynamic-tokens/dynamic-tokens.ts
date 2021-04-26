@@ -70,7 +70,8 @@ export class DynamicTokens {
     if (!this.mapNodes || this.mapNodes.length < 1) { return; }
     this.rand = this.seedrandom(seed);
     switch (scenario) {
-      case `Fool's Gold` || `Smoke & Mirrors`:
+      case `Smoke & Mirrors`:
+      case `Fool's Gold`:
         while (!this.generateFGSaMTokens()) { ; }
         break;
       case `Loot`:
@@ -93,6 +94,7 @@ export class DynamicTokens {
         break;
 
       default:
+        this.tokens = [];
         break;
     }
   }
@@ -232,8 +234,24 @@ export class DynamicTokens {
    */
   private generateFGSaMTokens(): boolean {
     this.tokens = [];
-    // TODO add placement functionality
-    return true;
+    const spacing = 25;
+      for (let i = 0; i < 10; i++) {
+        const alternateSide = (n: number) => (i % 2 === 0) ? n : (n + (this.height / 2));
+        let t: Token;
+        let ctr = 0;
+        do {
+          ctr++;
+          if (ctr > this.maxAttempts) {
+            // This token arrangement does not allow all tokens to be used.
+            console.warn('[DynamicTokens] Warn: MaxAttempts exceeded trying to place token ' + (i + 1));
+            return false;
+          }
+          t = new Token(((this.rand() * (this.width - spacing * 2)) + spacing),
+                          alternateSide((this.rand() * (this.height / 2 - spacing * 2)) + spacing));
+        } while (this.checkTokenCollisions(t, this.tokens) || this.checkMapCollisions(t));
+        this.tokens.push(t);
+      }
+      return true;
   }
 
   /**
