@@ -45,6 +45,15 @@
                 <label class="custom-range-label" for="rangeForest">Forest: {{sliderForest.value}}</label>
               </div>
             </div>
+            <div class="text-muted">Select a generator type</div>
+            <select class="custom-select" id='selectGenerator' (change)='generatorSettings.selectGenerator()'>
+                <option selected value=0>Standard Map (4x6)</option>
+                <!-- <option value=1>Standard Map (4x4)</option> -->
+                <option value=2>Perfect Mirror (4x6)</option>
+                <!-- <option value=3>Equavalent Sides (4x6)</option> -->
+                <!-- <option value=4>Lanes (4x6)</option> -->
+            </select>
+            <br>
             <br>
             <button type="button" class="btn btn-success btn-sm" (click)="generatorSettings.restoreDefaults()">
                 Restore Defaults

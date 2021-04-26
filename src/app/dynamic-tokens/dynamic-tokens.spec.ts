@@ -67,7 +67,7 @@ describe('DynamicTokens', () => {
     const dynamicTokens = new DynamicTokens();
     const dynamicMap = new DynamicMap();
     dynamicMap.generatorSettings = new GeneratorSettingsService();
-    dynamicTokens['mapNodes'] = dynamicMap['simpleGenerate'](400, 600, 50, null, DynamicMap.newSeed());
+    dynamicTokens['mapNodes'] = dynamicMap['simpleGenerate'](400, 600, 50, DynamicMap.newSeed());
 
     it('should return the same tokens from same seeds', () => {
       const testSeeds = [];
@@ -132,7 +132,7 @@ describe('DynamicTokens', () => {
       scenarios:
       for (const scenario of ShowMapComponent.scenarios) {
         for (let x = 0; x < 10; x++) { // test multiple maps per scenario
-          dynamicTokens['mapNodes'] = dynamicMap['simpleGenerate'](400, 600, 50, null, DynamicMap.newSeed());
+          dynamicTokens['mapNodes'] = dynamicMap['simpleGenerate'](400, 600, 50, DynamicMap.newSeed());
           dynamicTokens['generateTokens'](scenario, DynamicTokens.newSeed());
           const tokens = dynamicTokens['tokens'];
           if (!tokens) { continue scenarios; } // skip this scenario if it doesn't generate tokens

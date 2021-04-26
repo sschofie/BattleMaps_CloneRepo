@@ -151,6 +151,7 @@ export class ShowMapComponent implements OnInit {
       queryParams: {
         s: this.switchScenario(false),
         map: this.switchMap(false),
+        t: this.switchTokens(false),
         settings: this.generatorSettings.settingsParamValue(),
         r: this.generatorSettings.resourcesParamValue()
       }

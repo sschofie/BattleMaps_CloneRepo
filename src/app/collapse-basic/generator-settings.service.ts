@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TerrainPiece } from '../dynamic-map/dynamic-map';
+import { TerrainPiece, DynamicMap } from '../dynamic-map/dynamic-map';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +8,7 @@ export class GeneratorSettingsService {
   public useEDMaps = true;
   public hillNotInZones = true;
   public useUserTerrain = false;
+  public generator = 0 as DynamicMap.GenType;
   /**
    * Array representing the available quantity of each resource type.
    * Set value to `[]` to remove resource restrictions.
@@ -33,6 +34,10 @@ export class GeneratorSettingsService {
     }else{
       this.resources = [];
     }
+
+  selectGenerator() {
+    const gen = document.getElementById('selectGenerator') as HTMLInputElement;
+    this.generator = (+gen.value);
   }
 
   /**
@@ -49,10 +54,9 @@ export class GeneratorSettingsService {
   applySettingsFromQuery(settingsParam: string, resourcesParam: string) {
     // check that a value for the parameter exists
     if (settingsParam) {
-      const settings = settingsParam.split(',').map(x => Number(x) !== 0);
-      this.hillNotInZones = settings[0];
-      // TODO set mirroring setting
-      // TODO set lanes setting
+      const settings: number[] = settingsParam.split(',').map(x => Number(x));
+      this.hillNotInZones = !!settings[0];
+      this.generator = +settings[1];
     } else {
       console.debug('[GeneratorSettings] Settings not provided.');
       this.restoreDefaults();
@@ -79,9 +83,8 @@ export class GeneratorSettingsService {
   settingsParamValue(): string {
     let settings = [];
     settings = settings.concat(this.hillNotInZones);
-    // TODO add mirroring setting
-    // TODO add lanes setting
-    return settings.map(x => x ? 1 : 0).join(',');
+    settings = settings.concat(this.generator);
+    return settings.map(x => Number(x)).join(',');
   }
 
   /**
@@ -102,6 +105,7 @@ export class GeneratorSettingsService {
     this.hillNotInZones = true;
     this.useUserTerrain = false;
     this.resources = [];
+    this.generator = 0;
     this.setSwitches();
   }
 
@@ -115,9 +119,8 @@ export class GeneratorSettingsService {
     const hillNotInZonesSwitch = document.getElementById('switchHills') as HTMLInputElement;
     hillNotInZonesSwitch.checked = this.hillNotInZones;
 
-    // TODO set mirroring switch
-
-    // TODO set lanes switch
+    const genSelector = document.getElementById('selectGenerator') as HTMLInputElement;
+    genSelector.value = (+this.generator).toString();
 
     const userTerrainSwitch = document.getElementById('switchTerrain') as HTMLInputElement;
     userTerrainSwitch.checked = this.useUserTerrain;
