@@ -34,6 +34,7 @@
   </div>
   <div class="content m-0 p-0" id="map-holder"  #showWidth >
   <div class="content m-0 p-0" id="map-holder" #showWidth>
+    <app-toast-scenario-info class="d-flex justify-content-center w-100 m-0 p-2" aria-live="polite" aria-atomic="true"></app-toast-scenario-info>
     <canvas *appFeatureFlag="'tokens'" id="tokenViewer" width="500"></canvas>
     <canvas id="mapViewer" width="500" style="border: 1px solid rgb(95, 115, 46);"></canvas>
     <canvas *ngIf="showLegend" id="legendViewer" width="500"></canvas>

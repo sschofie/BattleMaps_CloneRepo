@@ -39,6 +39,15 @@ export class DynamicTokens {
     } else {
       this.printTokens(this.tokens, this.width, this.height, 2);
     }
+    if((scenario === `Fool's Gold`) || (scenario === `Smoke & Mirrors`)) {
+      this.showMapComponent.toastScenarioInfoService.show(
+        `Scenario Info`,
+        `see p. 62`,
+        `Determine token values based on ` + scenario + ` details in rulebook`
+        );
+    } else {
+      this.showMapComponent.toastScenarioInfoService.toasts = [];
+    }
   }
 
   /**

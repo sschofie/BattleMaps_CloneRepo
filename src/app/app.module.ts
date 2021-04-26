@@ -13,6 +13,7 @@ import { MapGeneratorPageComponent } from './map-generator-page/map-generator-pa
 import { DynamicMap } from './dynamic-map/dynamic-map';
 import { FeatureFlagDirective } from './feature-flag/feature-flag.directive';
 import { ToastComponent } from './toast/toast.component';
+import { ToastScenarioInfoComponent } from './toast/toast-scenario-info.component';
 import { CollapseBasicComponent } from './collapse-basic/collapse-basic.component';
 import { MapLegendComponent } from './show-map/map-legend/map-legend.component';
 import { GeneratorSettingsService } from './collapse-basic/generator-settings.service';
@@ -33,6 +34,7 @@ const routes: Routes = [
     MapGeneratorPageComponent,
     FeatureFlagDirective,
     ToastComponent,
+    ToastScenarioInfoComponent,
     CollapseBasicComponent,
     MapLegendComponent
 

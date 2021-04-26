@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { ClipboardService } from 'ngx-clipboard';
 import { DynamicMap, Node } from '../dynamic-map/dynamic-map';
 import { ToastService } from '../toast/toast.service';
+import { ToastScenarioInfoService } from '../toast/toast-scenario-info.service';
 import { GeneratorSettingsService } from '../collapse-basic/generator-settings.service';
 import { MapLegendComponent } from './map-legend/map-legend.component';
 import { DynamicTokens } from '../dynamic-tokens/dynamic-tokens';
@@ -65,6 +66,7 @@ export class ShowMapComponent implements OnInit {
     private clipboardService: ClipboardService,
     private dynamicMap: DynamicMap,
     public toastService: ToastService,
+    public toastScenarioInfoService: ToastScenarioInfoService,
     public generatorSettings: GeneratorSettingsService,
     private dynamicTokens: DynamicTokens,
     private config: NgbTooltipConfig
@@ -333,6 +335,7 @@ export class ShowMapComponent implements OnInit {
    */
   openShareModal(modal: TemplateRef<NgbModal>) {
     this.currentURL = this.baseURL + this.router.url;
+    this.toastScenarioInfoService.toasts = [];
     this.modalService.open(modal, { ariaLabelledBy: 'shareModalTitle' });
   }
 
