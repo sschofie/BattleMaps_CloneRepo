@@ -28,6 +28,11 @@ export class GeneratorSettingsService {
 
   toggleUserTerrainSettings(){
     this.useUserTerrain = !this.useUserTerrain;
+    if(this.useUserTerrain){
+      this.resources = [3, 3, 2, 2];
+    }else{
+      this.resources = [];
+    }
   }
 
   /**
@@ -95,11 +100,8 @@ export class GeneratorSettingsService {
   restoreDefaults() {
     this.useEDMaps = true;
     this.hillNotInZones = true;
-    if(this.useUserTerrain === true){
-      this.resources = [3, 3, 2, 2, 2];
-    }else{
-      this.resources = [];
-    }
+    this.useUserTerrain = false;
+    this.resources = [];
     this.setSwitches();
   }
 
@@ -119,17 +121,18 @@ export class GeneratorSettingsService {
 
     const userTerrainSwitch = document.getElementById('switchTerrain') as HTMLInputElement;
     userTerrainSwitch.checked = this.useUserTerrain;
-
-    const rangeBlocking = document.getElementById('rangeBlocking') as HTMLInputElement;
-    rangeBlocking.valueAsNumber = this.resources[0];
-    const rangeDifficult = document.getElementById('rangeDifficult') as HTMLInputElement;
-    rangeDifficult.valueAsNumber = this.resources[1];
-    const rangeObstacle = document.getElementById('rangeObstacle') as HTMLInputElement;
-     rangeObstacle.valueAsNumber = this.resources[2];
-    const rangeHill = document.getElementById('rangeHill') as HTMLInputElement;
-    rangeHill.valueAsNumber = this.resources[3];
-    const rangeForest = document.getElementById('rangeForest') as HTMLInputElement;
-    rangeForest.valueAsNumber = this.resources[4];
+    if(this.useUserTerrain){
+      const rangeBlocking = document.getElementById('rangeBlocking') as HTMLInputElement;
+      rangeBlocking.valueAsNumber = this.resources[0];
+      const rangeDifficult = document.getElementById('rangeDifficult') as HTMLInputElement;
+      rangeDifficult.valueAsNumber = this.resources[1];
+      const rangeObstacle = document.getElementById('rangeObstacle') as HTMLInputElement;
+      rangeObstacle.valueAsNumber = this.resources[2];
+      const rangeHill = document.getElementById('rangeHill') as HTMLInputElement;
+      rangeHill.valueAsNumber = this.resources[3];
+      const rangeForest = document.getElementById('rangeForest') as HTMLInputElement;
+      rangeForest.valueAsNumber = this.resources[4];
+    }
   }
 
   /**
