@@ -30,12 +30,14 @@ export class GeneratorSettingsService {
   toggleUserTerrainSettings(){
     this.useUserTerrain = !this.useUserTerrain;
     if(this.useUserTerrain){
-      this.resources = [3, 3, 2, 2];
+      this.resources = [3, 3, 2, 2, 2];
     }else{
       this.resources = [];
     }
+    this.setSwitches();
+  }
 
-  selectGenerator() {
+  selectGenerator(){
     const gen = document.getElementById('selectGenerator') as HTMLInputElement;
     this.generator = (+gen.value);
   }
