@@ -27,6 +27,35 @@
             </select>
             <br>
             <br>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="switchTerrain" checked (click)="generatorSettings.toggleUserTerrainSettings()">
+              <label class="custom-control-label" for="switchTerrain">Customize number of terrain pieces</label>
+            </div>
+            <div #collapse="ngbCollapse" [(ngbCollapse)]="!generatorSettings.useUserTerrain">
+              <br>
+              <p class="text-muted">Select how many of each terrain type you have:</p>
+              <div class="row align-content-center justify-content-center">
+                <input #sliderBlocking type="range" class="custom-range is-success" min="0" max="5" value=3 id="rangeBlocking" (input)="generatorSettings.setResourcesFromSliders()">
+                <label class="custom-range-label" for="rangeBlocking">Blocking: {{sliderBlocking.value}}</label>
+              </div>
+              <div class="row align-content-center justify-content-center">
+                <input #sliderDifficult type="range" class="custom-range is-success" min="0" max="5" value=3 id="rangeDifficult" (input)="generatorSettings.setResourcesFromSliders()">
+                <label class="custom-range-label" for="rangeDifficult">Difficult: {{sliderDifficult.value}}</label>
+              </div>
+              <div class="row align-content-center justify-content-center">
+                <input #sliderObstacle type="range" class="custom-range is-success" min="0" max="5" value=2 id="rangeObstacle" (input)="generatorSettings.setResourcesFromSliders()">
+                <label class="custom-range-label" for="rangeObstacle">Obstacle: {{sliderObstacle.value}}</label>
+              </div>
+              <div class="row align-content-center justify-content-center">
+                <input #sliderHill type="range" class="custom-range is-success" min="0" max="5" value=2 id="rangeHill" (input)="generatorSettings.setResourcesFromSliders()">
+                <label class="custom-range-label" for="rangeHill">Hill: {{sliderHill.value}}</label>
+              </div>
+              <div class="row align-content-center justify-content-center">
+                <input #sliderForest type="range" class="custom-range is-success" min="0" max="5" value=2 id="rangeForest" (input)="generatorSettings.setResourcesFromSliders()">
+                <label class="custom-range-label" for="rangeForest">Forest: {{sliderForest.value}}</label>
+              </div>
+            </div>
+            <br>
             <button type="button" class="btn btn-success btn-sm" (click)="generatorSettings.restoreDefaults()">
                 Restore Defaults
             </button>

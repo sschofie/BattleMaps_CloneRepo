@@ -2541,8 +2541,11 @@ input[type="button"].btn-block {
     border-left: inherit;
     border-radius: 0 0.25rem 0.25rem 0;
 }
+.custom-range-label {
+  margin-left: 20px;
+}
 .custom-range {
-    width: 100%;
+    width: 20%;
     height: 1.4rem;
     padding: 0;
     background-color: transparent;
@@ -2552,13 +2555,13 @@ input[type="button"].btn-block {
     outline: none;
 }
 .custom-range:focus::-webkit-slider-thumb {
-    box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(2, 117, 216, 0.25);
+    box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem #a2C44f;
 }
 .custom-range:focus::-moz-range-thumb {
-    box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(2, 117, 216, 0.25);
+    box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem #a2C44f;
 }
 .custom-range:focus::-ms-thumb {
-    box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(2, 117, 216, 0.25);
+    box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem #a2C44f;
 }
 .custom-range::-moz-focus-outer {
     border: 0;
@@ -2567,7 +2570,7 @@ input[type="button"].btn-block {
     width: 1rem;
     height: 1rem;
     margin-top: -0.25rem;
-    background-color: #0275d8;
+    background-color: #a2C44f;
     border: 0;
     border-radius: 1rem;
     transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -2579,7 +2582,7 @@ input[type="button"].btn-block {
     }
 }
 .custom-range::-webkit-slider-thumb:active {
-    background-color: #8fcafe;
+    background-color: #8fb13b;
 }
 .custom-range::-webkit-slider-runnable-track {
     width: 100%;

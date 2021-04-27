@@ -7,6 +7,7 @@ import { TerrainPiece, DynamicMap } from '../dynamic-map/dynamic-map';
 export class GeneratorSettingsService {
   public useEDMaps = true;
   public hillNotInZones = true;
+  public useUserTerrain = false;
   public generator = 0 as DynamicMap.GenType;
   /**
    * Array representing the available quantity of each resource type.
@@ -26,7 +27,17 @@ export class GeneratorSettingsService {
     this.hillNotInZones = !this.hillNotInZones;
   }
 
-  selectGenerator() {
+  toggleUserTerrainSettings(){
+    this.useUserTerrain = !this.useUserTerrain;
+    if(this.useUserTerrain){
+      this.resources = [3, 3, 2, 2, 2];
+    }else{
+      this.resources = [];
+    }
+    this.setSwitches();
+  }
+
+  selectGenerator(){
     const gen = document.getElementById('selectGenerator') as HTMLInputElement;
     this.generator = (+gen.value);
   }
@@ -94,6 +105,7 @@ export class GeneratorSettingsService {
   restoreDefaults() {
     this.useEDMaps = true;
     this.hillNotInZones = true;
+    this.useUserTerrain = false;
     this.resources = [];
     this.generator = 0;
     this.setSwitches();
@@ -112,6 +124,37 @@ export class GeneratorSettingsService {
     const genSelector = document.getElementById('selectGenerator') as HTMLInputElement;
     genSelector.value = (+this.generator).toString();
 
-    // TODO set resources sliders
+    const userTerrainSwitch = document.getElementById('switchTerrain') as HTMLInputElement;
+    userTerrainSwitch.checked = this.useUserTerrain;
+    if(this.useUserTerrain){
+      const rangeBlocking = document.getElementById('rangeBlocking') as HTMLInputElement;
+      rangeBlocking.valueAsNumber = this.resources[0];
+      const rangeDifficult = document.getElementById('rangeDifficult') as HTMLInputElement;
+      rangeDifficult.valueAsNumber = this.resources[1];
+      const rangeObstacle = document.getElementById('rangeObstacle') as HTMLInputElement;
+      rangeObstacle.valueAsNumber = this.resources[2];
+      const rangeHill = document.getElementById('rangeHill') as HTMLInputElement;
+      rangeHill.valueAsNumber = this.resources[3];
+      const rangeForest = document.getElementById('rangeForest') as HTMLInputElement;
+      rangeForest.valueAsNumber = this.resources[4];
+    }
   }
+
+  /**
+   * This function takes value of the slider and assigns the value in resources
+   */
+  setResourcesFromSliders(){
+    const rangeBlocking = document.getElementById('rangeBlocking') as HTMLInputElement;
+    this.resources[0] = rangeBlocking.valueAsNumber;
+    const rangeDifficult = document.getElementById('rangeDifficult') as HTMLInputElement;
+    this.resources[1] = rangeDifficult.valueAsNumber;
+    const rangeObstacle = document.getElementById('rangeObstacle') as HTMLInputElement;
+    this.resources[2] = rangeObstacle.valueAsNumber;
+    const rangeHill = document.getElementById('rangeHill') as HTMLInputElement;
+    this.resources[3] = rangeHill.valueAsNumber;
+    const rangeForest = document.getElementById('rangeForest') as HTMLInputElement;
+    this.resources[4] = rangeForest.valueAsNumber;
+  }
+
 }
+
