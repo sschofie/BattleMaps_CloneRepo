@@ -1,64 +1,123 @@
 <br>
 <p>
-    <button type="button" class="btn btn-success" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
-        Generator Settings
-    </button>
+  <button type="button" class="btn btn-success" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed"
+    aria-controls="collapseExample">
+    Generator Settings
+  </button>
 </p>
 <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
-    <div class="card">
-        <div class="card-body">
-            <p class="text-muted">Generate a new map to apply changes</p>
-            <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="switchED" checked (click)="generatorSettings.toggleUseEDMaps()">
-                <label class="custom-control-label" for="switchED">Include maps from Lars' Epic Dwarf pack</label>
+  <div class="card">
+    <div class="card-body">
+      <p class="text-muted">Generate a new map to apply changes</p>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="switchED" checked
+          (click)="generatorSettings.toggleUseEDMaps()">
+        <label class="custom-control-label" for="switchED">Include maps from Lars' Epic Dwarf pack</label>
+      </div>
+      <hr>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="switchHills" checked
+          (click)="generatorSettings.toggleHillSettings()">
+        <label class="custom-control-label" for="switchHills">Keep hills out of deployment zones</label>
+      </div>
+      <br>
+      <div class="text-muted">Select a generator type</div>
+      <select class="custom-select" id='selectGenerator' (change)='generatorSettings.selectGenerator()'>
+        <option selected value=0>Standard Map (4x6)</option>
+        <!-- <option value=1>Standard Map (4x4)</option> -->
+        <option value=2>Perfect Mirror (4x6)</option>
+        <!-- <option value=3>Equavalent Sides (4x6)</option> -->
+        <!-- <option value=4>Lanes (4x6)</option> -->
+      </select>
+      <br>
+      <br>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="switchTerrain" checked
+          (click)="generatorSettings.toggleUserTerrainSettings()">
+        <label class="custom-control-label" for="switchTerrain">Customize number of terrain pieces</label>
+      </div>
+      <div #collapse="ngbCollapse" [(ngbCollapse)]="!generatorSettings.useUserTerrain">
+        <br>
+        <div class="card">
+          <div class="card-body">
+            <p class="text-muted">Select how many of each terrain type you have:</p>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="selectBlocking">Blocking</label>
+              </div>
+              <select class="custom-select" id="selectBlocking"
+                (change)="generatorSettings.setResourcesFromSelection()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="3">4</option>
+                <option value="3">5</option>
+              </select>
             </div>
-            <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="switchHills" checked (click)="generatorSettings.toggleHillSettings()">
-                <label class="custom-control-label" for="switchHills">Keep hills out of deployment zones</label>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="selectDifficult">Difficult</label>
+              </div>
+              <select class="custom-select" id="selectDifficult"
+                (change)="generatorSettings.setResourcesFromSelection()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="3">4</option>
+                <option value="3">5</option>
+              </select>
             </div>
-            <br>
-            <div class="text-muted">Select a generator type</div>
-            <select class="custom-select" id='selectGenerator' (change)='generatorSettings.selectGenerator()'>
-                <option selected value=0>Standard Map (4x6)</option>
-                <!-- <option value=1>Standard Map (4x4)</option> -->
-                <option value=2>Perfect Mirror (4x6)</option>
-                <!-- <option value=3>Equavalent Sides (4x6)</option> -->
-                <!-- <option value=4>Lanes (4x6)</option> -->
-            </select>
-            <br>
-            <br>
-            <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="switchTerrain" checked (click)="generatorSettings.toggleUserTerrainSettings()">
-              <label class="custom-control-label" for="switchTerrain">Customize number of terrain pieces</label>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="selectObstacle">Obstacle</label>
+              </div>
+              <select class="custom-select" id="selectObstacle"
+                (change)="generatorSettings.setResourcesFromSelection()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="3">4</option>
+                <option value="3">5</option>
+              </select>
             </div>
-            <div #collapse="ngbCollapse" [(ngbCollapse)]="!generatorSettings.useUserTerrain">
-              <br>
-              <p class="text-muted">Select how many of each terrain type you have:</p>
-              <div class="row align-content-center justify-content-center">
-                <input #sliderBlocking type="range" class="custom-range is-success" min="0" max="5" value=3 id="rangeBlocking" (input)="generatorSettings.setResourcesFromSliders()">
-                <label class="custom-range-label" for="rangeBlocking">Blocking: {{sliderBlocking.value}}</label>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="selectHill">Hill</label>
               </div>
-              <div class="row align-content-center justify-content-center">
-                <input #sliderDifficult type="range" class="custom-range is-success" min="0" max="5" value=3 id="rangeDifficult" (input)="generatorSettings.setResourcesFromSliders()">
-                <label class="custom-range-label" for="rangeDifficult">Difficult: {{sliderDifficult.value}}</label>
-              </div>
-              <div class="row align-content-center justify-content-center">
-                <input #sliderObstacle type="range" class="custom-range is-success" min="0" max="5" value=2 id="rangeObstacle" (input)="generatorSettings.setResourcesFromSliders()">
-                <label class="custom-range-label" for="rangeObstacle">Obstacle: {{sliderObstacle.value}}</label>
-              </div>
-              <div class="row align-content-center justify-content-center">
-                <input #sliderHill type="range" class="custom-range is-success" min="0" max="5" value=2 id="rangeHill" (input)="generatorSettings.setResourcesFromSliders()">
-                <label class="custom-range-label" for="rangeHill">Hill: {{sliderHill.value}}</label>
-              </div>
-              <div class="row align-content-center justify-content-center">
-                <input #sliderForest type="range" class="custom-range is-success" min="0" max="5" value=2 id="rangeForest" (input)="generatorSettings.setResourcesFromSliders()">
-                <label class="custom-range-label" for="rangeForest">Forest: {{sliderForest.value}}</label>
-              </div>
+              <select class="custom-select" id="selectHill"
+              (change)="generatorSettings.setResourcesFromSelection()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="3">4</option>
+                <option value="3">5</option>
+              </select>
             </div>
-            <br>
-            <button type="button" class="btn btn-success btn-sm" (click)="generatorSettings.restoreDefaults()">
-                Restore Defaults
-            </button>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="selectForest">Forest</label>
+              </div>
+              <select class="custom-select" id="selectForest"
+              (change)="generatorSettings.setResourcesFromSelection()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="3">4</option>
+                <option value="3">5</option>
+              </select>
+            </div>
+          </div>
         </div>
+      </div>
+      <br>
+      <button type="button" class="btn btn-success btn-sm" (click)="generatorSettings.restoreDefaults()">
+        Restore Defaults
+      </button>
     </div>
+  </div>
 </div>

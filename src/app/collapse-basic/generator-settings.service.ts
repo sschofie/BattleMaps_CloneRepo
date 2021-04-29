@@ -27,17 +27,17 @@ export class GeneratorSettingsService {
     this.hillNotInZones = !this.hillNotInZones;
   }
 
-  toggleUserTerrainSettings(){
+  toggleUserTerrainSettings() {
     this.useUserTerrain = !this.useUserTerrain;
-    if(this.useUserTerrain){
+    if (this.useUserTerrain) {
       this.resources = [3, 3, 2, 2, 2];
-    }else{
+    } else {
       this.resources = [];
     }
     this.setSwitches();
   }
 
-  selectGenerator(){
+  selectGenerator() {
     const gen = document.getElementById('selectGenerator') as HTMLInputElement;
     this.generator = (+gen.value);
   }
@@ -47,7 +47,7 @@ export class GeneratorSettingsService {
    *
    * @param settingsParam - Comma-separated string representing the generator settings.
    * 0 is interpreted as `false`, any other value as `true`.
-   * TODO Format: `hillNotInZones,mirrorMaps,lanes`
+   * Format: `hillNotInZones,generator`
    *
    * @param resourcesParam - Comma-separated string representing the available resources,
    * where each value represents the quantity of that resource type.
@@ -66,6 +66,7 @@ export class GeneratorSettingsService {
 
     // check that a value for the parameter exists
     if (resourcesParam) {
+      this.useUserTerrain = true;
       this.resources = resourcesParam.split(',').map(x => +x);
       // discard extra values if the resources array is longer than list of terrain types
       this.resources = this.resources.slice(0, Object.keys(TerrainPiece.Type).length / 2);
@@ -126,34 +127,34 @@ export class GeneratorSettingsService {
 
     const userTerrainSwitch = document.getElementById('switchTerrain') as HTMLInputElement;
     userTerrainSwitch.checked = this.useUserTerrain;
-    if(this.useUserTerrain){
-      const rangeBlocking = document.getElementById('rangeBlocking') as HTMLInputElement;
-      rangeBlocking.valueAsNumber = this.resources[0];
-      const rangeDifficult = document.getElementById('rangeDifficult') as HTMLInputElement;
-      rangeDifficult.valueAsNumber = this.resources[1];
-      const rangeObstacle = document.getElementById('rangeObstacle') as HTMLInputElement;
-      rangeObstacle.valueAsNumber = this.resources[2];
-      const rangeHill = document.getElementById('rangeHill') as HTMLInputElement;
-      rangeHill.valueAsNumber = this.resources[3];
-      const rangeForest = document.getElementById('rangeForest') as HTMLInputElement;
-      rangeForest.valueAsNumber = this.resources[4];
+    if (this.useUserTerrain) {
+      const selectBlocking = document.getElementById('selectBlocking') as HTMLSelectElement;
+      selectBlocking.value = this.resources[0].toString();
+      const selectDifficult = document.getElementById('selectDifficult') as HTMLSelectElement;
+      selectDifficult.value = this.resources[1].toString();
+      const selectObstacle = document.getElementById('selectObstacle') as HTMLSelectElement;
+      selectObstacle.value = this.resources[2].toString();
+      const selectHill = document.getElementById('selectHill') as HTMLSelectElement;
+      selectHill.value = this.resources[3].toString();
+      const selectForest = document.getElementById('selectForest') as HTMLSelectElement;
+      selectForest.value = this.resources[4].toString();
     }
   }
 
   /**
-   * This function takes value of the slider and assigns the value in resources
+   * Update the resources array to reflect the values selected in the UI
    */
-  setResourcesFromSliders(){
-    const rangeBlocking = document.getElementById('rangeBlocking') as HTMLInputElement;
-    this.resources[0] = rangeBlocking.valueAsNumber;
-    const rangeDifficult = document.getElementById('rangeDifficult') as HTMLInputElement;
-    this.resources[1] = rangeDifficult.valueAsNumber;
-    const rangeObstacle = document.getElementById('rangeObstacle') as HTMLInputElement;
-    this.resources[2] = rangeObstacle.valueAsNumber;
-    const rangeHill = document.getElementById('rangeHill') as HTMLInputElement;
-    this.resources[3] = rangeHill.valueAsNumber;
-    const rangeForest = document.getElementById('rangeForest') as HTMLInputElement;
-    this.resources[4] = rangeForest.valueAsNumber;
+  setResourcesFromSelection() {
+    const selectBlocking = document.getElementById('selectBlocking') as HTMLSelectElement;
+    this.resources[0] = Number(selectBlocking.value);
+    const selectDifficult = document.getElementById('selectDifficult') as HTMLSelectElement;
+    this.resources[1] = Number(selectDifficult.value);
+    const selectObstacle = document.getElementById('selectObstacle') as HTMLSelectElement;
+    this.resources[2] = Number(selectObstacle.value);
+    const selectHill = document.getElementById('selectHill') as HTMLSelectElement;
+    this.resources[3] = Number(selectHill.value);
+    const selectForest = document.getElementById('selectForest') as HTMLSelectElement;
+    this.resources[4] = Number(selectForest.value);
   }
 
 }
