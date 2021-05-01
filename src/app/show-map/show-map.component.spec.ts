@@ -10,6 +10,7 @@ import { DynamicMap } from '../dynamic-map/dynamic-map';
 import { DynamicTokens } from '../dynamic-tokens/dynamic-tokens';
 import { MapGeneratorPageComponent } from '../map-generator-page/map-generator-page.component';
 import { ToastComponent } from '../toast/toast.component';
+import { ToastScenarioInfoComponent } from '../toast/toast-scenario-info.component';
 import { ShowMapComponent } from './show-map.component';
 
 describe('ShowMapComponent', () => {
@@ -17,6 +18,7 @@ describe('ShowMapComponent', () => {
     declarations: [
       ShowMapComponent,
       ToastComponent,
+      ToastScenarioInfoComponent,
       CollapseBasicComponent
     ],
     imports: [

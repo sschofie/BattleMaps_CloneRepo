@@ -13,6 +13,7 @@ export class DynamicTokens {
   private mapNodes: Node[];
   private tokens: Token[];
   private isPlunder = false;
+  private failureThreshold = 10; // max number of generation function restarts
 
   static newSeed(): number {
     return Math.floor(Math.random() * DynamicTokens.maxInt32Unsigned);
@@ -28,26 +29,31 @@ export class DynamicTokens {
    * @param showMapComponent Component containing the target canvas.
    * @param mapNodes Array that contains the current map encoding.
    * @param scenario The scenario for which to generate tokens.
+   *
+   * @returns false on token generation failure, true on success or if tokens should not be generated
    */
-  generateAndPrintTokens(showMapComponent: ShowMapComponent, mapNodes: Node[], scenario: string, seed: number) {
-    if (!environment.featureFlags.tokens) { return; }
+  generateAndPrintTokens(showMapComponent: ShowMapComponent, mapNodes: Node[], scenario: string, seed: number): boolean {
+    if (!environment.featureFlags.tokens || !scenario) { return true; }
     this.mapNodes = mapNodes;
     this.showMapComponent = showMapComponent;
-    this.generateTokens(scenario, seed);
+    if(!this.generateTokens(scenario, seed)) {
+      console.warn('[DynamicTokens] No valid arrangement found for ' + scenario + ' tokens on current map');
+      return false;
+    }
     if (environment.production) {
       this.printTokens(this.tokens, this.width, this.height);
     } else {
       this.printTokens(this.tokens, this.width, this.height, 2);
     }
+    this.showMapComponent.toastScenarioInfoService.toasts = [];
     if((scenario === `Fool's Gold`) || (scenario === `Smoke & Mirrors`)) {
       this.showMapComponent.toastScenarioInfoService.show(
         `Scenario Info`,
         `see p. 62`,
         `Determine token values based on ` + scenario + ` details in rulebook`
         );
-    } else {
-      this.showMapComponent.toastScenarioInfoService.toasts = [];
     }
+    return true;
   }
 
   /**
@@ -73,39 +79,64 @@ export class DynamicTokens {
   /**
    * Dynamically generate tokens for the given scenario, placing them into this.tokens.
    *
-   * @param scenario The scenario for which to generate tokens.
+   * @param scenario The scenario for which to generate tokens
+   *
+   * @returns if a valid token arrangement was found within the constraints set by maxAttempts and failureThreshold
    */
-  private generateTokens(scenario: string, seed: number) {
-    if (!this.mapNodes || this.mapNodes.length < 1) { return; }
+  private generateTokens(scenario: string, seed: number): boolean {
+    if (!this.mapNodes || this.mapNodes.length < 1) { return false; }
     this.rand = this.seedrandom(seed);
+    let restarts = 0;
     switch (scenario) {
       case `Smoke & Mirrors`:
       case `Fool's Gold`:
-        while (!this.generateFGSaMTokens()) { ; }
+        while (!this.generateFGSaMTokens()) {
+          restarts++;
+          if(restarts > this.failureThreshold) { return false; }
+        }
         break;
       case `Loot`:
-        while (!this.generateLootTokens()) { ; }
+        while (!this.generateLootTokens()) {
+          restarts++;
+          if(restarts > this.failureThreshold) { return false; }
+        }
         break;
       case `Pillage`:
-        while (!this.generatePillageTokens()) { ; }
+        while (!this.generatePillageTokens()) {
+          restarts++;
+          if(restarts > this.failureThreshold) { return false; }
+        }
         break;
       case `Plunder`:
-        while (!this.generatePlunderTokens()) { ; }
+        while (!this.generatePlunderTokens()) {
+          restarts++;
+          if(restarts > this.failureThreshold) { return false; }
+        }
         break;
       case `Push`:
-        while (!this.generatePushTokens()) { ; }
+        while (!this.generatePushTokens()) {
+          restarts++;
+          if(restarts > this.failureThreshold) { return false; }
+        }
         break;
       case `Raze`:
-        while (!this.generateRazeTokens()) { ; }
+        while (!this.generateRazeTokens()) {
+          restarts++;
+          if(restarts > this.failureThreshold) { return false; }
+        }
         break;
       case `Salt the Earth`:
-        while (!this.generateStETokens()) { ; }
+        while (!this.generateStETokens()) {
+          restarts++;
+          if(restarts > this.failureThreshold) { return false; }
+        }
         break;
 
       default:
         this.tokens = [];
-        break;
+        return true;
     }
+    return true;
   }
 
   /**
@@ -151,7 +182,7 @@ export class DynamicTokens {
     const primary1 = Math.floor(tokens.length*this.rand());
     let primary2 = Math.floor(tokens.length*this.rand());
     while(primary1 === primary2) {
-      primary2 = Math.floor(this.tokens.length*this.rand());
+      primary2 = Math.floor(tokens.length*this.rand());
     }
     let i = 0;
     for (const t of tokens) {
@@ -327,6 +358,9 @@ export class DynamicTokens {
       t = this.repositionTokenX(t);
       let ctr = 0;
       while(ctr < 100 && this.checkTokenCollisions(t, this.tokens) || this.checkMapCollisions(t)) {
+        if(t.x + 1 > 575) {
+          return false;
+        }
         t = new Token(t.x+1, t.y);
         ctr++;
       }

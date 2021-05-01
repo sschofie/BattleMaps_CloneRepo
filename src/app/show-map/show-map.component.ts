@@ -302,7 +302,6 @@ export class ShowMapComponent implements OnInit {
    * @returns False if token seed is invalid or does not exist.
    */
   setTokensFromQuery(): boolean {
-    if (!this.showTokens) { return true; } // don't bother if we're not showing the tokens anyway
     // load the token seed
     const tokenSeedParam = this.route.snapshot.queryParamMap.get('t');
     // check that the 't' parameter exists
@@ -313,7 +312,10 @@ export class ShowMapComponent implements OnInit {
       console.warn('WARN: Token seed is invalid.');
       return false;
     }
-    this.dynamicTokens.generateAndPrintTokens(this, this.mapNodes, this.tmpSelectedScenario, tokenSeed);
+    if(!this.dynamicTokens.generateAndPrintTokens(this, this.mapNodes, this.tmpSelectedScenario, tokenSeed)) {
+      console.debug('Switching scenario due to token generation failure...');
+      this.switchScenario(true);
+    }
     return true;
   }
 
