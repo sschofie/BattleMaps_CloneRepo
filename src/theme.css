@@ -431,6 +431,11 @@ mark,
     max-width: 100%;
     height: auto;
 }
+@media (orientation: landscape) {
+    .img-fluid {
+        width: 15rem;
+    }
+}
 .img-thumbnail {
     padding: 0.25rem;
     background-color: #fff;

@@ -115,3 +115,9 @@
   .features-icons .features-icons-item .features-icons-icon i {
     font-size: 4.5rem;
   }
+
+  .hyphenated {
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+  }

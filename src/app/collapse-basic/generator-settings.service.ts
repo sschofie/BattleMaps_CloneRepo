@@ -60,7 +60,7 @@ export class GeneratorSettingsService {
       this.hillNotInZones = !!settings[0];
       this.generator = +settings[1];
     } else {
-      console.debug('[GeneratorSettings] Settings not provided.');
+      console.debug('[GeneratorSettings] Settings not provided. Using defaults.');
       this.restoreDefaults();
     }
 
@@ -70,8 +70,8 @@ export class GeneratorSettingsService {
       this.resources = resourcesParam.split(',').map(x => +x);
       // discard extra values if the resources array is longer than list of terrain types
       this.resources = this.resources.slice(0, Object.keys(TerrainPiece.Type).length / 2);
+      console.debug('[GeneratorSettings] Using limited resources: ' + this.resources);
     } else {
-      console.debug('[GeneratorSettings] Resources not provided.');
       this.resources = [];
     }
     this.setSwitches();

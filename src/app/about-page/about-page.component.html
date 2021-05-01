@@ -2,23 +2,36 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-43006852-3"></script>
   <script>
-   window.dataLayer = window.dataLayer || [];
-   function gtag(){dataLayer.push(arguments);}
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
     gtag('config', 'UA-43006852-3');
   </script>
-  
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Quickly generate a fair battlefield map for Kings of War, the mass combat fantasy miniatures game from Mantic Games">
+  <meta name="description"
+    content="Quickly generate a fair battlefield map for Kings of War, the mass combat fantasy miniatures game from Mantic Games">
   <meta name="author" content="Carlson McKinnon Consulting">
   <meta name="application-name" content="Battle Maps">
 
   <title>Battle Maps - Kings of War</title>
 
-  <link rel="shortcut icon" type="image/jpg" href="assets/img/Terrain_Pieces_8.svg"/>
+  <link rel="shortcut icon" type="image/jpg" href="assets/img/Terrain_Pieces_8.svg" />
 </head>
+
+<!-- Toolbar -->
+<div class="toolbar container-fluid bg-secondary" role="banner">
+  <div class="row align-items-center">
+    <div class="col-6 d-flex justify-content-start">
+      <img class="logo img-fluid" src="assets/img/LogoTitleHorizontal.svg" alt="Battle Maps Logo" />
+    </div>
+    <div class="col-6 d-flex justify-content-end">
+      <a role="button" class="btn btn-outline-success" routerLink="../app">Go to Battle Maps!</a>
+    </div>
+  </div>
+</div>
 
 <body>
   <!-- Masthead -->
@@ -38,21 +51,8 @@
     </div>
   </header>
 
-  <div class="alert alert-success" role="alert">
-    <div class="d-flex justify-content-center">
-      <div class="row align-items-center justify-content-center">
-        <div class="col-sm-auto">
-          Ready to get back into the fight?
-        </div>
-        <div class="col-md-auto">
-          <a role="button" class="btn btn-block btn-success" routerLink="../app">Go to Battle Maps!</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-   <!-- Icons Grid -->
-   <section class="features-icons bg-light text-center">
+  <!-- Icons Grid -->
+  <section class="features-icons bg-light text-center">
     <div class="container">
       <div class="row">
         <div class="col-lg-4">
@@ -62,7 +62,8 @@
             </div>
             <h3>Generate</h3>
             <p class="lead mb-0">
-              Prepare for battle for <a href="https://www.manticgames.com/games/kings-of-war/">Kings of War</a> with Battle Maps!</p>
+              Prepare for battle for <a href="https://www.manticgames.com/games/kings-of-war/">Kings of War</a> with
+              Battle Maps!</p>
           </div>
         </div>
         <div class="col-lg-4">
@@ -71,7 +72,8 @@
               <i class="icon-wrench m-auto text-primary"></i>
             </div>
             <h3>Customize</h3>
-            <p class="lead mb-0">Customize your settings to create your perfect map and be certain that your map is fair to both sides!</p>
+            <p class="lead mb-0">Customize your settings to create your perfect map and be certain that your map is fair
+              to both sides!</p>
           </div>
         </div>
         <div class="col-lg-4">
@@ -96,7 +98,9 @@
         </div>
         <div class="col-lg-6 order-lg-1 my-auto showcase-text">
           <h2>Quickly Generate a Battlefield</h2>
-          <p class="lead mb-0">Dispense with the time-consuming process of creating a fair and interesting map by hand and have one generated for you instead so you can get right into the <a href="https://www.manticgames.com/games/kings-of-war/">Kings of War</a> game!
+          <p class="lead mb-0">Dispense with the time-consuming process of creating a fair and interesting map by hand
+            and have one generated for you instead so you can get right into the <a
+              href="https://www.manticgames.com/games/kings-of-war/">Kings of War</a> game!
           </p>
         </div>
       </div>
@@ -106,18 +110,51 @@
         </div>
         <div class="col-lg-6 my-auto showcase-text">
           <h2>Map Options</h2>
-          <p class="lead mb-0">Randomly pick a hand generated <a href="https://dash28.org/epic-dwarf-map-pack/">Epic Dwarf</a> map or generate a new custom one to your liking. Delve into various options for more control over map generation!</p>
+          <p class="lead mb-0">Randomly pick a hand generated <a href="https://dash28.org/epic-dwarf-map-pack/">Epic
+              Dwarf</a> map or generate a new custom one to your liking. Delve into various options for more control
+            over map generation!</p>
         </div>
       </div>
       <div class="row no-gutters">
-        <div class="col-lg-6 order-lg-2 text-white showcase-img bg-success" >
+        <div class="col-lg-6 order-lg-2 text-white showcase-img bg-success">
           <img src="assets/img/Terrain_Pieces_3.svg" style="width:100%; height:100%" alt="">
         </div>
         <div class="col-lg-6 order-lg-1 my-auto showcase-text">
           <h2>Share With Others</h2>
-          <p class="lead mb-0">Share any map with your friends—just show them a QR code or send a link!</p> 
+          <p class="lead mb-0">Share any map with your friends—just show them a QR code or send a link!</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="text-center bg-light">
+    <div class="container">
+      <br>
+      <h2 class="my-5">About</h2>
+      <div class="m-5 font-weight-light">
+        <div class="text-justify hyphenated mb-5">
+          <p class="mb-3">Battle Maps began as the senior capstone project of five computer science
+            students, created throughout the fall of 2020 and spring of 2021. Given the project's limited time-frame,
+            every effort was taken to include all the features players may find most useful.</p>
+          <p class="mb-3">Though that initial development is over, Battle Maps will continue to be
+            maintained! If you come across any bugs or features you'd like to see implemented, send us an email using
+            the &ldquo;contact&rdquo; link at the bottom of the page with the details of your bug or feature suggestion.
+          </p>
+        </div>
+        <h5>— Project Lead —</h5>
+        <p class="mb-0">Troy McKinnon</p>
+        <br>
+        <h5>— Developers —</h5>
+        <p class="mb-0">Nash Evans</p>
+        <p class="mb-0">Morgen Halle</p>
+        <p class="mb-0">Ren Hardzog</p>
+        <p class="mb-0">Grant Peterson</p>
+        <p class="mb-0">Suzette Schofield</p>
+        <br>
+        <h5>— Art —</h5>
+        <p class="mb-0">John Key</p>
+      </div>
+      <br>
     </div>
   </section>
 
@@ -132,7 +169,8 @@
               <a href="mailto:1603848714584@carlsonmckinnon.com?subject=Contact Battle Maps">Contact</a>
             </li>
           </ul>
-          <p class="text-muted small mb-4 mb-lg-0">Copyright © <a href="http://carlsonmckinnon.com">Carlson McKinnon Consulting, LLC</a> {{copyrightYear}} — v{{version}}</p>
+          <p class="text-muted small mb-4 mb-lg-0">Copyright © <a href="http://carlsonmckinnon.com">Carlson McKinnon
+              Consulting, LLC</a> {{copyrightYear}} — v{{version}}</p>
         </div>
       </div>
     </div>

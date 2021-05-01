@@ -157,7 +157,7 @@ export class DynamicTokens {
     for (const t of tokens) {
       ctx.strokeStyle = 'black';
       ctx.beginPath();
-      ctx.arc(t.x, t.y, 4.1, 0, 2 * Math.PI);
+      ctx.arc(t.x, t.y, 8.2, 0, 2 * Math.PI);
       ctx.stroke();
       ctx.fillStyle = '#cab9a5';
       if(generatePrimary && (i === primary1 || i === primary2)) {
