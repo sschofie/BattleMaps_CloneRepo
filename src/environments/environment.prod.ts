@@ -7,6 +7,6 @@ export const environment = {
   featureFlags: {
     sharing: false,
     dynamicMaps: true,
-    tokens: false
+    tokens: true
   }
 };

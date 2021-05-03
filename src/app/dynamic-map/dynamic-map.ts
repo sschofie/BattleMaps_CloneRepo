@@ -110,7 +110,7 @@ export class DynamicMap {
         this.mapNodes = this.standardGenerate(seed);
         break;
     }
-    this.printMap(this.mapNodes, board.height, board.width, false);
+    this.printMap(this.mapNodes, board.height, board.width, true);
     return this.mapNodes;
   }
 

@@ -14,6 +14,7 @@ export class DynamicTokens {
   private tokens: Token[];
   private isPlunder = false;
   private failureThreshold = 10; // max number of generation function restarts
+  private edgeBoundary = 25;
 
   static newSeed(): number {
     return Math.floor(Math.random() * DynamicTokens.maxInt32Unsigned);
@@ -87,6 +88,8 @@ export class DynamicTokens {
     if (!this.mapNodes || this.mapNodes.length < 1) { return false; }
     this.rand = this.seedrandom(seed);
     let restarts = 0;
+    //TODO: rand should be passed to functions that use it to ensure all operations use the same seed
+    //see rand in dynamic maps for reference.
     switch (scenario) {
       case `Smoke & Mirrors`:
       case `Fool's Gold`:
@@ -221,7 +224,7 @@ export class DynamicTokens {
   private checkMapCollisions(token: Token): Node {
     for (const node of this.mapNodes) {
       if (node.item.type !== TerrainPiece.Type.blocking) { continue; }
-      if (dist(token.x, token.y, node.x, node.y) < (25 + node.item.radius)) {
+      if (dist(token.x, token.y, node.x, node.y) < (this.edgeBoundary + node.item.radius)) {
         return node;
       }
     }
@@ -254,10 +257,10 @@ export class DynamicTokens {
   private repositionTokenX(token: Token): Token {
     let xLeft = token.x;
     let xRight = token.x;
-    while (this.checkMapCollisions(new Token(xLeft, token.y)) && xLeft > 25) {
+    while (this.checkMapCollisions(new Token(xLeft, token.y)) && xLeft > this.edgeBoundary) {
       xLeft--; // find the closest valid position to the left
     }
-    while (this.checkMapCollisions(new Token(xRight, token.y)) && xRight < this.width - 25) {
+    while (this.checkMapCollisions(new Token(xRight, token.y)) && xRight < this.width - this.edgeBoundary) {
       xRight++; // find the closest valid position to the right
     }
     // pick the closer value between the left and right positions
@@ -313,7 +316,7 @@ export class DynamicTokens {
           console.warn('[DynamicTokens] Warn: MaxAttempts exceeded trying to place token ' + (i + 1));
           return false;
         }
-        t = new Token(this.rand() * (this.width - 50) + 25, y);
+        t = new Token(this.rand() * (this.width - (this.edgeBoundary*2)) + this.edgeBoundary, y);
       } while (this.checkTokenCollisions(t, this.tokens) || this.checkMapCollisions(t));
       this.tokens.push(t);
     }
@@ -339,7 +342,8 @@ export class DynamicTokens {
           console.warn('[DynamicTokens] Warn: MaxAttempts exceeded trying to place token ' + (i + 1));
           return false;
         }
-        t = new Token(this.rand() * (this.width - 50) + 25, this.rand()*(this.height-50)+25);
+        t = new Token(this.rand() * (this.width - (this.edgeBoundary*2)) + this.edgeBoundary,
+         this.rand()*(this.height-(this.edgeBoundary*2))+this.edgeBoundary);
       } while (this.checkTokenCollisions(t, this.tokens) || this.checkMapCollisions(t));
       this.tokens.push(t);
     }
@@ -381,8 +385,8 @@ export class DynamicTokens {
     let t = new Token(this.width / 2, this.height / 2);
     this.tokens.push(this.repositionTokenX(t));
     for(let i = 0; i<markers ; i++) {
-      const y = (i % 2 === 0) ? (Math.floor(this.rand()*(this.height/4-25)+25)) :
-      (Math.floor(this.rand()*(this.height/4-25)+3*this.height/4));
+      const y = (i % 2 === 0) ? (Math.floor(this.rand()*(this.height/4-this.edgeBoundary)+this.edgeBoundary)) :
+      (Math.floor(this.rand()*(this.height/4-this.edgeBoundary)+3*this.height/4));
       let ctr = 0;
       do {
         ctr++;
@@ -391,7 +395,7 @@ export class DynamicTokens {
           console.warn('[DynamicTokens] Warn: MaxAttempts exceeded trying to place token ' + (i + 1));
           return false;
         }
-        t = new Token(this.rand()* (this.width - 50) + 25, y);
+        t = new Token(this.rand()* (this.width - (this.edgeBoundary*2)) + this.edgeBoundary, y);
       } while (this.checkTokenCollisions(t, this.tokens) || this.checkMapCollisions(t));
       this.tokens.push(t);
     }
@@ -410,7 +414,7 @@ export class DynamicTokens {
     this.tokens.push(this.repositionTokenX(t));
     // 6 side tokens
     for (let i = 0; i < 6; i++) {
-      const y = this.height / 2 + 50 * (i % 2 === 0 ? 1 : -1); // 3 tokens on each side
+      const y = this.height / 2 + (this.edgeBoundary*2) * (i % 2 === 0 ? 1 : -1); // 3 tokens on each side
       let ctr = 0;
       do {
         ctr++;
@@ -419,7 +423,7 @@ export class DynamicTokens {
           console.warn('[DynamicTokens] Warn: MaxAttempts exceeded trying to place token ' + (i + 1));
           return false;
         }
-        t = new Token(this.rand() * (this.width - 50) + 25, y);
+        t = new Token(this.rand() * (this.width - (this.edgeBoundary*2)) + this.edgeBoundary, y);
       } while (this.checkTokenCollisions(t, this.tokens) || this.checkMapCollisions(t));
       this.tokens.push(t);
     }
@@ -433,7 +437,25 @@ export class DynamicTokens {
    */
   private generateStETokens(): boolean {
     this.tokens = [];
-    // TODO add placement functionality
+    // 1 center token
+    let t = new Token(this.width / 2, this.height / 2);
+    this.tokens.push(this.repositionTokenX(t));
+    // r randomly placed tokens
+    for(let i = 0; i < 6; i++){
+      let ctr = 0;
+      do {
+        ctr++;
+        if (ctr > this.maxAttempts) {
+          // This token arrangement does not allow all tokens to be used.
+          console.warn('[DynamicTokens] Warn: MaxAttempts exceeded trying to place token ' + (1 + 1));
+          return false;
+        }
+        const x = this.rand()*(this.width - (this.edgeBoundary*2)) + this.edgeBoundary;
+        const y = this.rand()*(this.height - (this.edgeBoundary*2)) + this.edgeBoundary;
+        t = new Token(x, y);
+      } while (this.checkTokenCollisions(t, this.tokens) || this.checkMapCollisions(t));
+      this.tokens.push(t);
+    }
     return true;
   }
 }
