@@ -51,7 +51,7 @@ export class DynamicMap {
   mapNodes: Node[]; //keep track of the current map for other funcions
   generatorSettings: GeneratorSettingsService;
   private context: ShowMapComponent;
-  private maxRuns = 50; //universal limit to number of runs each generation is allowed.
+  private maxRuns = 500; //universal limit to number of runs each generation is allowed.
   private seedrandom = require('seedrandom');
   //private numOfPieces = DynamicMap.terrainPieces.length;
   private boundScaling = 0.85; //this scales the bounding circle allowing object to overlap slightly.
@@ -95,12 +95,16 @@ export class DynamicMap {
         this.mapNodes = this.standardGenerate(seed);
         break;
       case DynamicMap.GenType.fourByFour:
+        //this option prints streached out. Hidden for now
         board.width = 400;
         const rand = this.seedrandom(seed);
         this.mapNodes = this.mapGenerate(board,null,Math.floor(rand() * 4) + 8,rand);
         break;
       case DynamicMap.GenType.perfectMirror:
         this.mapNodes = this.mirroredGenerate(board,seed);
+        break;
+      case DynamicMap.GenType.lanes:
+        this.mapNodes = this.laneGenerate(board,seed);
         break;
       default:
         this.mapNodes = this.standardGenerate(seed);
@@ -244,6 +248,85 @@ export class DynamicMap {
         map.push(new Node((board.width-n.x),(board.height-n.y),n.angle,n.radius,n.item,n.height)); //need complement of angle
       }
       return map;
+    }
+
+    /**
+     *
+     * Generate a map with one randomly generated lane running through it
+     *
+     * @param board - an object representing the height, width, and bounds of a board
+     * @param seed - a 32 bit unsigned int to generate a specific map
+     * @returns - an array of nodes representing a map
+     */
+    private laneGenerate(board: Board, seed: number): Node[] {
+      const resources = this.generatorSettings.resources.slice();
+      const rand = this.seedrandom(seed);
+      let numOfNodes = Math.floor(rand() * 4) + 8; //designates number of terrain pieces with a max of 12 and min of 8.
+      let prefab: Node[] = [];
+      const x1 = Math.floor(rand() * (board.width - board.edgeBoundary*2)) + board.edgeBoundary;
+      const y1 = Math.floor(rand() * (board.height - board.edgeBoundary*2)) + board.edgeBoundary;
+      let x2 = x1;
+      let y2 = y1;
+      //asures that the lane is atleast a certain length, but favors diagonal lines
+      //fix later?
+      while(Math.abs(x2-x1)< 100) {
+        x2 = Math.floor(rand() * (board.width - board.edgeBoundary*2)) + board.edgeBoundary;
+      }
+      while(Math.abs(y2-y1)< 100) {
+        y2 = Math.floor(rand() * (board.height - board.edgeBoundary*2)) + board.edgeBoundary;
+      }
+      prefab = prefab.concat(this.makeLane(x1,y1,x2,y2,50));
+      numOfNodes+= prefab.length;
+      const map = this.mapGenerate(board,prefab,numOfNodes,rand);
+      const m = map.filter(x => x.item.id !== -1);
+      return m;
+    }
+
+    /**
+     *
+     * Generate a line of blank nodes on the line between point (x1,y1) and (x2,y2)
+     * that represents a lane. These items should be filtered from a map, but
+     * will not cause a problem if they are not.
+     *
+     * @param x1 - initial x coordiante
+     * @param y1 - initial y coordiante
+     * @param x2 - final x coordiante
+     * @param y2 - final y coordiante
+     * @param width - the width of a lane
+     * @returns - an array of nodes representing a lane
+     */
+    private makeLane(x1: number, y1: number, x2: number, y2: number, width: number): Node[] {
+      width = width/2;
+      let d = dist(x1,y1,x2,y2);
+      const wy = (y2-y1)*width/d;
+      const wx = (x2-x1)*width/d;
+      if(x1 < x2) {
+        x1 = x1 + wx;
+        x2 = x2 - wx;
+      } else {
+        x1 = x1 - wx;
+        x2 = x2 + wx;
+      }
+      if(y1 < y2) {
+        y1 = y1 - wy;
+        y2 = y2 + wy;
+      } else {
+        y1 = y1 + wy;
+        y2 = y2 - wy;
+      }
+      d = dist(x1,y1,x2,y2);
+      const numOfNodes = Math.ceil(d/(width*2));
+      const dY = (y2-y1)/numOfNodes;
+      const dX = (x2-x1)/numOfNodes;
+      const lane: Node[] = [];
+      //change id to 0 for debug and -1 for deployment
+      const blankPiece = new TerrainPiece(-1, TerrainPiece.Type.obstacle, 0, 1, 'stone_wall');
+      for(let i = 0; i <= numOfNodes; i++){
+        const x = x1 + dX*i;
+        const y = y1 + dY*i;
+        lane.push(new Node(x,y,0,width,blankPiece,0));
+      }
+      return lane;
     }
 
   /**
