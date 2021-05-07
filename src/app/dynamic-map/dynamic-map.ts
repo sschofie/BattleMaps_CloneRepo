@@ -438,6 +438,7 @@ export class DynamicMap {
    * @param debug - indicates whether or not to print debug info (bounding circles and spawn pts)
    */
   private async printMap(encoding: Node[], h: number, w: number, debug: boolean) {
+    if (this.context.isProduction) { debug = false; }
     const gridSpacing = 100; //could be a param later
     let canvas = document.getElementById('mapViewer') as HTMLCanvasElement;
     if (!canvas) {
