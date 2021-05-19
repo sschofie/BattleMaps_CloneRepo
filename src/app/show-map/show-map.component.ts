@@ -94,7 +94,7 @@ export class ShowMapComponent implements OnInit {
         this.switchMap(true);
       }
       // if setting the tokens fails, pick a new token seed
-      if (!this.setTokensFromQuery()) {
+      if (this.showTokens && !this.setTokensFromQuery()) {
         console.debug('Generating new tokens...');
         this.switchTokens(true);
       }
