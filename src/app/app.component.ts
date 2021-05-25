@@ -1,5 +1,4 @@
 import { Component} from '@angular/core';
-import { FeatureFlagsService } from './feature-flag/feature-flags.service';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +7,4 @@ import { FeatureFlagsService } from './feature-flag/feature-flags.service';
 })
 
 export class AppComponent{
-
 }

@@ -1,13 +1,31 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>BattleMaps</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-43006852-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    let path = document.location.pathname;
+    // navigation to '/', '/app', or '/app?...' will all be recorded as '/app'
+    if (path.includes('/app') || path == '/') {
+      path = '/app';
+    }
+    gtag('config', 'UA-43006852-3', { page_path: path });
+  </script>
 </head>
+
 <body>
   <app-root></app-root>
 </body>
+
 </html>
